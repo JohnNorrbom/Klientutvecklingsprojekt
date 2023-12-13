@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+
     val navVersion = "2.5.0"
 
     // Kotlin

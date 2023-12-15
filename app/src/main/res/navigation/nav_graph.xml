@@ -25,6 +25,5 @@
     <fragment
         android:id="@+id/boardFragment"
         android:name="com.hfad.klientutvecklingsprojekt.BoardFragment"
-        android:label="fragment_board"
-        tools:layout="@layout/fragment_board" />
+        android:label="BoardFragment" />
 </navigation>

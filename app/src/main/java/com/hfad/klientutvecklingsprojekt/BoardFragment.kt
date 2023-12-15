@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -18,8 +19,6 @@ class BoardFragment : Fragment() {
                 11 to "tile_plus_2.png", 12 to "tile_plus_1.png", 13 to "tile_plus_2.png", 14 to "tile_plus_3.png", 15 to "tile_minus_5.png",
                 16 to "tile_plus_2.png", 17 to "tile_plus_1.png", 18 to "tile_plus_2.png", 19 to "tile_plus_3.png", 20 to "tile_minus_5.png")
         println("pararray to map" + pairArray.toMap().toString())
-
-
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?

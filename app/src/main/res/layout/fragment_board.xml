@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/tile1"
         android:layout_width="56dp"
-        android:layout_height="49dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile20"
         app:layout_constraintEnd_toStartOf="@+id/tile2"
         app:layout_constraintHorizontal_bias="0.5"
@@ -20,50 +20,9 @@
         app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
-        android:id="@+id/tile7"
-        android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
-        app:layout_constraintBottom_toTopOf="@+id/tile12"
-        app:layout_constraintEnd_toStartOf="@+id/tile8"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tile6"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tile_plus_1" />
-
-    <ImageView
-        android:id="@+id/tile5"
-        android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
-        app:layout_constraintBottom_toTopOf="@+id/tile14"
-        app:layout_constraintEnd_toStartOf="@+id/tile6"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tile4"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tile_plus_1" />
-
-    <ImageView
-        android:id="@+id/tile6"
-        android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
-        app:layout_constraintBottom_toTopOf="@+id/tile13"
-        app:layout_constraintEnd_toStartOf="@+id/tile7"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/tile5"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/tile_plus_1" />
-
-    <ImageView
         android:id="@+id/tile2"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile17"
         app:layout_constraintEnd_toStartOf="@+id/tile3"
         app:layout_constraintHorizontal_bias="0.5"
@@ -74,9 +33,7 @@
     <ImageView
         android:id="@+id/tile3"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile16"
         app:layout_constraintEnd_toStartOf="@+id/tile4"
         app:layout_constraintHorizontal_bias="0.5"
@@ -87,9 +44,7 @@
     <ImageView
         android:id="@+id/tile4"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="107dp"
-        android:layout_marginBottom="99dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile15"
         app:layout_constraintEnd_toStartOf="@+id/tile5"
         app:layout_constraintHorizontal_bias="0.5"
@@ -98,9 +53,44 @@
         app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
+        android:id="@+id/tile5"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/tile14"
+        app:layout_constraintEnd_toStartOf="@+id/tile6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tile4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tile_plus_1" />
+
+    <ImageView
+        android:id="@+id/tile6"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/tile13"
+        app:layout_constraintEnd_toStartOf="@+id/tile7"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tile5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tile_plus_1" />
+
+    <ImageView
+        android:id="@+id/tile7"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:layout_constraintBottom_toTopOf="@+id/tile12"
+        app:layout_constraintEnd_toStartOf="@+id/tile8"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/tile6"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/tile_plus_1" />
+
+
+
+    <ImageView
         android:id="@+id/tile8"
         android:layout_width="56dp"
-        android:layout_height="49dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -111,9 +101,8 @@
 
     <ImageView
         android:id="@+id/tile9"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginEnd="141dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tile20"
@@ -122,9 +111,8 @@
 
     <ImageView
         android:id="@+id/tile10"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginEnd="141dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tile19"
@@ -134,7 +122,7 @@
     <ImageView
         android:id="@+id/tile11"
         android:layout_width="56dp"
-        android:layout_height="49dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -145,8 +133,7 @@
     <ImageView
         android:id="@+id/tile13"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile12"
         app:layout_constraintHorizontal_bias="0.5"
@@ -157,8 +144,7 @@
     <ImageView
         android:id="@+id/tile16"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile15"
         app:layout_constraintHorizontal_bias="0.5"
@@ -169,8 +155,7 @@
     <ImageView
         android:id="@+id/tile12"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile11"
         app:layout_constraintHorizontal_bias="0.5"
@@ -181,8 +166,7 @@
     <ImageView
         android:id="@+id/tile15"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile14"
         app:layout_constraintHorizontal_bias="0.5"
@@ -193,8 +177,7 @@
     <ImageView
         android:id="@+id/tile17"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile16"
         app:layout_constraintHorizontal_bias="0.5"
@@ -205,8 +188,7 @@
     <ImageView
         android:id="@+id/tile14"
         android:layout_width="56dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="107dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile13"
         app:layout_constraintHorizontal_bias="0.5"
@@ -217,7 +199,7 @@
     <ImageView
         android:id="@+id/tile18"
         android:layout_width="56dp"
-        android:layout_height="49dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile17"
         app:layout_constraintHorizontal_bias="0.5"
@@ -228,10 +210,8 @@
 
     <ImageView
         android:id="@+id/tile19"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="142dp"
-        android:layout_marginEnd="336dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile18"
         app:layout_constraintEnd_toStartOf="@+id/tile10"
         app:layout_constraintStart_toStartOf="parent"
@@ -240,10 +220,8 @@
 
     <ImageView
         android:id="@+id/tile20"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="142dp"
-        android:layout_marginEnd="336dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile19"
         app:layout_constraintEnd_toStartOf="@+id/tile9"
         app:layout_constraintStart_toStartOf="parent"

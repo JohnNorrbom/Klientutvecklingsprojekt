@@ -23,7 +23,7 @@ class StartScreenFragment : Fragment() {
             view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
         }
         //soccer button
-        val soccerButton = view.findViewById<Button>(R.id.start_button)
+        val soccerButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
         soccerButton.setOnClickListener {
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }

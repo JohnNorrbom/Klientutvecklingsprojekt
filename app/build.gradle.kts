@@ -43,6 +43,7 @@ android {
 
 dependencies {
 
+    implementation("com.google.firebase:firebase-database:20.3.0")
     val navVersion = "2.5.0"
 
     // Kotlin
@@ -59,9 +60,7 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$navVersion")
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
-
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.3.1")
-
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")

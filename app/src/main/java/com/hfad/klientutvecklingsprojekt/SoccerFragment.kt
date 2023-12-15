@@ -17,14 +17,12 @@ class SoccerFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater,container,false)
         val view = binding.root
-
-
-
+        //binding shooters
         binding.yellowShooter.visibility = View.INVISIBLE
         binding.redShooter.visibility = View.INVISIBLE
         binding.greenShooter.visibility = View.INVISIBLE
         binding.blueShooter.visibility = View.INVISIBLE
-
+        //create animation for shooter
         var animationDrawable = binding.whiteShooter.background as AnimationDrawable
         var ballAnimation = binding.ballRight.background as AnimationDrawable
         animationDrawable.apply {

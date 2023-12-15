@@ -12,15 +12,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Create an instance of your SoccerFragment
-        val soccerFragment = SoccerFragment()
+        //val soccerFragment = SoccerFragment()
 
         // Get FragmentManager and start a transaction
-        supportFragmentManager.beginTransaction().apply {
+        //supportFragmentManager.beginTransaction().apply {
             // Replace the container view with your SoccerFragment instance
             //replace(R.id.nav_host_fragment, soccerFragment)
-            addToBackStack(null) // If you want to add the transaction to the back stack
-            commit() // Commit the transaction
-        }
+            //addToBackStack(null) // If you want to add the transaction to the back stack
+            //commit() // Commit the transaction
+        //}
     }
     //Hejsan ferdinand is here
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
+        <item android:drawable="@drawable/zballleft00" android:duration="1000"/>
+        <item android:drawable="@drawable/zballleft01" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft02" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft03" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft04" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft05" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft06" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft07" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft08" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft09" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft10" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft11" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft12" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft13" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft14" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft15" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft16" android:duration="50"/>
+        <item android:drawable="@drawable/zballleft17" android:duration="50"/>
+    </animation-list>

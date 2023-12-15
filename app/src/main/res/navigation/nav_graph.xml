@@ -11,12 +11,12 @@
         android:label="fragment_start_screen"
         tools:layout="@layout/fragment_start_screen" >
         <action
-            android:id="@+id/action_startScreenFragment_to_boardFragment"
-            app:destination="@id/boardFragment" />
+            android:id="@+id/action_startScreenFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/boardFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.BoardFragment"
-        android:label="fragment_board"
-        tools:layout="@layout/fragment_board" />
+        android:id="@+id/soccerFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.SoccerFragment"
+        android:label="fragment_soccer"
+        tools:layout="@layout/fragment_soccer" />
 </navigation>

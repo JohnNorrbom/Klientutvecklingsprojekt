@@ -3,4 +3,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">HThis is dice fragment</string>
     <string name="board">Board</string>
+    <string name="soccer_nav_button">Soccer</string>
+    <string name="start_button">Board</string>
 </resources>

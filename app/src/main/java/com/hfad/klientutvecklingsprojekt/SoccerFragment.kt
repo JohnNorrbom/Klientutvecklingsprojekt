@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 
-class OrderFragment : Fragment() {
+class SoccerFragment : Fragment() {
 
     private var _binding: FragmentSoccerBinding? = null
     private val binding get() = _binding!!
@@ -16,6 +17,18 @@ class OrderFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater,container,false)
         val view = binding.root
+
+
+
+        binding.yellowShooter.visibility = View.INVISIBLE
+        binding.redShooter.visibility = View.INVISIBLE
+        binding.greenShooter.visibility = View.INVISIBLE
+        binding.blueShooter.visibility = View.INVISIBLE
+
+        var animationDrawable = binding.whiteShooter.background as AnimationDrawable
+        animationDrawable.start()
+        animationDrawable = binding.ballRight.background as AnimationDrawable
+        animationDrawable.start()
         return view
     }
     override fun onDestroyView() {

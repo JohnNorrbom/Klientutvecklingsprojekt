@@ -1,17 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/aliengreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/aliencrowdfast"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="56dp" />
+
+    <ImageView
+        android:id="@+id/ball_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballrightanim" />
+
+    <ImageView
+        android:id="@+id/white_shooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/whiteshotanim" />
+
+    <ImageView
+        android:id="@+id/blue_shooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/blueshotanim" />
+
+    <ImageView
+        android:id="@+id/green_shooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/greenshotanim" />
+
+    <ImageView
+        android:id="@+id/red_shooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/redshotanim" />
+
+    <ImageView
+        android:id="@+id/yellow_shooter"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/yellowshotanim" />
+
+
+
+</FrameLayout>

@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,21 +14,20 @@ class StartScreenFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_start_screen, container, false)
-
-        // Changes view when button is clicked ****BOARD*****
+        // Changes view when button is clicked
+        //board button
         val startButton = view.findViewById<Button>(R.id.start_button)
         startButton.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
         }
         //soccer button
-        val soccerButton = view.findViewById<Button>(R.id.start_button)
+        val soccerButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
         soccerButton.setOnClickListener {
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }
         return view
     }
-
 }

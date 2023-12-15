@@ -26,8 +26,13 @@ class StartScreenFragment : Fragment() {
         //soccer button
         val soccerButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
         soccerButton.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }
         return view
+    }
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 }

@@ -24,9 +24,13 @@ class SoccerFragment : Fragment() {
         binding.blueShooter.visibility = View.INVISIBLE
         //create animation for shooter
         var animationDrawable = binding.whiteShooter.background as AnimationDrawable
-        animationDrawable.start()
-        animationDrawable = binding.ballRight.background as AnimationDrawable
-        animationDrawable.start()
+        var ballAnimation = binding.ballRight.background as AnimationDrawable
+        animationDrawable.apply {
+            start()
+        }
+        ballAnimation.apply {
+            start()
+        }
         return view
     }
     override fun onDestroyView() {

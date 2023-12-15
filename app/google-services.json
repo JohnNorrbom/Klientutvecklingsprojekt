@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "959367491822",
+    "firebase_url": "https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "klientutvecklingsprojekt",
+    "storage_bucket": "klientutvecklingsprojekt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:959367491822:android:b8e4e74dba22d51111c3ff",
+        "android_client_info": {
+          "package_name": "com.hfad.klientutvecklingsprojekt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjjY-svUjmTzkuPaGqA607C9QdY4iVUII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

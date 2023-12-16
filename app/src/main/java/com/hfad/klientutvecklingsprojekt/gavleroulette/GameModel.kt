@@ -1,4 +1,4 @@
-package com.hfad.wifeposijo_boardgame
+package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import kotlin.random.Random
 

@@ -11,4 +11,5 @@
     <string name="confirm">Confirm</string>
     <string name="choose_your_name_and_character">Choose your name and character</string>
     <string name="please_enter_game_id">Please enter game ID</string>
+    <string name="gavle_roulette_nav_button">Gavle roulette</string>
 </resources>

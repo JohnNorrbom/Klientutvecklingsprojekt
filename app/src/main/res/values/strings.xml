@@ -5,4 +5,10 @@
     <string name="board">Board</string>
     <string name="soccer_nav_button">Soccer</string>
     <string name="start_button">Board</string>
+    <string name="nickname">Nickname</string>
+    <string name="enter_user_name">Enter user name</string>
+    <string name="choose_character">Choose Character</string>
+    <string name="confirm">Confirm</string>
+    <string name="choose_your_name_and_character">Choose your name and character</string>
+    <string name="please_enter_game_id">Please enter game ID</string>
 </resources>

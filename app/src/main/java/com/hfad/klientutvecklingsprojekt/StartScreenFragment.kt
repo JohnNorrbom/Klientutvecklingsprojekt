@@ -20,12 +20,14 @@ class StartScreenFragment : Fragment() {
         //board button
         val startButton = view.findViewById<Button>(R.id.start_button)
         startButton.setOnClickListener {
+            //  Changes to landscape view
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
         }
         //soccer button
         val soccerButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
         soccerButton.setOnClickListener {
+            //  Changes to portrait view
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }

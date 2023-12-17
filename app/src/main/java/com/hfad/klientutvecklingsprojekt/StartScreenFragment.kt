@@ -48,6 +48,13 @@ class StartScreenFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_gavleRouletteFragment)
         }
+        //action_startScreenFragment_to_gameActivity
+        val rouletteButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
+        rouletteButton.setOnClickListener {
+            //  Changes to portrait view
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_gavleRouletteFragment)
+        }
         return view
     }
     override fun onResume() {

@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt.gavleroulette
+package com.hfad.wifeposijo_boardgame
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 import kotlin.random.Random
 
 class GavleRouletteFragment : Fragment(), View.OnClickListener{

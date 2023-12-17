@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt.gavleroulette
+package com.hfad.wifeposijo_boardgame
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null

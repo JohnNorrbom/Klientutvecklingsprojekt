@@ -18,41 +18,32 @@ class StartScreenFragment : Fragment() {
     private var _binding: FragmentStartScreenBinding? = null
     private val binding get()  = _binding!!
     override fun onCreateView(
-
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentStartScreenBinding.inflate(inflater,container,false)
         val view = binding.root
-        // Changes view when button is clicked
-        //board button
+        //  Changes view when button is clicked
+        //  board button
         binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
         }
-        //soccer button
+        //  soccer button
         binding.soccerMiniGameButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }
-
+        //  roulette button
         binding.rouletteMiniGameButton.setOnClickListener{
             GameData.saveGameModel(
                 GameModel(
                     gameStatus = GameStatus.JOINED
                 )
             )
-
-
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_gavleRouletteFragment)
-        }
-        //action_startScreenFragment_to_gameActivity
-        val rouletteButton = view.findViewById<Button>(R.id.soccer_mini_game_button)
-        rouletteButton.setOnClickListener {
-            //  Changes to portrait view
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            //  Crashes after executing the line below
             view.findNavController().navigate(R.id.action_startScreenFragment_to_gavleRouletteFragment)
         }
         return view
@@ -61,7 +52,6 @@ class StartScreenFragment : Fragment() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

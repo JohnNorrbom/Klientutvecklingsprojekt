@@ -31,6 +31,6 @@
         android:label="BoardFragment" />
     <fragment
         android:id="@+id/gavleRouletteFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"
+        android:name="com.hfad.wifeposijo_boardgame.GavleRouletteFragment"
         android:label="GavleRouletteFragment" />
 </navigation>

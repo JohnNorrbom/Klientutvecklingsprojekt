@@ -15,11 +15,60 @@
         tools:layout_editor_absoluteY="56dp" />
 
     <ImageView
+        android:id="@+id/ball_mid_in"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballmidinanim"/>
+
+    <ImageView
+        android:id="@+id/ball_right_in"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballrightinanim"/>
+
+    <ImageView
+        android:id="@+id/ball_left_in"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballleftinanim"/>
+
+    <ImageView
+        android:id="@+id/blue_goalie_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zbluegoalrightanim"/>
+
+    <ImageView
+        android:id="@+id/blue_goalie_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zbluegoalleftanim"/>
+
+    <ImageView
         android:id="@+id/ball_right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:background="@drawable/zballrightanim"/>
+
+    <ImageView
+        android:id="@+id/ball_left"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballleftanim"/>
+
+    <ImageView
+        android:id="@+id/ball_mid"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/zballmidanim"/>
 
     <ImageView
         android:id="@+id/white_shooter"

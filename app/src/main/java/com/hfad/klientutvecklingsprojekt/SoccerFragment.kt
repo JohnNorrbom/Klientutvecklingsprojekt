@@ -1,6 +1,8 @@
 package com.hfad.klientutvecklingsprojekt
 
+import android.graphics.drawable.AnimatedVectorDrawable
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater

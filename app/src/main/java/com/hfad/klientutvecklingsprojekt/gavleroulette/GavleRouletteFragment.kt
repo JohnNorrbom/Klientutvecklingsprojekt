@@ -34,7 +34,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             setUi()
         }
 
-        return view;
+        return view
     }
 
     override fun onDestroy() {

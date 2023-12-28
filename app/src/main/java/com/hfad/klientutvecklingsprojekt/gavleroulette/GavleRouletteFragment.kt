@@ -1,16 +1,13 @@
-package com.hfad.wifeposijo_boardgame
+package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
-import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 import kotlin.random.Random
 
 class GavleRouletteFragment : Fragment(), View.OnClickListener{
@@ -28,6 +25,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
 
         binding.startGameBtn.setOnClickListener {
             startGame()
+
         }
         binding.rouletAction.setOnClickListener(this)
 
@@ -65,17 +63,28 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                             val resId = resources.getIdentifier("chamber", "drawable", requireContext().packageName)
                             binding.magasinSlot.setImageResource(resId)
                             binding.test.text = luckyNumber[0]
+                            binding.playerOneText.text = offlineParticipants[0].first
+                            binding.playerTwoText.text = offlineParticipants[1].first
+                            binding.playerThreeText.text = offlineParticipants[2].first
+                            val p1 = resources.getIdentifier("astro_white", "drawable", requireContext().packageName)
+                            val p2 = resources.getIdentifier("astro_blue", "drawable", requireContext().packageName)
+                            val p3 = resources.getIdentifier("astro_red", "drawable", requireContext().packageName)
+                            binding.player1.setImageResource(p1)
+                            binding.player2.setImageResource(p2)
+                            binding.player3.setImageResource(p3)
                         }
-                        val p1 = resources.getIdentifier("astro_white", "drawable", requireContext().packageName)
-                        val p2 = resources.getIdentifier("astro_blue", "drawable", requireContext().packageName)
-                        binding.playerTwo.setImageResource(p2)
-                        binding.playerOne.setImageResource(p1)
                         binding.startGameBtn.visibility = View.INVISIBLE
-                        if (currentPlayer == offlineParticipants[0].first) offlineParticipants[0].first + " turn" else offlineParticipants[1].first + " turn"
+                        var text = ""
+                        for (i in 0 until offlineParticipants.size) {
+                            if (currentPlayer == offlineParticipants[i].first) {
+                                text = offlineParticipants[i].first + " turn"
+                            }
+                        }
+                        text
                     }
 
                     GameStatus.FINISHED -> {
-                        if (winner.isNotEmpty()) winner + " Won" else "DRAW"
+                        winner + " Won"
                     }
                 }
         }
@@ -85,7 +94,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
         gameModel?.apply {
             currentBullet = Random.nextInt(6) + 1
             attempts += 1
-            if (attempts == 2) {
+            if (attempts == nbrOfPlayers) {
                 attempts = 0
                 laps += 1
             }
@@ -145,48 +154,101 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
 
     fun startGame() {
         gameModel?.apply {
+            val initialParticipants = mutableListOf(
+                Pair("1", PlayerStatus.ALIVE),
+                Pair("2", PlayerStatus.ALIVE),
+                Pair("3", PlayerStatus.ALIVE)
+            )
             updateGameData(
                 GameModel(
                     gameId = gameId,
                     gameStatus = GameStatus.INPROGRESS,
-                    playerOne = Pair("Alex", PlayerStatus.ALIVE),
-                    playerTwo = Pair("Kent", PlayerStatus.ALIVE)
+                    offlineParticipants = initialParticipants,
+                    currentPlayer = initialParticipants[Random.nextInt(initialParticipants.size)].first,
+                    nbrOfPlayers = initialParticipants.size,
+                    aliveCount = initialParticipants.size
+                )
+            )
+        }
+    }
+    /*fun startGame() {
+        gameModel?.apply {
+            updateGameData(
+                GameModel(
+                    gameId = gameId,
+                    gameStatus = GameStatus.INPROGRESS,
                 )
             )
         }
     }
 
+    fun initPlayers(){
+        gameModel?.apply {
+            offlineParticipants = mutableListOf(Pair(participants[0].first,PlayerStatus.ALIVE))
+            currentPlayer = offlineParticipants[Random.nextInt(offlineParticipants.size)].first
+            nbrOfPlayers = offlineParticipants.size
+            aliveCount = offlineParticipants.size
+
+            updateGameData(this)
+        }
+    }
+*/
+
     fun updateGameData(model: GameModel) {
         GameData.saveGameModel(model)
     }
+    fun changePlayer(){
+        gameModel?.apply {
+            for (i in 0 until offlineParticipants.size) {
+                if (currentPlayer == offlineParticipants[i].first) {
+                    var j = i + 1
+                    while (j != i) {
+                        if (j == offlineParticipants.size) {
+                            j = 0
+                        }
 
+                        if (offlineParticipants[j].second != PlayerStatus.DEAD) {
+                            currentPlayer = offlineParticipants[j].first
+                            break
+                        }
+
+                        j += 1
+                    }
+                    break
+                }
+                updateGameData(this)
+            }
+        }
+    }
     fun checkForRemainingPlayers() {
         gameModel?.apply {
             if (luckyNumber.contains(currentBullet.toString())) {
-                for (participant in offlineParticipants) {
-                    if (currentPlayer == participant.first) {
+                for (i in 0 until offlineParticipants.size) {
                         val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
-                        if (participant.first == playerOne.first) {
-                            binding.playerOne.setImageResource(resId)
-                            playerOne = Pair(playerOne.first, PlayerStatus.DEAD)
-                        } else {
-                            binding.playerTwo.setImageResource(resId)
-                            playerTwo = Pair(playerTwo.first, PlayerStatus.DEAD)
+                        if(currentPlayer == offlineParticipants[i].first) {
+                            offlineParticipants[i] =
+                                Pair(offlineParticipants[i].first, PlayerStatus.DEAD)
+                            val playerImageViewId = resources.getIdentifier(
+                                "player_${i + 1}",
+                                "id",
+                                requireContext().packageName
+                            )
+                            val playerImageView =
+                                binding.root.findViewById<ImageView>(playerImageViewId)
+                            playerImageView.setImageResource(resId)
+                            aliveCount--
                         }
-                        aliveCount--
-                    }
                 }
             }
+            updateGameData(this)
+        }
+    }
+    fun checkForWinner(){
+        gameModel?.apply {
             if (aliveCount == 1) {
-                for (participant in offlineParticipants) {
-                    if (participant.first == playerOne.first) {
-                        if (playerOne.second == PlayerStatus.ALIVE) {
-                            winner = participant.first
-                        }
-                    } else {
-                        if (playerTwo.second == PlayerStatus.ALIVE) {
-                            winner = participant.first
-                        }
+                for (i in 0 until offlineParticipants.size) {
+                    if (offlineParticipants[i].second == PlayerStatus.ALIVE){
+                        winner = offlineParticipants[i].first
                     }
                 }
                 gameStatus = GameStatus.FINISHED
@@ -203,10 +265,10 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             }
             //game is in progress
             addBullet()
-            currentPlayer =
-                if (currentPlayer == offlineParticipants[0].first) offlineParticipants[1].first else offlineParticipants[0].first
+            changePlayer()
             pullTheTrigger()
             checkForRemainingPlayers()
+            checkForWinner()
             updateGameData(this)
 
         }

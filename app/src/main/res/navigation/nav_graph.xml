@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/startScreenFragment">
+    app:startDestination="@id/startScreenFragment"
+    tools:ignore="ExtraText">
 
     <fragment
         android:id="@+id/startScreenFragment"
@@ -19,6 +20,9 @@
         <action
             android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
+            app:destination="@+id/stensaxpaseFragment" />
         <action
             android:id="@+id/action_startScreenFragment_to_playerInfoFragment"
             app:destination="@id/playerInfoFragment" />
@@ -37,6 +41,11 @@
         android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"
         android:label="fragment_gavle_roulette"
         tools:layout="@layout/fragment_gavle_roulette" />
+    <fragment
+        android:id="@+id/stensaxpaseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.StenSaxPaseFragment"
+        android:label="StenSaxPaseFragment"
+        tools:layout="@layout/fragment_sten_sax_pase" />
     <fragment
         android:id="@+id/playerInfoFragment"
         android:name="com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragment"

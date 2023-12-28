@@ -1,14 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".StenSaxPaseFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <ImageView
+        android:id="@+id/actionView"
+        android:layout_width="354dp"
+        android:layout_height="343dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="324dp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:src="@tools:sample/avatars" />
 
-</FrameLayout>
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow_playeractions"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        app:constraint_referenced_ids="sten,sax,pase"
+        app:layout_constraintBottom_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        app:layout_constraintVertical_bias="0.0">
+
+
+    </androidx.constraintlayout.helper.widget.Flow>
+
+    <Button
+        android:id="@+id/pase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Påse" />
+
+    <Button
+        android:id="@+id/sten"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sten"
+        tools:layout_editor_absoluteX="188dp"
+        tools:layout_editor_absoluteY="170dp" />
+
+    <Button
+        android:id="@+id/sax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sax" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="539dp" />
+
+    <TextView
+        android:id="@+id/actionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="63dp"
+        android:text="Gör ett val"
+        app:layout_constraintBottom_toTopOf="@+id/sten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionView" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

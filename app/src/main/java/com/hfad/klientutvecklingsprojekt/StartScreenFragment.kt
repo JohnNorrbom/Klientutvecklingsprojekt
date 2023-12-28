@@ -38,6 +38,11 @@ class StartScreenFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }
+        //  stensaxpase button
+        binding.stensaxpaseMiniGameButton.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_stensaxpaseFragment)
+        }
         //  roulette button
         binding.rouletteMiniGameButton.setOnClickListener{
 

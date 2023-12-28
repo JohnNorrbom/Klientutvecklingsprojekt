@@ -43,6 +43,19 @@
         android:text="@string/gavle_roulette_nav_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/soccer_mini_game_button" />
+        app:layout_constraintTop_toBottomOf="@+id/soccer_mini_game_button"
+        app:layout_constraintVertical_bias="0.306" />
+
+    <Button
+        android:id="@+id/stensaxpase_mini_game_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sten Sax Påse"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteX="163dp"
+        tools:layout_editor_absoluteY="450dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

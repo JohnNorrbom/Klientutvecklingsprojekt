@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".GameActivity"
+    tools:context=".gavleroulette.GavleRouletteFragment"
     android:background="#000000">
 
     <TextView
@@ -17,26 +17,72 @@
         android:layout_margin="8dp"
         android:padding="8dp"
         android:textColor="#F44336"/>
-    <LinearLayout
+    <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"
-            android:id="@+id/player_one"
-            android:src="@drawable/astro_white"
-            android:scaleType="fitCenter"/>
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_weight="@integer/material_motion_duration_long_1"
-            android:id="@+id/player_two"
-            android:src="@drawable/astro_blue"
-            android:scaleType="fitCenter"/>
-    </LinearLayout>
+        android:columnCount="1">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:id="@+id/player_1"
+                android:src="@drawable/astro_white"
+                android:scaleType="fitCenter"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:id="@+id/player_2"
+                android:src="@drawable/astro_blue"
+                android:scaleType="fitCenter"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:id="@+id/player_3"
+                android:src="@drawable/astro_red"
+                android:scaleType="fitCenter"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/player_one_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#F44336"
+                tools:text="0"/>
+
+            <TextView
+                android:id="@+id/player_two_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#F44336"
+                tools:text="0"/>
+
+            <TextView
+                android:id="@+id/player_three_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#F44336"
+                tools:text="0"/>
+        </LinearLayout>
+    </GridLayout>
 
     <TextView
         android:layout_width="match_parent"

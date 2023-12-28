@@ -1,23 +1,23 @@
 package com.hfad.klientutvecklingsprojekt
 
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
-
-
-
-
-
+import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
 
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
+    lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    private val binding get()  = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 
     fun setNavigateCallback(callback: () -> Unit) {
@@ -40,12 +40,9 @@ class GameView : ConstraintLayout {
         init(context)
     }
 
-
-
-
-
     private fun init(context: Context) {
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
+        view = binding.root
         // Now you can access the views using the binding
         player = _binding.player1
 
@@ -102,19 +99,20 @@ class GameView : ConstraintLayout {
         }
     }
 
-
     private fun movePlayer(targetedImageView: ImageView) {
         // Update constraints to move player to next tile
         val layoutParams = player.layoutParams as LayoutParams
         layoutParams.topToTop = targetedImageView.id
         layoutParams.endToEnd = targetedImageView.id
         player.layoutParams = layoutParams
-        println("test " + targetedImageView.id + " " + R.drawable.tile_mini_game)
-        if(targetedImageView.id == R.drawable.tile_mini_game) {
+        if(targetedImageView.id == R.id.tile11) {
 
+            val activity: AppCompatActivity? = context as? AppCompatActivity
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
         }
     }
-
+//  New solution WIP
     fun initTileBlocks(size: Int, geometry: Int) {
         var tileBlockArray = arrayOf(TileBlock(0,0,TileTypes.TileStart,0,0,100,100))
 
@@ -122,10 +120,10 @@ class GameView : ConstraintLayout {
             tileBlockArray += TileBlock(i,i,TileTypes.TileAdd1Point,i,0,100,100)
         }
     }
-
+//  New solution
     fun plotTiles() {
         //  first tile
-        <ImageView
+        /*<ImageView
         android:id="@+id/tile1"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -135,9 +133,9 @@ class GameView : ConstraintLayout {
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/tile_go" />
+        app:srcCompat="@drawable/tile_go" />*/
         //  horizontal tile
-        <ImageView
+        /*<ImageView
         android:id="@+id/tile2"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -145,33 +143,29 @@ class GameView : ConstraintLayout {
         app:layout_constraintEnd_toStartOf="@+id/tile3"
         app:layout_constraintStart_toEndOf="@+id/tile1"
         app:layout_constraintHorizontal_bias="0.5"
-        app:srcCompat="@drawable/tile_plus_1" />
+        app:srcCompat="@drawable/tile_plus_1" />*/
         //  vertical tile
-        <ImageView
+        /*<ImageView
         android:id="@+id/tile9"
         android:layout_width="56dp"
         android:layout_height="56dp"
         app:layout_constraintBottom_toTopOf="@+id/tile10"
         app:layout_constraintTop_toBottomOf="@+id/tile8"
         app:layout_constraintEnd_toEndOf="@+id/tile8"
-        app:srcCompat="@drawable/tile_plus_3" />
-        * * * * *
-        *       *
-        *       *
-        * * * * *
+        app:srcCompat="@drawable/tile_plus_3" />*/
     }
-
+//  New solution
     private var gamePoints: Int = 0
     private fun addPoints(addPoint: Int)
     {
         gamePoints += addPoint
     }
-
+//  New solution
     fun getPoints(): Int
     {
         return gamePoints
     }
-
+//  New solution
     fun moveEvent(tileBlockType: TileTypes ) {
 
         when (tileBlockType)
@@ -204,7 +198,7 @@ class GameView : ConstraintLayout {
 }
 
 
-
+// New solution
 enum class TileTypes {
     TileStart,
     TileAdd1Point, TileAdd2Point, TileAdd3Point,
@@ -212,7 +206,7 @@ enum class TileTypes {
     TileMiniGame,
     TileTreasure,
 }
-
+//  New solution
 class TileBlock(i: Int, i1: Int, tileAdd1Point: TileTypes, i2: Int, i3: Int, i4: Int, i5: Int) {
     val idNumber: Int = 0
     val tileNumber: Int = 0

@@ -15,6 +15,7 @@ class BoardFragment : Fragment() {
     private lateinit var gameView: GameView // Replace with your custom game view
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -23,6 +24,7 @@ class BoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         gameView = GameView(requireContext()) // Replace with your custom game view
+
         return gameView
     }
     override fun onResume() {

@@ -7,19 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.RadioButton
 import android.widget.TextView
-import androidx.navigation.findNavController
-import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import kotlin.random.Random
 
 
 class LobbyFragment : Fragment() {
@@ -38,7 +27,7 @@ class LobbyFragment : Fragment() {
         }
         LobbyData.lobbyModel.observe(this){
             lobbyModel = it
-            init()
+            setUI()
         }
 
         return view;
@@ -50,7 +39,7 @@ class LobbyFragment : Fragment() {
             updateLobbyData(this)
         }
     }
-    fun init() {
+    fun setUI() {
         lobbyModel?.apply {
             for(i in 0 until participants.size){
                 var resId = resources.getIdentifier(

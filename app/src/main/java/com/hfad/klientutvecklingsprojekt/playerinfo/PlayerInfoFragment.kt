@@ -11,9 +11,6 @@ import android.widget.RadioButton
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import kotlin.random.Random
@@ -55,7 +52,7 @@ class PlayerInfoFragment : Fragment() {
             setUI()
         }
 
-        return view;
+        return view
     }
     fun setUI(){
         playerModel?.apply {

@@ -26,7 +26,6 @@ class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +33,9 @@ class LobbyFragment : Fragment() {
     ): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
-        addPlayer()
+        binding.testBtn.setOnClickListener{
+            addPlayer()
+        }
         LobbyData.lobbyModel.observe(this){
             lobbyModel = it
             init()
@@ -50,13 +51,15 @@ class LobbyFragment : Fragment() {
         }
     }
     fun init() {
+        lobbyModel?.apply {
+            for(i in 0 until participants.size){
                 var resId = resources.getIdentifier(
-                    "astro_red",
+                    "astro_${participants[i].second}",
                     "drawable",
                     requireContext().packageName
                 )
                 val playerId = resources.getIdentifier(
-                    "player_1",
+                    "player_${i+1}",
                     "id",
                     requireContext().packageName
                 )
@@ -66,15 +69,17 @@ class LobbyFragment : Fragment() {
                 playerImageView.visibility = View.VISIBLE
 
                 val playerTextId = resources.getIdentifier(
-                    "player_1_text",
+                    "player_${i+1}_text",
                     "id",
                     requireContext().packageName
                 )
                 val playerTextView =
                     binding.root.findViewById<TextView>(playerTextId)
-                playerTextView.text = "nickname"
+                playerTextView.text = participants[i].first
                 playerTextView.visibility = View.VISIBLE
+            }
         }
+    }
 
 
     fun updateLobbyData(model: LobbyModel){

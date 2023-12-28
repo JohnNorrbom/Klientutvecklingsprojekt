@@ -48,6 +48,11 @@ class StenSaxPaseViewModel : ViewModel() {
 
         } while (gameStatus)
     }
+
+    fun setChoice(choice : String) {
+        val choice = choice
+    }
+
     class Player {
         val id = Random.nextInt(0, 999)
         val color = "black"
@@ -58,6 +63,10 @@ class StenSaxPaseViewModel : ViewModel() {
 
         fun unAlive() {
             alive = false
+        }
+
+        fun makeChoice() {
+
         }
     }
     class Lobby(playerOne: Player, playerTwo: Player) {

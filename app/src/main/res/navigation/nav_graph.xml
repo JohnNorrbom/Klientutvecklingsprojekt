@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
+            app:destination="@+id/stensaxpaseFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
@@ -31,6 +34,12 @@
         android:label="BoardFragment" />
     <fragment
         android:id="@+id/gavleRouletteFragment"
-        android:name="com.hfad.wifeposijo_boardgame.GavleRouletteFragment"
-        android:label="GavleRouletteFragment" />
+        android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"
+        android:label="fragment_gavle_roulette"
+        tools:layout="@layout/fragment_gavle_roulette" />
+    <fragment
+        android:id="@+id/stensaxpaseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.StenSaxPaseFragment"
+        android:label="StenSaxPaseFragment"
+        tools:layout="@layout/fragment_sten_sax_pase" />
 </navigation>

@@ -19,22 +19,22 @@ class SoccerFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater,container,false)
         val view = binding.root
-        //set all shooters invisible except for white
-        binding.yellowShooter.visibility = View.INVISIBLE
-        binding.redShooter.visibility = View.INVISIBLE
-        binding.greenShooter.visibility = View.INVISIBLE
-        binding.blueShooter.visibility = View.INVISIBLE
+        //set all shooters invisible
+        binding.whiteMidMiss.visibility = View.INVISIBLE
 
-        //set all goalies invisible except for white
-        binding.blueGoalieRight.visibility = View.INVISIBLE
+        //set all goalies invisible
+        binding.blueGoalLeft.visibility = View.INVISIBLE
+        binding.blueGoalRight.visibility = View.INVISIBLE
+        binding.redGoalLeft.visibility = View.INVISIBLE
+        binding.redGoalRight.visibility = View.INVISIBLE
+        binding.yellowGoalLeft.visibility = View.INVISIBLE
+        binding.yellowGoalRight.visibility = View.INVISIBLE
+        binding.greenGoalLeft.visibility = View.INVISIBLE
+        binding.greenGoalRight.visibility = View.INVISIBLE
+        binding.whiteGoalLeft.visibility = View.INVISIBLE
+        binding.whiteGoalRight.visibility = View.INVISIBLE
 
-        //set all ball animations invisible except right in animation
 
-        binding.ballLeft.visibility = View.INVISIBLE
-        binding.ballRight.visibility = View.INVISIBLE
-        binding.ballMid.visibility = View.INVISIBLE
-        binding.ballLeftIn.visibility = View.INVISIBLE
-        binding.ballMidIn.visibility = View.INVISIBLE
 
         //create animation for shooter
         var animationDrawable = binding.whiteShooter.background as AnimationDrawable

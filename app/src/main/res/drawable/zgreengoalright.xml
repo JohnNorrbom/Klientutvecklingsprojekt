@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
+    <item android:drawable="@drawable/zgreengoalright02" android:duration="1000"/>
+    <item android:drawable="@drawable/zgreengoalright03" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright04" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright05" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright06" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright07" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright08" android:duration="50"/>
+    <item android:drawable="@drawable/zgreengoalright09" android:duration="50"/>
+    </animation-list>

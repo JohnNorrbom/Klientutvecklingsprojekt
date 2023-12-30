@@ -37,9 +37,10 @@ class SoccerFragment : Fragment() {
 
 
         //create animation for shooter
-        var animationDrawable = binding.whiteShooter.background as AnimationDrawable
-        var ballAnimation = binding.ballRightIn.background as AnimationDrawable
-        var goalieAnimation = binding.blueGoalieLeft.background as AnimationDrawable
+        //var animationDrawable = binding.whiteShooter.background as AnimationDrawable
+        //var ballAnimation = binding.ballRightIn.background as AnimationDrawable
+        //var goalieAnimation = binding.blueGoalieLeft.background as AnimationDrawable
+        /*
         animationDrawable.apply {
             start()
         }
@@ -50,7 +51,7 @@ class SoccerFragment : Fragment() {
         goalieAnimation.apply{
             start()
         }
-
+    */
         return view
     }
     override fun onDestroyView() {

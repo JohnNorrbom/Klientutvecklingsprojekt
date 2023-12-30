@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:layout_margin="16dp"
     android:orientation="vertical"
-    tools:context=".gavleroulette.MainActivity">
+    tools:context=".gamestart.GameStartFragment">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="s"
+        android:text="@string/game_name"
         android:textStyle="bold"
         android:textSize="28sp"
         android:layout_margin="8dp"
@@ -22,13 +21,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/play_offline_btn"
-        android:text="Play Offline"
+        android:text="@string/play_offline"
         android:layout_margin="8dp"
         android:padding="8dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="or"
+        android:text="@string/or"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_margin="8dp"
@@ -37,32 +36,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/create_online_game_btn"
-        android:text="Create Game Online"
+        android:text="@string/create_game_oline"
         android:layout_margin="8dp"
         android:padding="8dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="or"
+        android:text="@string/or"
         android:textStyle="bold"
         android:textSize="20sp"
         android:layout_margin="8dp"
         android:padding="8dp"/>
-   <EditText
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:id="@+id/game_id_input"
-       android:textSize="24sp"
-       android:textStyle="bold"
-       android:inputType="number"
-       android:layout_margin="8dp"
-       android:padding="8dp"
-       android:hint="Enter game Id"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/game_id_input"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:inputType="number"
+        android:layout_margin="8dp"
+        android:padding="8dp"
+        android:hint="@string/enter_game_id"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/join_online_game_btn"
-        android:text="Join Online Game"
+        android:text="@string/join_online_game"
         android:layout_margin="8dp"
         android:padding="8dp"/>
 </LinearLayout>

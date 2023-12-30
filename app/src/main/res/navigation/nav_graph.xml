@@ -24,8 +24,8 @@
             android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
             app:destination="@+id/stensaxpaseFragment" />
         <action
-            android:id="@+id/action_startScreenFragment_to_playerInfoFragment"
-            app:destination="@id/playerInfoFragment" />
+            android:id="@+id/action_startScreenFragment_to_gameStartFragment"
+            app:destination="@id/gameStartFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
@@ -67,4 +67,13 @@
         android:name="com.hfad.klientutvecklingsprojekt.lobby.LobbyFragment"
         android:label="fragment_lobby"
         tools:layout="@layout/fragment_lobby" />
+    <fragment
+        android:id="@+id/gameStartFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment"
+        android:label="fragment_game_start"
+        tools:layout="@layout/fragment_game_start" >
+        <action
+            android:id="@+id/action_gameStartFragment_to_playerInfoFragment"
+            app:destination="@id/playerInfoFragment" />
+    </fragment>
 </navigation>

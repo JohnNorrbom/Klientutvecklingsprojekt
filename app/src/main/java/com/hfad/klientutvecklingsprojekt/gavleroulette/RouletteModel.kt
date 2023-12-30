@@ -2,7 +2,7 @@ package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import kotlin.random.Random
 
-data class GameModel (
+data class RouletteModel (
     val temp: MutableList<Pair<String, PlayerStatus>> = mutableListOf(
         Pair("1", PlayerStatus.ALIVE),
         Pair("2", PlayerStatus.ALIVE)

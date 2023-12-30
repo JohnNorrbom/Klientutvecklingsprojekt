@@ -4,7 +4,8 @@ package com.hfad.klientutvecklingsprojekt.playerinfo
 
 
 data class PlayerModel(
-    var status : Progress,
+    var gameID : String = "",
+    var status : Progress? = null,
     var takenPosition: MutableList<Pair<String,CharacterStatus>> = mutableListOf()
 
 )

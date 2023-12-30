@@ -8,14 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
 import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.Progress
-import kotlin.random.Random
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
+
 
 class StartScreenFragment : Fragment() {
     private var _binding: FragmentStartScreenBinding? = null
@@ -46,8 +42,8 @@ class StartScreenFragment : Fragment() {
         //  roulette button
         binding.rouletteMiniGameButton.setOnClickListener{
 
-            GameData.saveGameModel(
-                GameModel(
+            RouletteData.saveGameModel(
+                RouletteModel(
                     gameStatus = GameStatus.JOINED
                 )
             )
@@ -57,13 +53,8 @@ class StartScreenFragment : Fragment() {
         }
 
         binding.playerCreateButton.setOnClickListener {
-            PlayerData.savePlayerModel(
-                PlayerModel(
-                    status = Progress.INPROGRESS
-            )
-            )
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_playerInfoFragment)
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_gameStartFragment)
         }
         return view
     }

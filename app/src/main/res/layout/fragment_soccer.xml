@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SoccerFragment">
+    tools:context=".soccer.SoccerFragment">
 
+    <!-- background animations -->
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,261 +15,60 @@
         tools:layout_editor_absoluteX="224dp"
         tools:layout_editor_absoluteY="56dp" />
     <!-- shooter animations -->
-    <!-- WHITE SHOOTER -->
     <ImageView
-        android:id="@+id/white_left_miss"
+        android:id="@+id/shooter_hit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:background="@drawable/zwhiteleftmiss"/>
-    <ImageView
-        android:id="@+id/white_left_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhitelefthit"/>
-    <ImageView
-        android:id="@+id/white_mid_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhitemidmiss"/>
-    <ImageView
-        android:id="@+id/white_mid_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhitemidhit"/>
-    <ImageView
-        android:id="@+id/white_right_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhiterightmiss"/>
-    <ImageView
-        android:id="@+id/white_right_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhiterighthit"/>
-
-    <!-- BLUE SHOOTER -->
-    <ImageView
-        android:id="@+id/blue_left_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zblueleftmiss"/>
-    <ImageView
-        android:id="@+id/blue_left_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluelefthit"/>
-    <ImageView
-        android:id="@+id/blue_mid_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluemidmiss"/>
-    <ImageView
-        android:id="@+id/blue_mid_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluemidhit"/>
-    <ImageView
-        android:id="@+id/blue_right_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluerightmiss"/>
-    <ImageView
-        android:id="@+id/blue_right_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluerighthit"/>
-
-    <!-- RED SHOOTER -->
-    <ImageView
-        android:id="@+id/red_left_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredleftmiss"/>
-    <ImageView
-        android:id="@+id/red_left_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredlefthit"/>
-    <ImageView
-        android:id="@+id/red_mid_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredmidmiss"/>
-    <ImageView
-        android:id="@+id/red_mid_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredmidhit"/>
-    <ImageView
-        android:id="@+id/red_right_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredrightmiss"/>
-    <ImageView
-        android:id="@+id/red_right_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredrighthit"/>
-
-    <!-- YELLOW SHOOTER -->
-    <ImageView
-        android:id="@+id/yellow_left_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowleftmiss"/>
-    <ImageView
-        android:id="@+id/yellow_left_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowlefthit"/>
-    <ImageView
-        android:id="@+id/yellow_mid_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowmidmiss"/>
-    <ImageView
-        android:id="@+id/yellow_mid_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowmidhit"/>
-    <ImageView
-        android:id="@+id/yellow_right_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowrightmiss"/>
-    <ImageView
-        android:id="@+id/yellow_right_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowrighthit"/>
-
-    <!-- GREEN SHOOTER -->
-    <ImageView
-        android:id="@+id/green_left_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenleftmiss"/>
-    <ImageView
-        android:id="@+id/green_left_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenlefthit"/>
-    <ImageView
-        android:id="@+id/green_mid_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenmidmiss"/>
-    <ImageView
-        android:id="@+id/green_mid_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenmidhit"/>
-    <ImageView
-        android:id="@+id/green_right_miss"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenrightmiss"/>
-    <ImageView
-        android:id="@+id/green_right_hit"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreenrighthit"/>
-
-
+        android:src="@drawable/zwhitelefthit"/>
     <!-- Goalie animations -->
     <ImageView
-        android:id="@+id/blue_goal_left"
+        android:id="@+id/goalie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:background="@drawable/zbluegoalleft"/>
+        android:src="@drawable/zbluegoalleft"/>
+    <!-- shooter animations -->
     <ImageView
-        android:id="@+id/blue_goal_right"
+        android:id="@+id/shooter_miss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:background="@drawable/zbluegoalright"/>
-    <ImageView
-        android:id="@+id/red_goal_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredgoalleft"/>
-    <ImageView
-        android:id="@+id/red_goal_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zredgoalright"/>
-    <ImageView
-        android:id="@+id/yellow_goal_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowgoalleft"/>
-    <ImageView
-        android:id="@+id/yellow_goal_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zyellowgoalright"/>
-    <ImageView
-        android:id="@+id/green_goal_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreengoalleft"/>
-    <ImageView
-        android:id="@+id/green_goal_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zgreengoalright"/>
-    <ImageView
-        android:id="@+id/white_goal_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhitegoalleft"/>
-    <ImageView
-        android:id="@+id/white_goal_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zwhitegoalright"/>
+        android:src="@drawable/zwhiteleftmiss"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/left_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="↖"
+            android:textSize="70dp"
+            android:backgroundTint="@color/blue"/>
 
+        <Button
+            android:id="@+id/mid_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⬆"
+            android:textSize="70dp"
+            android:backgroundTint="@color/blue"/>
 
+        <Button
+            android:id="@+id/right_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="↗"
+            android:textSize="70dp"
+            android:backgroundTint="@color/blue"/>
+
+    </LinearLayout>
 
 
 

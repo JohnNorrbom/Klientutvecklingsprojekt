@@ -29,7 +29,7 @@
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.SoccerFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerFragment"
         android:label="fragment_soccer"
         tools:layout="@layout/fragment_soccer" />
     <fragment

@@ -1,19 +1,15 @@
 package com.hfad.klientutvecklingsprojekt.playerinfo
 
+import com.google.firebase.database.IgnoreExtraProperties
 
 
-
-data class PlayerModel(
-    var gameID : String = "",
-    var status : Progress? = null,
-    var takenPosition: MutableList<Pair<String,CharacterStatus>> = mutableListOf()
-
-)
+@IgnoreExtraProperties
+data class PlayerModel(val gameID : String? = null, var status : Progress? = null, var takenPosition: MutableMap<String,CharacterStatus>? = null)
 enum class Progress{
     INPROGRESS,
     FINISHED
 }
 enum class CharacterStatus{
-    FREE,
     TAKEN,
+    FREE
 }

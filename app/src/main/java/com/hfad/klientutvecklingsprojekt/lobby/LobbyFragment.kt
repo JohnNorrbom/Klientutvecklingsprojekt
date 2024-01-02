@@ -1,20 +1,30 @@
 package com.hfad.klientutvecklingsprojekt.lobby
 
+import android.content.ContentValues
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
 class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Space Party").child("Players")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -22,17 +32,34 @@ class LobbyFragment : Fragment() {
     ): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
-        binding.testBtn.setOnClickListener{
-            addPlayer()
-        }
+        addPlayer()
+
         LobbyData.lobbyModel.observe(this){
             lobbyModel = it
             setUI()
         }
-
+        myRef.addValueEventListener(lobbyListener)
         return view;
     }
+    val lobbyListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            lobbyModel?.apply {
+                val gameModel = dataSnapshot.child(playerID).getValue(LobbyModel::class.java)
+                if (gameModel != null) {
+                    updateLobbyData(gameModel)
+                    setUI()
+                }
+            }
+            // Get Post object and use the values to update the UI
 
+            // ...
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }
     fun addPlayer(){
         lobbyModel?.apply {
             participants.add(Pair(nickname,color))

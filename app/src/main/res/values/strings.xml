@@ -11,6 +11,7 @@
     <string name="confirm">Confirm</string>
     <string name="choose_your_name_and_character">Choose your name and character</string>
     <string name="please_enter_game_id">Please enter game ID</string>
+    <string name="please_enter_valid_game_id">Please enter valid game ID</string>
     <string name="gavle_roulette_nav_button">Gavle roulette</string>
     <string name="player_info_nav_button">Online(håller på och fixar här så gör inget dumt)</string>
     <string name="start_game">Start Game</string>
@@ -20,4 +21,6 @@
     <string name="create_game_oline">Create Game Online</string>
     <string name="enter_game_id">Enter game ID</string>
     <string name="join_online_game">Join Online Game</string>
+    <string name="game_ID">Game ID </string>
+    <string name="game_is_full">Game is full</string>
 </resources>

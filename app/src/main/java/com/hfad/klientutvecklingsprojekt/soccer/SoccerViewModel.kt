@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.soccer
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
@@ -7,9 +8,7 @@ import kotlin.random.Random
 
 class SoccerViewModel() : ViewModel(){
 
-    private var leftCount = 0
-    private var midCount = 0
-    private var rightCount = 0
+    private var buttonCount = 0
     private var color = "not assigned"
     private var enemyColor = "not assigned"
     private var type = "not assigned"
@@ -58,41 +57,47 @@ class SoccerViewModel() : ViewModel(){
     }
 
     fun leftButtonClick(){
-        leftCount++
-        if(leftCount%2 == 0){
+        Log.d("Count", "" + buttonCount)
+
+        if(buttonCount%2 == 0){
             shooterChoice = "left"
             animationReady = false
 
         }
-        if(leftCount%2 == 1){
+        if(buttonCount%2 == 1){
             goalieChoice = "left"
             startRound()
             animationReady = true
         }
+        buttonCount++
     }
     fun rightButtonClick(){
-        rightCount++
-        if(leftCount%2 == 0){
+        Log.d("Count", "" + buttonCount)
+
+        if(buttonCount%2 == 0){
             shooterChoice = "right"
             animationReady = false
         }
-        if(leftCount%2 == 1){
+        if(buttonCount%2 == 1){
             goalieChoice = "right"
             startRound()
             animationReady = true
         }
+        buttonCount++
     }
     fun midButtonClick(){
-        midCount++
-        if(leftCount%2 == 0){
+        Log.d("Count", "" + buttonCount)
+
+        if(buttonCount%2 == 0){
             shooterChoice = "mid"
             animationReady = false
         }
-        if(leftCount%2 == 1){
+        if(buttonCount%2 == 1){
             goalieChoice = "mid"
             startRound()
             animationReady = true
         }
+        buttonCount++
     }
 
 
@@ -121,7 +126,7 @@ class SoccerViewModel() : ViewModel(){
             enemyType = "goalie"
         }
 
-        if(goalieChoice == "right" || shooterChoice == "left"){
+        if(goalieChoice == "right" && shooterChoice == "left"){
             if(type == "shooter"){
                 points++
 
@@ -131,7 +136,7 @@ class SoccerViewModel() : ViewModel(){
             shooterHit = true
         }
 
-        if(goalieChoice == "mid" || shooterChoice == "left"){
+        if(goalieChoice == "mid" && shooterChoice == "left"){
             if(type == "shooter"){
                 points++
 
@@ -140,7 +145,7 @@ class SoccerViewModel() : ViewModel(){
             }
             shooterHit = true
         }
-        if(goalieChoice == "left" || shooterChoice == "mid"){
+        if(goalieChoice == "left" && shooterChoice == "mid"){
             if(type == "shooter"){
                 points++
 
@@ -149,7 +154,7 @@ class SoccerViewModel() : ViewModel(){
             }
             shooterHit = true
         }
-        if(goalieChoice == "right" || shooterChoice == "mid"){
+        if(goalieChoice == "right" && shooterChoice == "mid"){
             if(type == "shooter"){
                 points++
             }else{
@@ -157,7 +162,7 @@ class SoccerViewModel() : ViewModel(){
             }
             shooterHit = true
         }
-        if(goalieChoice == "left" || shooterChoice == "right"){
+        if(goalieChoice == "left" && shooterChoice == "right"){
             if(type == "shooter"){
                 points++
             }else{
@@ -165,7 +170,7 @@ class SoccerViewModel() : ViewModel(){
             }
             shooterHit = true
         }
-        if(goalieChoice == "mid" || shooterChoice == "right"){
+        if(goalieChoice == "mid" && shooterChoice == "right"){
             if(type == "shooter"){
                 points++
             }else{

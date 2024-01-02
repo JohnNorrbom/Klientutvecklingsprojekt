@@ -70,6 +70,14 @@
 
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/score_board"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="70dp"
+        android:text="0-0"
+        android:background="@color/blue"
+        />
 
 
 </FrameLayout>

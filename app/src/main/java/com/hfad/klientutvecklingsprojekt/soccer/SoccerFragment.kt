@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
+import kotlinx.coroutines.delay
+import java.time.Duration
 
 class SoccerFragment : Fragment() {
 
@@ -24,16 +26,20 @@ class SoccerFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater,container,false)
         val view = binding.root
-
-
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
+        var goalieColor = "yellow"
+        var shootercolor = "green"
+        soccerViewModel.setColors(shootercolor,goalieColor, 1)
 
-        soccerViewModel.setColors("white","blue", 1)
+        var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
+        binding.goalie.setImageResource(resourceId)
+        var resourceId2 = resources.getIdentifier("z" + shootercolor +"leftmiss", "drawable", "com.hfad.klientutvecklingsprojekt")
+        binding.shooterMiss.setImageResource(resourceId2)
 
         binding.leftButton.setOnClickListener {
             soccerViewModel.leftButtonClick()
@@ -75,20 +81,31 @@ class SoccerFragment : Fragment() {
             currentImageView.setImageResource(resourceId)
 
             val goalDestination: String
+
             if (soccerViewModel.goalieChoice == "mid"){
                goalDestination  = "z" + soccerViewModel.goalieColor + "goalleft"
+                val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
+                binding.goalie.setImageResource(resourceId)
+                Log.d("Goal if statement", "did click mid")
             }else{
+                Log.d("Goal if statement", "did not click mid")
                 goalDestination = "z" + soccerViewModel.goalieColor + "goal" + soccerViewModel.goalieChoice
+                val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
+                binding.goalie.setImageResource(resourceId)
                 val goalieAnimation  = binding.goalie.drawable as AnimationDrawable
                 goalieAnimation.start()
             }
-            Log.d("all choices", "")
+            Log.d("Goal Destination", goalDestination)
+            Log.d("all choices", soccerViewModel.shooterColor+"shooter: " + soccerViewModel.shooterChoice + " " + soccerViewModel.goalieColor+"goalie: " + soccerViewModel.goalieChoice)
 
 
 
             val shooterAnimation = currentImageView.drawable as AnimationDrawable
 
             shooterAnimation.start()
+
+            binding.scoreBoard.text = "" + soccerViewModel.points + "-" + soccerViewModel.enemyPoints
+
 
             soccerViewModel.switchType()
 

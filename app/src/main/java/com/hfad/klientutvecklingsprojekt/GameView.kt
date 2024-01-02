@@ -11,18 +11,20 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
+import kotlin.random.Random
 
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
-    private val binding get()  = _binding!!
+    private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 
     fun setNavigateCallback(callback: () -> Unit) {
         this.navigateCallback = callback
     }
+
     // Constructors for creating the view programmatically
     constructor(context: Context) : super(context) {
         init(context)
@@ -105,22 +107,39 @@ class GameView : ConstraintLayout {
         layoutParams.topToTop = targetedImageView.id
         layoutParams.endToEnd = targetedImageView.id
         player.layoutParams = layoutParams
-        if(targetedImageView.id == R.id.tile11) {
 
+        if (targetedImageView.tag == _binding.tile2.tag) {
+            println("Plus 1")
+        } else if (targetedImageView.tag == _binding.tile3.tag) {
+            println("Plus 2")
+        } else if (targetedImageView.tag == _binding.tile4.tag) {
+            println("Plus 3")
+        } else if (targetedImageView.tag == _binding.tile5.tag) {
+            println("Minus 5")
+        } else if (targetedImageView.tag == _binding.tile6.tag) {
             val activity: AppCompatActivity? = context as? AppCompatActivity
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+            val randomVal = Random.nextInt(3)
+            if(randomVal == 0) {
+                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+            } else if(randomVal == 1) {
+                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
+            } else {
+                view.findNavController().navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+            }
         }
     }
-//  New solution WIP
+
+    //  New solution WIP
     fun initTileBlocks(size: Int, geometry: Int) {
-        var tileBlockArray = arrayOf(TileBlock(0,0,TileTypes.TileStart,0,0,100,100))
+        var tileBlockArray = arrayOf(TileBlock(0, 0, TileTypes.TileStart, 0, 0, 100, 100))
 
         for (i in 1..<size) {
-            tileBlockArray += TileBlock(i,i,TileTypes.TileAdd1Point,i,0,100,100)
+            tileBlockArray += TileBlock(i, i, TileTypes.TileAdd1Point, i, 0, 100, 100)
         }
     }
-//  New solution
+
+    //  New solution
     fun plotTiles() {
         //  first tile
         /*<ImageView
@@ -154,22 +173,22 @@ class GameView : ConstraintLayout {
         app:layout_constraintEnd_toEndOf="@+id/tile8"
         app:srcCompat="@drawable/tile_plus_3" />*/
     }
-//  New solution
+
+    //  New solution
     private var gamePoints: Int = 0
-    private fun addPoints(addPoint: Int)
-    {
+    private fun addPoints(addPoint: Int) {
         gamePoints += addPoint
     }
-//  New solution
-    fun getPoints(): Int
-    {
+
+    //  New solution
+    fun getPoints(): Int {
         return gamePoints
     }
-//  New solution
-    fun moveEvent(tileBlockType: TileTypes ) {
 
-        when (tileBlockType)
-        {
+    //  New solution
+    fun moveEvent(tileBlockType: TileTypes) {
+
+        when (tileBlockType) {
             TileTypes.TileStart -> addPoints(0)
 
             TileTypes.TileAdd1Point -> addPoints(1)
@@ -206,6 +225,7 @@ enum class TileTypes {
     TileMiniGame,
     TileTreasure,
 }
+
 //  New solution
 class TileBlock(i: Int, i1: Int, tileAdd1Point: TileTypes, i2: Int, i3: Int, i4: Int, i5: Int) {
     val idNumber: Int = 0

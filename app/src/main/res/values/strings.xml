@@ -20,4 +20,5 @@
     <string name="create_game_oline">Create Game Online</string>
     <string name="enter_game_id">Enter game ID</string>
     <string name="join_online_game">Join Online Game</string>
+    <string name="someone_won">Someone won!</string>
 </resources>

@@ -2,11 +2,17 @@ package com.hfad.klientutvecklingsprojekt.soccer
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 import kotlin.random.Random
 
 class SoccerViewModel() : ViewModel(){
+
+    val databaseReference = FirebaseDatabase.getInstance().getReference("Soccer")
+
 
     private var buttonCount = 0
     private var color = "not assigned"

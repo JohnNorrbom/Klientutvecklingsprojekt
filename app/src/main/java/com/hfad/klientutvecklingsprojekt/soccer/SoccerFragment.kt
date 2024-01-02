@@ -3,12 +3,16 @@ package com.hfad.klientutvecklingsprojekt.soccer
 import android.graphics.drawable.AnimationDrawable
 import android.media.MediaPlayer
 import android.net.Uri
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -17,6 +21,7 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 import kotlinx.coroutines.delay
 import java.net.URI
 import java.time.Duration
+import kotlin.concurrent.thread
 
 class SoccerFragment : Fragment() {
 
@@ -105,20 +110,12 @@ class SoccerFragment : Fragment() {
                 goalDestination = "z" + soccerViewModel.goalieColor + "goal" + soccerViewModel.goalieChoice
                 val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
                 binding.goalie.setImageResource(resourceId)
-                val goalieAnimation  = binding.goalie.drawable as AnimationDrawable
+                var goalieAnimation  = binding.goalie.drawable as AnimationDrawable
                 goalieAnimation.start()
+
             }
             Log.d("Goal Destination", goalDestination)
             Log.d("all choices", soccerViewModel.shooterColor+"shooter: " + soccerViewModel.shooterChoice + " " + soccerViewModel.goalieColor+"goalie: " + soccerViewModel.goalieChoice)
-
-
-
-
-
-
-
-            binding.scoreBoard.text = "" + soccerViewModel.points + "-" + soccerViewModel.enemyPoints + " "
-
 
             soccerViewModel.switchType()
 
@@ -136,7 +133,6 @@ class SoccerFragment : Fragment() {
                     findNavController().popBackStack()
                 }
             }
-
         }
     }
 

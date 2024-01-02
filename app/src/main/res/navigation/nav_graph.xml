@@ -17,6 +17,15 @@
         <action
             android:id="@+id/action_startScreenFragment_to_boardFragment"
             app:destination="@id/boardFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
+            app:destination="@id/stensaxpaseFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"

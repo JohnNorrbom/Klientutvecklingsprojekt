@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.firebase.FirebaseFragment
 
@@ -15,7 +16,15 @@ object PlayerData {
         fun savePlayerModel(model: PlayerModel){
             _playerModel.postValue(model)
             if(model.gameID!= "-1"){
-                myRef.child(model.gameID).setValue(model)
+                model.gameID?.let { myRef.child(it).setValue(model) }
             }
         }
+
+    fun fetchPlayerModel(){
+        playerModel.value?.apply {
+            if (gameID!= "-1"){
+
+            }
+        }
+    }
 }

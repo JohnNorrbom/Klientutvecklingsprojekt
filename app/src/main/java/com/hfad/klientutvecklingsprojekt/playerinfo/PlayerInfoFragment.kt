@@ -1,7 +1,9 @@
 package com.hfad.klientutvecklingsprojekt.playerinfo
 
+import android.content.ContentValues.TAG
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,17 +11,27 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RadioButton
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null
     private val binding get()  = _binding!!
     private var playerModel : PlayerModel? = null
+    private val characterColors = listOf("white","red","blue","green","yellow")
+    var playerColor = ""
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Space Party")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,78 +42,119 @@ class PlayerInfoFragment : Fragment() {
         val view = binding.root
        binding.confirmBtn.setOnClickListener{
            setPlayerInfo()
-           val playerId = Random.nextInt(9999).toString()
-           val playerName = binding.nicknameInput.text.toString()
-           var playerColor = ""
-           playerModel?.apply {
-               playerColor = takenPosition[takenPosition.size-1].first
-           }
-           LobbyData.saveLobbyModel(
-               LobbyModel(
-                   nickname = playerName,
-                   color = playerColor
-               )
-           )
-           activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            //  Crashes after executing the line below
-            view.findNavController().navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
+           confirmCharacter()
         }
 
         PlayerData.playerModel.observe(this){
             playerModel = it
             setUI()
         }
-
+        myRef.addValueEventListener(gameListener)
         return view
+    }
+    fun confirmCharacter(){
+        val currentPlayerId = Random.nextInt(1000..9999).toString()
+        val playerName = binding.nicknameInput.text.toString()
+        if (playerName == null){
+            binding.nicknameInput.error=(getText(R.string.enter_user_name))
+        }
+        var currentGameID = ""
+        playerModel?.apply {
+            currentGameID = gameID ?: ""
+        }
+        if (playerColor == ""){
+            binding.confirmBtn.error=(getText(R.string.choose_character))
+        }
+        LobbyData.saveLobbyModel(
+            LobbyModel(
+                gameID = currentGameID,
+                playerID = currentPlayerId,
+                nickname = playerName,
+                color = playerColor
+            )
+        )
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        //  Crashes after executing the line below
+        view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }
     fun setUI(){
         playerModel?.apply {
-            for (i in 0 until takenPosition.size){
-                if(takenPosition[i].second == CharacterStatus.TAKEN){
-                    val resId = resources.getIdentifier("astro_${takenPosition[i].first}_taken", "drawable", requireContext().packageName)
-                    val astroId = resources.getIdentifier(
-                        "astro_${takenPosition[i].first}",
-                        "id",
-                        requireContext().packageName
-                    )
-                    val characterImageView =
-                        binding.root.findViewById<ImageView>(astroId)
-                    characterImageView.setImageResource(resId)
+            if ((takenPosition?.size ?: 1) <= 5){
+                binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
+                for (i in 0 until characterColors.size){
+                    if(takenPosition?.get(characterColors[i]) == CharacterStatus.TAKEN){
+                        val resId = resources.getIdentifier("astro_${characterColors[i]}_taken", "drawable", requireContext().packageName)
+                        val astroId = resources.getIdentifier(
+                            "astro_${characterColors[i]}",
+                            "id",
+                            requireContext().packageName
+                        )
+                        val characterImageView =
+                            binding.root.findViewById<ImageView>(astroId)
+                        characterImageView.setImageResource(resId)
 
-                    val radioId = resources.getIdentifier(
-                        "radio_btn_${takenPosition[i].first}",
-                        "id",
-                        requireContext().packageName
-                    )
-                    val radioBtn = binding.root.findViewById<RadioButton>(radioId)
+                        val radioId = resources.getIdentifier(
+                            "radio_btn_${characterColors[i]}",
+                            "id",
+                            requireContext().packageName
+                        )
+                        val radioBtn = binding.root.findViewById<RadioButton>(radioId)
                         radioBtn.visibility = View.INVISIBLE
+                    }
                 }
             }
         }
     }
-fun setPlayerInfo(){
-    val colors = mutableListOf(
-        Pair("white", binding.radioBtnWhite)
-        ,Pair("blue",binding.radioBtnBlue),
-        Pair("red",binding.radioBtnRed),
-        Pair("green",binding.radioBtnGreen),
-        Pair("yellow",binding.radioBtnYellow)
-    )
-    var characterColor = ""
-    for (color in colors){
-        if (color.second.isChecked){
+
+    val gameListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
             playerModel?.apply {
-                takenPosition.add(Pair(color.first,CharacterStatus.TAKEN))
-                updatePlayerData(this)
+                val gameModel = dataSnapshot.child(gameID ?: "").getValue(PlayerModel::class.java)
+                if (gameModel != null) {
+                    updatePlayerData(gameModel)
+                    setUI()
+                }
             }
+            // Get Post object and use the values to update the UI
+
+            // ...
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Getting Post failed, log a message
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }
+
+
+
+        fun setPlayerInfo(){
+        val colors = mutableListOf(
+            Pair("white", binding.radioBtnWhite)
+            ,Pair("blue",binding.radioBtnBlue),
+            Pair("red",binding.radioBtnRed),
+            Pair("green",binding.radioBtnGreen),
+            Pair("yellow",binding.radioBtnYellow)
+        )
+        for (color in colors){
+            if (color.second.isChecked){
+                playerModel?.apply {
+                    Log.d("inför Apply","bra")
+                    takenPosition?.set(color.first, CharacterStatus.TAKEN)
+                    playerColor = color.first
+                    Log.d("takenPosition","taken: ${takenPosition}")
+                    Log.d("this","this: ${this}")
+                    updatePlayerData(this)
+                }
+            }
+
         }
 
     }
-
-}
     fun updatePlayerData(model: PlayerModel){
         PlayerData.savePlayerModel(model)
     }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null

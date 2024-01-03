@@ -16,8 +16,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
+import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragmentDirections
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import kotlin.random.Random
@@ -101,8 +104,14 @@ class PlayerInfoFragment : Fragment() {
 //            players = newPlayer
 //        )
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // Code used for safeargs
+        val gameID = PlayerInfoFragmentArgs.fromBundle(requireArguments()).gameID
+        val action = PlayerInfoFragmentDirections.actionPlayerInfoFragmentToLobbyFragment(gameID)
+        view?.findNavController()?.navigate(action)
+
         //  Crashes after executing the line below
-        view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
+        // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }
 
     fun setUI() {

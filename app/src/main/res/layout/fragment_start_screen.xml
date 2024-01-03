@@ -19,30 +19,31 @@
 
     <ImageButton
         android:id="@+id/player_create_button"
-        android:layout_width="200dp"
-        android:layout_height="50dp"
+        android:layout_width="290dp"
+        android:layout_height="60dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/play_online"
         android:scaleType="fitXY"
         android:src="@drawable/online_button"
         android:text="@string/player_info_nav_button"
-        app:layout_constraintBottom_toTopOf="@+id/start_button"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-
 
 
     <Button
         android:id="@+id/start_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="192dp"
         android:text="@string/start_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/player_create_button" />
 
     <Button
         android:id="@+id/soccer_mini_game_button"
@@ -70,10 +71,11 @@
         android:id="@+id/stensaxpase_mini_game_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Sten Sax Påse"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/soccer_mini_game_button"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="450dp" />
+        app:layout_constraintTop_toBottomOf="@+id/start_button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Vilket år upptäcktes neutronen?",
+    "options": ["1911", "1932", "1956", "1969"],
+    "correctAnswer": "1932"
+  },
+  {
+    "question": "Vad är Vantablack?",
+    "options": ["En extremt svart färg", "En ny typ av batteri", "En exoplanet", "En maträtt"],
+    "correctAnswer": "En extremt svart färg"
+  },
+  {
+    "question": "Vad är Heisenbergs osäkerhetsprincip?",
+    "options": ["Möjligheten att förutsäga en partikels position och rörelse samtidigt", "Lagen om energins bevarande", "Ett matlagningskoncept", "Teorin om relativitet"],
+    "correctAnswer": "Möjligheten att förutsäga en partikels position och rörelse samtidigt"
+  },
+  {
+    "question": "Vilken gas används i neonlampor?",
+    "options": ["Argon", "Xenon", "Krypton", "Neon"],
+    "correctAnswer": "Neon"
+  },
+  {
+    "question": "Vem formulerade E=mc²?",
+    "options": ["Niels Bohr", "Max Planck", "Albert Einstein", "Werner Heisenberg"],
+    "correctAnswer": "Albert Einstein"
+  },
+  {
+    "question": "Vad är Turingtestet?",
+    "options": ["En testmetod för att avgöra artificiell intelligens", "Ett test för fysisk styrka", "En musiktävling", "En matlagningstävling"],
+    "correctAnswer": "En testmetod för att avgöra artificiell intelligens"
+  },
+  {
+    "question": "Vilken är världens största ö?",
+    "options": ["Grönland", "Australien", "Madagaskar", "Borneo"],
+    "correctAnswer": "Grönland"
+  },
+  {
+    "question": "Vad kallas den kemiska processen där väte omvandlas till helium?",
+    "options": ["Fission", "Fusion", "Förbränning", "Fotosyntes"],
+    "correctAnswer": "Fusion"
+  },
+  {
+    "question": "Vilken planet kallas ibland för 'Aftonstjärnan' eller 'Morgonstjärnan'?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturnus"],
+    "correctAnswer": "Venus"
+  },
+  {
+    "question": "Vad är Schrödingers katt?",
+    "options": ["En katt med kvantmekaniska egenskaper", "En skröna", "En berömd konstverk", "En populär filmkaraktär"],
+    "correctAnswer": "En skröna"
+  }
+]

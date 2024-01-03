@@ -56,11 +56,9 @@ class PlayerInfoFragment : Fragment() {
 
         GameData.gameModel.observe(this) {
             gameModel = it
-        }
-        PlayerData.playerModel.observe(this) {
-            playerModel = it
             setUI()
         }
+
         myRef.addValueEventListener(gameListener)
         return view
     }
@@ -70,6 +68,7 @@ class PlayerInfoFragment : Fragment() {
         playerName = binding.nicknameInput.text.toString()
         if (playerName == "") {
             binding.nicknameInput.error = (getText(R.string.enter_user_name))
+            return
         }
 
         checkName { isNameTaken ->
@@ -88,19 +87,22 @@ class PlayerInfoFragment : Fragment() {
                 ).show()
                 return@checkName
             }
+
+            playerModel?.apply {
+                playerID = currentPlayerID
+                nickname = playerName
+                color = playerColor
+
+                updatePlayerData(this)
+            }
+
+            Log.d("playermodel","playerModel ${playerModel}")
             LobbyData.saveLobbyModel(
                 LobbyModel(
-                    gameID = currentGameID
+                    gameID = gameModel?.gameID,
+                    players = playerModel
                 )
             )
-            PlayerData.savePlayerModel(
-                PlayerModel(
-                playerID = currentPlayerID,
-                nickname = playerName,
-                color = playerColor
-                )
-            )
-
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
@@ -115,6 +117,7 @@ class PlayerInfoFragment : Fragment() {
             for(player in snapshot.children){
                 if (player.child("nickname").value == playerName){
                     callback(true)
+                    return@addOnSuccessListener
                 }
             }
             callback(false)
@@ -127,7 +130,7 @@ class PlayerInfoFragment : Fragment() {
     fun setUI() {
         gameModel?.apply {
             //  Changes text for TextView to the lobby gameID
-            binding.gameId.text = "${getText(R.string.game_ID)}${gameID?:""}"
+            binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
             //  Loops through all 5 character colors to see which of them are taken
             for (i in 0 until characterColors.size) {
                 // if a player color is taken

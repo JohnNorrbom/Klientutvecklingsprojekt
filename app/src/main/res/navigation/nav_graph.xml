@@ -45,6 +45,9 @@
         <action
             android:id="@+id/action_boardFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_boardFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
     </fragment>
     <fragment
         android:id="@+id/gavleRouletteFragment"
@@ -83,4 +86,9 @@
             android:id="@+id/action_gameStartFragment_to_playerInfoFragment"
             app:destination="@id/playerInfoFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.QuizFragment"
+        android:label="fragment_quiz"
+        tools:layout="@layout/fragment_quiz" />
 </navigation>

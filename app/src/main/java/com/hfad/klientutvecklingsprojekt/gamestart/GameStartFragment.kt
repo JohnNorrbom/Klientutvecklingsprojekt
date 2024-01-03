@@ -90,7 +90,7 @@ class GameStartFragment : Fragment() {
         }
         //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
-            val model = it?.getValue(PlayerModel::class.java)
+            val model = it?.getValue(GameModel::class.java)
             //  Checks if the server has that gameID
             if (model == null) {
                 Log.d("Om null", "den är null")
@@ -99,15 +99,7 @@ class GameStartFragment : Fragment() {
                 //  Create array of colors to compare them with the colors in the lobby to see
                 //  which of them are are taken
                 val color = listOf("white", "red", "blue", "green", "yellow")
-                PlayerData.savePlayerModel(model)
-                Log.d("Om success", "model: ${model}")
-            val model = it?.getValue(GameModel::class.java)
 
-            if (model == null){
-                Log.d("Om null","den är null")
-                binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
-            }else {
-                val color = listOf("white","red","blue","green","yellow")
                 GameData.saveGameModel(model)
                 Log.d("Om success","model: ${model}")
                 model?.apply {
@@ -134,10 +126,9 @@ class GameStartFragment : Fragment() {
                     }
                 }
             }
-        }
         }.addOnFailureListener {
-                binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
-            }
+            binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
+        }
     }
 
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation

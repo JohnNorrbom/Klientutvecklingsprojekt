@@ -31,11 +31,7 @@
         android:id="@+id/soccerFragment"
         android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerFragment"
         android:label="fragment_soccer"
-        tools:layout="@layout/fragment_soccer" >
-        <argument
-            android:name="gameID"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/fragment_soccer" />
     <fragment
         android:id="@+id/boardFragment"
         android:name="com.hfad.klientutvecklingsprojekt.BoardFragment"
@@ -49,28 +45,17 @@
         <action
             android:id="@+id/action_boardFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
-        <argument
-            android:name="gameID"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/gavleRouletteFragment"
         android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"
         android:label="fragment_gavle_roulette"
-        tools:layout="@layout/fragment_gavle_roulette" >
-        <argument
-            android:name="gameID"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/fragment_gavle_roulette" />
     <fragment
         android:id="@+id/stensaxpaseFragment"
         android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseFragment"
         android:label="StenSaxPaseFragment"
-        tools:layout="@layout/fragment_sten_sax_pase" >
-        <argument
-            android:name="gameID"
-            app:argType="string" />
-    </fragment>
+        tools:layout="@layout/fragment_sten_sax_pase" />
     <fragment
         android:id="@+id/playerInfoFragment"
         android:name="com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragment"
@@ -79,9 +64,6 @@
         <action
             android:id="@+id/action_playerInfoFragment_to_lobbyFragment"
             app:destination="@id/lobbyFragment" />
-        <argument
-            android:name="gameID"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/lobbyFragment"
@@ -91,9 +73,6 @@
         <action
             android:id="@+id/action_lobbyFragment_to_boardFragment"
             app:destination="@id/boardFragment" />
-        <argument
-            android:name="gameID"
-            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/gameStartFragment"

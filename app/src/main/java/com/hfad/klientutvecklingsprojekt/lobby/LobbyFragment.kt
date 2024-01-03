@@ -18,8 +18,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentArgs
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentDirections
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -48,12 +46,7 @@ class LobbyFragment : Fragment() {
         binding.testBtn.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
-            // For safeargs
-            val gameID = LobbyFragmentArgs.fromBundle(requireArguments()).gameID
-            val action = LobbyFragmentDirections.actionLobbyFragmentToBoardFragment(gameID)
-            view.findNavController().navigate(action)
-
-            //view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
+            view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
         lobbyRef.addValueEventListener(lobbyListener)
         playerRef.addValueEventListener(playerListener)

@@ -13,8 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 import kotlin.random.Random
 
 class GameView : ConstraintLayout {
@@ -31,12 +29,8 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
-    // For safeargs
-    var gameID = ""
-
     // Constructors for creating the view programmatically
-    constructor(context: Context, gameID:String) : super(context) {
-        this.gameID = gameID
+    constructor(context: Context) : super(context) {
         init(context)
     }
 
@@ -134,20 +128,11 @@ class GameView : ConstraintLayout {
             val randomVal = Random.nextInt(3)
 
             if (randomVal == 0) {
-                // For safeargs
-                val action = BoardFragmentDirections.actionBoardFragmentToStensaxpaseFragment(gameID)
-
-                view.findNavController().navigate(action)
+                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
-                // For safeargs
-                val action = BoardFragmentDirections.actionBoardFragmentToSoccerFragment(gameID)
-
-                view.findNavController().navigate(action)
+                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
             } else {
-                // For safeargs
-                val action = BoardFragmentDirections.actionBoardFragmentToGavleRouletteFragment(gameID)
-
-                view.findNavController().navigate(action)
+                view.findNavController().navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
     }

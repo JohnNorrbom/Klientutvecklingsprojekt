@@ -121,7 +121,7 @@ class GameStartFragment : Fragment() {
                         if (count == 5) {
                             PlayerData.savePlayerModel(PlayerModel(status = Progress.FINISHED))
                         }
-                        joinLobby()
+                        joinLobby(gameID)
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }

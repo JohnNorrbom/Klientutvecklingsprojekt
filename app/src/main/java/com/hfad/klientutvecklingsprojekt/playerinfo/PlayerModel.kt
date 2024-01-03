@@ -4,12 +4,9 @@ import com.google.firebase.database.IgnoreExtraProperties
 
 
 @IgnoreExtraProperties
-data class PlayerModel(val gameID : String? = null, var status : Progress? = null, var takenPosition: MutableMap<String,CharacterStatus>? = null)
-enum class Progress{
-    INPROGRESS,
-    FINISHED
-}
-enum class CharacterStatus{
-    TAKEN,
-    FREE
-}
+data class PlayerModel(
+    var gameID : String? = null,
+    var playerID : String? = null,
+    var nickname : String? = null,
+    var color : String? = null,
+)

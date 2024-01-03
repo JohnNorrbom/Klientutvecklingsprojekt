@@ -1,7 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.gamestart
 
 import android.content.pm.ActivityInfo
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,13 +13,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.Progress
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -28,7 +22,6 @@ class GameStartFragment : Fragment() {
     private var _binding: FragmentGameStartBinding? = null
     private val binding get()  = _binding!!
     private lateinit var view : LinearLayout
-    private var playerModel : PlayerModel? = null
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
    private val myRef = database.getReference("Space Party")
 
@@ -56,8 +49,8 @@ class GameStartFragment : Fragment() {
     }
 
     fun createOfflinGame(){
-        PlayerData.savePlayerModel(
-            PlayerModel(
+        GameData.saveGameModel(
+            GameModel(
                 gameID = "-1",
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
@@ -72,8 +65,8 @@ class GameStartFragment : Fragment() {
         startGame()
     }
     fun createOnlineGame(){
-        PlayerData.savePlayerModel(
-            PlayerModel(
+        GameData.saveGameModel(
+            GameModel(
                 gameID = (Random.nextInt(1000..9999)).toString(),
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
@@ -96,14 +89,14 @@ class GameStartFragment : Fragment() {
         }
 
         myRef.child(gameID).get().addOnSuccessListener {
-            val model = it?.getValue(PlayerModel::class.java)
+            val model = it?.getValue(GameModel::class.java)
 
             if (model == null){
                 Log.d("Om null","den är null")
                 binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
             }else {
                 val color = listOf("white","red","blue","green","yellow")
-                PlayerData.savePlayerModel(model)
+                GameData.saveGameModel(model)
                 Log.d("Om success","model: ${model}")
                 model?.apply {
                     if (status != Progress.FINISHED){
@@ -114,8 +107,8 @@ class GameStartFragment : Fragment() {
                             }
                         }
                         if (count == 5) {
-                            PlayerData.savePlayerModel(
-                                PlayerModel(
+                            GameData.saveGameModel(
+                                GameModel(
                                     status = Progress.FINISHED
                                 )
                             )

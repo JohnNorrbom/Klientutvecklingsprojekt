@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +20,9 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData
+import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragmentDirections
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
@@ -29,30 +33,16 @@ import kotlin.random.nextInt
 
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null
-    private val binding get() = _binding!!
-    private var playerModel: PlayerModel? = null
-    private val characterColors = listOf("white", "red", "blue", "green", "yellow")
-    var playerColor = ""
-    val database =
-        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Space Party")
-    val gameListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            playerModel?.apply {
-                val gameModel = dataSnapshot.child(gameID ?: "").getValue(PlayerModel::class.java)
-                if (gameModel != null) {
-                    updatePlayerData(gameModel)
-                    setUI()
-                }
-            }
-            // Get Post object and use the values to update the UI
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            // Getting Post failed, log a message
-            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-        }
-    }
+    private val binding get()  = _binding!!
+    private var playerModel : PlayerModel? = null
+    private var gameModel : GameModel? = null
+    private val characterColors = listOf("white","red","blue","green","yellow")
+    private var playerColor = ""
+    private var playerName = ""
+    private var currentGameID = ""
+    private var currentPlayerID = ""
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("PLayers")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,9 +51,12 @@ class PlayerInfoFragment : Fragment() {
     ): View? {
         _binding = FragmentPlayerInfoBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.confirmBtn.setOnClickListener {
-            setPlayerInfo()
-            confirmCharacter()
+       binding.confirmBtn.setOnClickListener{
+           confirmCharacter()
+       }
+
+        GameData.gameModel.observe(this) {
+            gameModel = it
         }
         PlayerData.playerModel.observe(this) {
             playerModel = it
@@ -74,20 +67,56 @@ class PlayerInfoFragment : Fragment() {
     }
 
     fun confirmCharacter() {
-        val currentPlayerID = Random.nextInt(1000..9999).toString()
+        currentPlayerID = Random.nextInt(1000..9999).toString()
         val playerName = binding.nicknameInput.text.toString()
-        if (playerName == null) {
+        if (playerName == "") {
             binding.nicknameInput.error = (getText(R.string.enter_user_name))
         }
-        var currentGameID = ""
-        playerModel?.apply {
+
+        gameModel?.apply {
             currentGameID = gameID ?: ""
+        }
+
+        checkName { isNameTaken ->
+            if (isNameTaken) {
+                binding.nicknameInput.error = getText(R.string.enter_valid_user_name)
+                return@checkName
+            }
+
+            setPlayerInfo()
+
+            if (playerColor == "") {
+                Toast.makeText(
+                    requireContext().applicationContext,
+                    getText(R.string.choose_character),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@checkName
+            }
+
+            playerModel?.apply {
+                gameID = currentGameID
+                playerID = currentPlayerID
+                nickname = playerName
+                color = playerColor
+
+                updatePlayerData(this)
+            }
+
+            LobbyData.saveLobbyModel(
+                LobbyModel(
+                    gameID = currentGameID
+                )
+            )
+
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
         if (playerColor == "") {
             binding.confirmBtn.error = (getText(R.string.choose_character))
         }
-        LobbyData.saveLobbyModel(
-            LobbyModel(
+        PlayerData.savePlayerModel(
+            PlayerModel(
                 gameID = currentGameID,
                 playerID = currentPlayerID,
                 nickname = playerName,
@@ -104,42 +133,104 @@ class PlayerInfoFragment : Fragment() {
         //  Crashes after executing the line below
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }
+    fun checkName(callback: (Boolean) -> Unit) {
+        myRef.get().addOnSuccessListener {
+            val snapshot = it
+            Log.d("snap children", "children: ${snapshot.children}")
+            for(child in snapshot.children){
+                if (child.child("gameID").value == currentGameID && child.child("nickname").value == playerName){
+                    callback(true)
+                }
+            }
+            callback(false)
+        }.addOnFailureListener {
+            callback(false)
+        }
+    }
 
+    //update UI
     fun setUI() {
-        playerModel?.apply {
-            if ((takenPosition?.size ?: 1) <= 5) {
-                //  Changes text for TextView to the lobby gameID
-                binding.gameId.text = "${getText(R.string.game_ID)}${gameID?:""}"
-                //  Loops through all 5 characters to see which of them are taken
-                for (i in 0 until characterColors.size) {
-                    if (takenPosition?.get(characterColors[i]) == CharacterStatus.TAKEN) {
-                        //  Find Id for new picture
-                        val resId = resources.getIdentifier(
-                            "astro_${characterColors[i]}_taken",
-                            "drawable",
-                            requireContext().packageName
-                        )
-                        //  Find Id for picture
-                        val astroId = resources.getIdentifier(
-                            "astro_${characterColors[i]}",
-                            "id",
-                            requireContext().packageName
-                        )
-                        //  Apply changes to ImageView
-                        val characterImageView = binding.root.findViewById<ImageView>(astroId)
-                        characterImageView.setImageResource(resId)
-                        //  Get id of radio button
-                        val radioId = resources.getIdentifier(
-                            "radio_btn_${characterColors[i]}",
-                            "id",
-                            requireContext().packageName
-                        )
-                        //  Removes radio button
-                        val radioBtn = binding.root.findViewById<RadioButton>(radioId)
-                        radioBtn.visibility = View.INVISIBLE
+        gameModel?.apply {
+            //  Changes text for TextView to the lobby gameID
+            binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
+            //  Loops through all 5 character colors to see which of them are taken
+            for (i in 0 until characterColors.size) {
+                // if a player color is taken
+                if (takenPosition?.get(characterColors[i]) == CharacterStatus.TAKEN) {
+                    //  Find picture
+                    val resId = resources.getIdentifier(
+                        "astro_${characterColors[i]}_taken",
+                        "drawable",
+                        requireContext().packageName
+                    )
+                    //  Find Id for picture
+                    val astroId = resources.getIdentifier(
+                        "astro_${characterColors[i]}",
+                        "id",
+                        requireContext().packageName
+                    )
+                    //  Apply changes to ImageView
+                    val characterImageView = binding.root.findViewById<ImageView>(astroId)
+                    characterImageView.setImageResource(resId)
+                    //  Get id of radio button
+                    val radioId = resources.getIdentifier(
+                        "radio_btn_${characterColors[i]}",
+                        "id",
+                        requireContext().packageName
+                    )
+                    //  Makes radio button Invisible
+                    val radioBtn = binding.root.findViewById<RadioButton>(radioId)
+                    radioBtn.visibility = View.INVISIBLE
+                }
+
+                // if player color is free
+                if (takenPosition?.get(characterColors[i]) == CharacterStatus.FREE) {
+                    // get picture
+                    val resId = resources.getIdentifier(
+                        "astro_${characterColors[i]}_free",
+                        "drawable",
+                        requireContext().packageName
+                    )
+                    //get id for Imageview
+                    val astroId = resources.getIdentifier(
+                        "astro_${characterColors[i]}",
+                        "id",
+                        requireContext().packageName
+                    )
+                    // change imageView
+                    val characterImageView =
+                        binding.root.findViewById<ImageView>(astroId)
+                    characterImageView.setImageResource(resId)
+
+                    // get id for radio button and makes it visible
+                    val radioId = resources.getIdentifier(
+                        "radio_btn_${characterColors[i]}",
+                        "id",
+                        requireContext().packageName
+                    )
+                    val radioBtn = binding.root.findViewById<RadioButton>(radioId)
+                    radioBtn.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    val gameListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            gameModel?.apply {
+                val gameModel = dataSnapshot.child(gameID ?: "").getValue(PlayerModel::class.java)
+                if (gameModel != null) {
+                    // Check if the data has changed before updating and setting UI
+                    if (!gameModel.equals(this)) {
+                        updatePlayerData(gameModel)
+                        setUI()
                     }
                 }
             }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
         }
     }
 
@@ -153,14 +244,21 @@ class PlayerInfoFragment : Fragment() {
         )
         for (color in colors) {
             if (color.second.isChecked) {
-                playerModel?.apply {
+                gameModel?.apply {
                     Log.d("inför Apply", "bra")
-                    //  Set position to taken
-                    takenPosition?.set(color.first, CharacterStatus.TAKEN)
-                    playerColor = color.first
-                    Log.d("takenPosition", "taken: ${takenPosition}")
-                    Log.d("this", "this: ${this}")
-                    updatePlayerData(this)
+                    for (color in colors) {
+                        if (color.second.isChecked) {
+                            gameModel?.apply {
+                                Log.d("inför Apply", "bra")
+                                //  Set position to taken
+                                takenPosition?.set(color.first, CharacterStatus.TAKEN)
+                                playerColor = color.first
+                                Log.d("takenPosition", "taken: ${takenPosition}")
+                                Log.d("this", "this: ${this}")
+                                updateGameData(this)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -168,6 +266,9 @@ class PlayerInfoFragment : Fragment() {
 
     fun updatePlayerData(model: PlayerModel) {
         PlayerData.savePlayerModel(model)
+    }
+    fun updateGameData(model: GameModel){
+        GameData.saveGameModel(model)
     }
 
     override fun onDestroy() {

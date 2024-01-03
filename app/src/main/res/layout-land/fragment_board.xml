@@ -244,4 +244,19 @@
         android:text="Move Player"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/dice_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/dice1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
+        app:layout_constraintTop_toTopOf="@+id/moveButton" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

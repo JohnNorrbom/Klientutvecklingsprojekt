@@ -120,7 +120,7 @@ class GameStartFragment : Fragment() {
                                 )
                             )
                         }
-                        joinLobby(gameID)
+                        joinLobby()
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }
@@ -132,12 +132,6 @@ class GameStartFragment : Fragment() {
     }
 
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
-    fun joinLobby(gameID:String) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        val action = GameStartFragmentDirections.actionGameStartFragmentToPlayerInfoFragment(gameID)
-        view.findNavController().navigate(action)
-    }
-    // For offline mode
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         view.findNavController().navigate(R.id.action_gameStartFragment_to_playerInfoFragment)

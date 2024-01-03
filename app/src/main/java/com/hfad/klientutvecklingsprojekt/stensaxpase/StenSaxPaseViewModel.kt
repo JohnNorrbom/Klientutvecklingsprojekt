@@ -1,159 +1,91 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import kotlin.random.Random
 
-class StenSaxPaseViewModel : ViewModel() {
+class StenSaxPaseViewModel() : ViewModel() {
 
-    //add bussiness logic for sten sax pase mini-game
-    var players = ArrayList<Player>()
-    var lobbies = ArrayList<Lobby>()
-    var id: Int = -1
-    val gameModel : GameModel ?=null
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Sten Sax Pase")
+
+    private var stenSaxPaseModel : StenSaxPaseModel? = null
+
+    //val gameModel = GameModel?""
+
     /*
-    init {
-        setPlayerCount()
-        gameLoop()
+    stenSaxPaseModel?.apply {
+        // lägg till de variabler som ska in i firebase
     }
      */
 
-    fun setID(id: Int) {
-        this.id = id
-        println(this.id)
+    fun loadFromDatabase() {
+        var spaceParty = database.getReference("Space Party").child(gameID)
+
+        spaceParty.get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+        }.addOnFailureListener{
+            Log.e("firebase", "Error getting data", it)
+        }
+
+    }
+
+    fun saveToDatabase() {
+
+        //loadFromDatabase()
+
+        val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
+
+        /*
+        // for each player in lobby, get this from loadFromDatabase(), or possibly safeargs
+
+        players.put("${player.playerID}", mutableMapOf(
+            "nickname" to "${player.nickname}",
+            "color" to "${player.color}",
+            "choice" to "null",
+            "score" to "0"
+        ))
+
+         */
+
+        stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
+
+        myRef.child(gameID).setValue(stenSaxPaseModel)
+    }
+
+    //add bussiness logic for sten sax pase mini-game
+    var gameID = ""
+
+    fun setGameID() {
+
     }
 
     fun initPlayers() {
+        //load two players from lobby
+        loadFromDatabase()
 
-        for(i in 0..1) {
-            if(i == 0) players.add(Player(id).getThis())
-            else players.add(Player(-1).getThis())
-        }
+        // execute gameLoop
+        gameLoop()
     }
 
-    //gameStatus should remain true if any player is still "ingame"
-    var gameStatus: Boolean = true
+    val gameStatus = database.getReference("Sten Sax Pase").child(gameID).child("status")
 
-    //do game loop
-    private fun gameLoop() {
-        //println("playerCount: $playerCount , $players.size")
-        /*
-        do {
-            //check if player count is even or odd, based on that, apply suitable game logic
-            if(playerCount%2 == 0) {
-                //match players against each other based on score
-                //create lobbies and assign players
-                for((i, player) in players.withIndex()) {
-                    if(i%2 == 0) lobbies.add(Lobby(players[i], players[i+1]).getThis())
+        fun gameLoop() {
+            gameStatus.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot){
+                    val status = dataSnapshot.getValue()
                 }
-                //do match
-                for(lobby in lobbies) lobby.doMatch()
-                //wait for lobbies to finish
-            }
-
-            //check if more games are needed
-            var nmbrOfAlive = 0
-            for(player in players) if(player.alive) nmbrOfAlive++
-            if(nmbrOfAlive == 1) gameStatus = false
-
-        } while (gameStatus)
-         */
-        do {
-
-            //match players against each other based on score
-            //create lobbies and assign players
-            for((i, player) in players.withIndex()) {
-                if(i%2 == 0) lobbies.add(Lobby(players[i], players[i+1]).getThis())
-            }
-            //do match
-            for(lobby in lobbies) lobby.doMatch()
-            //wait for lobbies to finish
-
-            //check if more games are needed
-            var nmbrOfAlive = 0
-            for(player in players) if(player.alive) nmbrOfAlive++
-            if(nmbrOfAlive == 1) gameStatus = false
-
-        } while (gameStatus)
+                override fun onCancelled(error: DatabaseError) {
+                    // Failed to read value
+                    Log.w("db_error", "Failed to read value.", error.toException())
+                }
+            })
     }
 
-    fun setChoice(choice: String) {
-        initPlayers()
-        for(player in players) {
-            if(player.id == id) player.choice = choice
-        }
-        //gameLoop()
-    }
-
-    class Player(id:Int) {
-        val id = id
-        var alive = true
-        val score = Random.nextInt(0,5)
-        var choice: String? = null
-
-        val cpu: Boolean = if( id == -1) true else false
-
-        val choices = arrayOf("sten", "sax", "pase")
-
-        fun getThis() = this
-
-        fun unAlive() {
-            alive = false
-        }
-
-        fun makeChoice(): String? {
-            while(this.choice == null)
-            {
-                println("making choice...")
-                println("${this.id} chose ${this.choice}")
-                Thread.sleep(1000)
-            }
-            return this.choice
-        }
-
-        fun randomChoice() {
-            this.choice = choices[Random.nextInt(0,3)]
-        }
-    }
-    class Lobby(playerOne: Player, playerTwo: Player) {
-        val id = Random.nextInt(0, 999)
-        val playerOne = playerOne
-        val playerTwo = playerTwo
-        var active = false
-        fun getThis() = this
-
-        fun doMatch() {
-            // mark lobby as active
-            active = true
-            var result: String
-
-            do {
-                println("playerOne is cpu: ${playerOne.cpu}")
-                println("playerTwo is cpu: ${playerTwo.cpu}")
-                if (playerOne.cpu) playerOne.randomChoice()
-                else playerOne.makeChoice()
-                if (playerTwo.cpu) playerTwo.randomChoice()
-                else playerTwo.makeChoice()
-
-                result = checkResult()
-            } while(result.equals("even"))
-
-            if(result.equals("playerOne")) playerTwo.unAlive()
-            else playerOne.unAlive()
-        }
-
-        private fun checkResult(): String {
-            var result: String
-
-            if(playerOne.choice.equals(playerTwo.choice)) result = "even"
-            else if(playerOne.choice.equals("sten") && playerTwo.choice.equals("sax")) result = "playerOne"
-            else if(playerOne.choice.equals("sax") && playerTwo.choice.equals("pase")) result = "playerOne"
-            else if(playerOne.choice.equals("pase") && playerTwo.choice.equals("sten")) result = "playerOne"
-            else result = "playerTwo"
-
-            println("outcome: $result , playerOne chose: ${playerOne.choice} , playerTwo chose: ${playerTwo.choice}" )
-
-            return result
-        }
-    }
 }

@@ -17,7 +17,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
@@ -105,6 +104,10 @@ class PlayerInfoFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
+
+            )
+        )
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         //  Crashes after executing the line below
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)

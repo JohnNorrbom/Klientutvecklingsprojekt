@@ -10,8 +10,8 @@
         android:id="@+id/character"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
         app:layout_constraintStart_toStartOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1"
         app:srcCompat="@drawable/astro_white" />
 
     <ImageView
@@ -30,227 +30,239 @@
         android:id="@+id/tile2"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
+        android:tag="plus1"
         app:layout_constraintEnd_toStartOf="@+id/tile3"
-        app:layout_constraintStart_toEndOf="@+id/tile1"
         app:layout_constraintHorizontal_bias="0.5"
-        app:srcCompat="@drawable/tile_plus_1"
-        android:tag="plus1"/>
+        app:layout_constraintStart_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1"
+        app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
         android:id="@+id/tile3"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
+        android:tag="plus2"
         app:layout_constraintEnd_toStartOf="@+id/tile4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile2"
-        app:srcCompat="@drawable/tile_plus_2"
-        android:tag="plus2"/>
+        app:layout_constraintTop_toTopOf="@+id/tile1"
+        app:srcCompat="@drawable/tile_plus_2" />
 
     <ImageView
         android:id="@+id/tile4"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus3"
         app:layout_constraintEnd_toStartOf="@+id/tile5"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile3"
         app:layout_constraintTop_toTopOf="@+id/tile1"
-        app:srcCompat="@drawable/tile_plus_3"
-        android:tag="plus3"/>
+        app:srcCompat="@drawable/tile_plus_3" />
 
     <ImageView
         android:id="@+id/tile5"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
+        android:tag="minus5"
         app:layout_constraintEnd_toStartOf="@+id/tile6"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile4"
-        app:srcCompat="@drawable/tile_minus_5"
-        android:tag="minus5"/>
+        app:layout_constraintTop_toTopOf="@+id/tile1"
+        app:srcCompat="@drawable/tile_minus_5" />
 
     <ImageView
         android:id="@+id/tile6"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
+        android:tag="mini_game"
         app:layout_constraintEnd_toStartOf="@+id/tile7"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile5"
-        app:srcCompat="@drawable/tile_mini_game"
-        android:tag="mini_game"/>
+        app:layout_constraintTop_toTopOf="@+id/tile1"
+        app:srcCompat="@drawable/tile_mini_game" />
 
     <ImageView
         android:id="@+id/tile7"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
+        android:tag="plus1"
         app:layout_constraintEnd_toStartOf="@+id/tile8"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile6"
-        app:srcCompat="@drawable/tile_plus_1"
-        android:tag="plus1"/>
+        app:layout_constraintTop_toTopOf="@+id/tile1"
+        app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
         android:id="@+id/tile8"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus2"
         app:layout_constraintBottom_toTopOf="@+id/tile9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile7"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
-        app:srcCompat="@drawable/tile_plus_2"
-        android:tag="plus2"/>
+        app:srcCompat="@drawable/tile_plus_2" />
 
     <ImageView
         android:id="@+id/tile9"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus3"
         app:layout_constraintBottom_toTopOf="@+id/tile10"
-        app:layout_constraintTop_toBottomOf="@+id/tile8"
         app:layout_constraintEnd_toEndOf="@+id/tile8"
-        app:srcCompat="@drawable/tile_plus_3"
-        android:tag="plus3"/>
+        app:layout_constraintTop_toBottomOf="@+id/tile8"
+        app:srcCompat="@drawable/tile_plus_3" />
 
     <ImageView
         android:id="@+id/tile10"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="minus5"
         app:layout_constraintBottom_toTopOf="@+id/tile11"
-        app:layout_constraintTop_toBottomOf="@+id/tile9"
         app:layout_constraintEnd_toEndOf="@+id/tile8"
-        app:srcCompat="@drawable/tile_minus_5"
-        android:tag="minus5"/>
+        app:layout_constraintTop_toBottomOf="@+id/tile9"
+        app:srcCompat="@drawable/tile_minus_5" />
 
     <ImageView
         android:id="@+id/tile11"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="mini_game"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile12"
         app:layout_constraintTop_toBottomOf="@+id/tile10"
-        app:srcCompat="@drawable/tile_mini_game"
-        android:tag="mini_game"/>
+        app:srcCompat="@drawable/tile_mini_game" />
 
     <ImageView
         android:id="@+id/tile12"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus1"
         app:layout_constraintEnd_toStartOf="@+id/tile11"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile13"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_plus_1"
-        android:tag="plus1"/>
+        app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
         android:id="@+id/tile13"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus2"
         app:layout_constraintEnd_toStartOf="@+id/tile12"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile14"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_plus_2"
-        android:tag="plus2"/>
+        app:srcCompat="@drawable/tile_plus_2" />
 
     <ImageView
         android:id="@+id/tile14"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus3"
         app:layout_constraintEnd_toStartOf="@+id/tile13"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile15"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_plus_3"
-        android:tag="plus3"/>
+        app:srcCompat="@drawable/tile_plus_3" />
 
     <ImageView
         android:id="@+id/tile15"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="minus5"
         app:layout_constraintEnd_toStartOf="@+id/tile14"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile16"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_minus_5"
-        android:tag="minus5"/>
+        app:srcCompat="@drawable/tile_minus_5" />
 
     <ImageView
         android:id="@+id/tile16"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus1"
         app:layout_constraintEnd_toStartOf="@+id/tile15"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile17"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_plus_1"
-        android:tag="plus1"/>
+        app:srcCompat="@drawable/tile_plus_1" />
 
     <ImageView
         android:id="@+id/tile17"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        app:layout_constraintTop_toBottomOf="@+id/tile19"
+        android:tag="plus2"
         app:layout_constraintEnd_toStartOf="@+id/tile16"
-        app:layout_constraintStart_toEndOf="@+id/tile18"
         app:layout_constraintHorizontal_bias="0.5"
-        app:srcCompat="@drawable/tile_plus_2"
-        android:tag="plus2"/>
+        app:layout_constraintStart_toEndOf="@+id/tile18"
+        app:layout_constraintTop_toBottomOf="@+id/tile19"
+        app:srcCompat="@drawable/tile_plus_2" />
 
 
     <ImageView
         android:id="@+id/tile18"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="plus3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/tile17"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tile19"
-        app:srcCompat="@drawable/tile_plus_3"
-        android:tag="plus3"/>
+        app:srcCompat="@drawable/tile_plus_3" />
 
     <ImageView
         android:id="@+id/tile19"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="minus5"
         app:layout_constraintBottom_toTopOf="@+id/tile18"
         app:layout_constraintStart_toStartOf="@+id/tile1"
         app:layout_constraintTop_toBottomOf="@+id/tile20"
-        app:srcCompat="@drawable/tile_minus_5"
-        android:tag="minus5"/>
+        app:srcCompat="@drawable/tile_minus_5" />
 
     <ImageView
         android:id="@+id/tile20"
         android:layout_width="56dp"
         android:layout_height="56dp"
+        android:tag="mini_game"
         app:layout_constraintBottom_toTopOf="@+id/tile19"
         app:layout_constraintStart_toStartOf="@+id/tile1"
         app:layout_constraintTop_toBottomOf="@+id/tile1"
-        app:srcCompat="@drawable/tile_mini_game"
-        android:tag="mini_game"/>
+        app:srcCompat="@drawable/tile_mini_game" />
 
     <ImageView
         android:id="@+id/player1"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@drawable/astro_white"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
-        app:layout_constraintEnd_toEndOf="@+id/tile1"/>
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/moveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Move Player"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/dice_button"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        android:src="@drawable/dice1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tile14" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

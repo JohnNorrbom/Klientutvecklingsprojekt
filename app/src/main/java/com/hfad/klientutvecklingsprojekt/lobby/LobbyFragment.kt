@@ -41,7 +41,7 @@ class LobbyFragment : Fragment() {
         }
         myRef.addValueEventListener(lobbyListener)
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
-        binding.testBtn.setOnClickListener {
+        binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
             // For safeargs

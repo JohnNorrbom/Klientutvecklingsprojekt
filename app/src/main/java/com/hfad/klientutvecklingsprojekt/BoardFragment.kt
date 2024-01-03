@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt
 
 import android.R
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -32,6 +33,7 @@ class BoardFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         startGameLoop()
     }
     override fun onPause() {

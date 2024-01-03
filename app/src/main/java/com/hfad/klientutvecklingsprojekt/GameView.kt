@@ -75,7 +75,7 @@ class GameView : ConstraintLayout {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             Log.d("dice destination", destination)
             val resourceId = resources.getIdentifier(

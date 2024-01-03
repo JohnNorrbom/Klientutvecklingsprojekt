@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 
@@ -30,12 +29,7 @@ class StenSaxPaseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseBinding? = null
     private val binding get() = _binding!!
-    lateinit var viewModel: StenSaxPaseViewModel
-
-    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Sten Sax Pase")
-
-    var stenSaxPaseModel : StenSaxPaseModel? = null
+    private lateinit var viewModel: StenSaxPaseViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,58 +44,15 @@ class StenSaxPaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
-        println("Currently in gameID: $gameID")
-
-
-        stenSaxPaseModel?.apply {
-            // lägg till de variabler som ska in i firebase
-        }
-
-        fun loadFromDatabase() {
-            var spaceParty = database.getReference("Space Party").child(gameID)
-
-            spaceParty.get().addOnSuccessListener {
-                Log.i("firebase", "Got value ${it.value}")
-            }.addOnFailureListener{
-                Log.e("firebase", "Error getting data", it)
-            }
-
-        }
-
-        fun saveToDatabase() {
-
-            //Use this once gameID is passed through the use of safeargs
-            //loadFromDatabase(gameID)
-
-            val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
-
-            players.put("playerIDplaceholder1", mutableMapOf(
-                "nickname" to "nicknamePlaceholder",
-                "color" to "colorPlaceholder",
-                "choice" to "choicePlacerholder"
-            ))
-
-            players.put("playerIDplaceholder2", mutableMapOf(
-                "nickname" to "nicknamePlaceholder",
-                "color" to "colorPlaceholder",
-                "choice" to "choicePlacerholder"
-            ))
-
-            stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
-            var lobbyID:String = gameID
-            myRef.child(lobbyID).setValue(stenSaxPaseModel)
-        }
-
-        // change gameID to the gameID which the overall game uses, possibly by safeARGS
-        saveToDatabase()
-
         // establish binding
         _binding = FragmentStenSaxPaseBinding.inflate(inflater, container, false)
         val view = binding.root
 
         // establish viewModel
         viewModel = ViewModelProvider(this).get(StenSaxPaseViewModel::class.java)
+
+        // set gameID for viewModel to use
+        viewModel.setGameID()
 
         // load in players
         viewModel.initPlayers()
@@ -114,19 +65,19 @@ class StenSaxPaseFragment : Fragment() {
         sten.setOnClickListener {
             sax.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
-            viewModel.setChoice("sten")
+            //viewModel.setChoice("sten")
             setActionText("Du valde: Sten")
         }
         sax.setOnClickListener {
             sten.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
-            viewModel.setChoice("sax")
+            //viewModel.setChoice("sax")
             setActionText("Du valde: Sax")
         }
         pase.setOnClickListener {
             sten.visibility = View.INVISIBLE
             sax.visibility = View.INVISIBLE
-            viewModel.setChoice("pase")
+            //viewModel.setChoice("pase")
             setActionText("Du valde: Påse")
         }
 

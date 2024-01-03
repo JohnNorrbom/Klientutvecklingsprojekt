@@ -11,11 +11,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 
 
 class BoardFragment : Fragment() {
@@ -29,16 +24,12 @@ class BoardFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        gameView = GameView(requireContext()) // Replace with your custom game view
         mediaPlayer = MediaPlayer.create(requireContext(), com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm)
         mediaPlayer?.isLooping = true // Disable built-in looping
         mediaPlayer?.start()
 
-
-
-        // For safeargs
-        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
-
-        gameView = GameView(requireContext(), gameID) // Replace with your custom game view
+        gameView = GameView(requireContext()) // Replace with your custom game view
 
         return gameView
     }

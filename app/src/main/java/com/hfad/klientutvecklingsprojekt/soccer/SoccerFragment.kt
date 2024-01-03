@@ -111,6 +111,7 @@ class SoccerFragment : Fragment() {
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
         var goalieColor = "yellow"
         var shootercolor = "green"
+
         soccerViewModel.setColors(shootercolor,goalieColor, 1)
 
         var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")

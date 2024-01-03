@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
+import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
+import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 

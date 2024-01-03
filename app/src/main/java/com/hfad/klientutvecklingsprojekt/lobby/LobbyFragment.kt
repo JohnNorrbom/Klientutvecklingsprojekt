@@ -141,8 +141,6 @@ class LobbyFragment : Fragment() {
                     }
                 }
             }
-
-
         }
     }
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för
@@ -163,9 +161,7 @@ class LobbyFragment : Fragment() {
         }
     }
 
-
     fun updateLobbyData(model: LobbyModel){
         LobbyData.saveLobbyModel(model)
     }
-
 }

@@ -128,7 +128,7 @@ class GameStartFragment : Fragment() {
                                 )
                             )
                         }
-                        joinLobby()
+                        joinLobby(gameID)
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }

@@ -1,9 +1,8 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.IgnoreExtraProperties
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 @IgnoreExtraProperties

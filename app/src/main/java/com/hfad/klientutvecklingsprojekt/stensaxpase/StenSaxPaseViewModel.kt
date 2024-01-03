@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import androidx.lifecycle.ViewModel
 import kotlin.random.Random

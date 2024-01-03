@@ -53,7 +53,7 @@
         tools:layout="@layout/fragment_gavle_roulette" />
     <fragment
         android:id="@+id/stensaxpaseFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.StenSaxPaseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseFragment"
         android:label="StenSaxPaseFragment"
         tools:layout="@layout/fragment_sten_sax_pase" />
     <fragment

@@ -56,7 +56,7 @@ class StartScreenFragment : Fragment() {
         //  quiz button
         binding.quizButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_quizFragment)
         }
         return view
     }

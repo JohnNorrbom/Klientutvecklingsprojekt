@@ -35,6 +35,7 @@ class QuizFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        println("I AM IN CONSTRUCUTR RIGHT NOW !!!! !!! !")
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
         try {
             questions = JSONArray(jsonQuestions)

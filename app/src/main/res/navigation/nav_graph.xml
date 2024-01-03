@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"

@@ -77,7 +77,6 @@ class GameView : ConstraintLayout {
             soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
-            Log.d("dice destination", destination)
             val resourceId = resources.getIdentifier(
                 destination,
                 "drawable",

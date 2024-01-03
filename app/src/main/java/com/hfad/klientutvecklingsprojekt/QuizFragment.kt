@@ -62,15 +62,11 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
-
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         return binding.root
     }
-
-
-
 
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null

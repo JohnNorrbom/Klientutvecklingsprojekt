@@ -13,7 +13,7 @@ object PlayerData {
         var playerModel : LiveData<PlayerModel> = _playerModel
         var gameModel : GameModel? = null
         private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-        private val myRef = database.getReference("Game Lobby")
+        private val myRef = database.getReference("Player Data")
         fun savePlayerModel(model: PlayerModel){
             _playerModel.postValue(model)
                 myRef.child(gameModel?.gameID.toString()).child("players").setValue(model)

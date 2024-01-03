@@ -28,8 +28,8 @@ class LobbyFragment : Fragment() {
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val lobbyRef = database.getReference("Game Lobby")
-    val playerRef = database.getReference("Game Lobby").child("Players")
+    val lobbyRef = database.getReference("Game Lobby").child(lobbyModel?.gameID.toString())
+    val playerRef = database.getReference("Game Lobby").child(lobbyModel?.gameID.toString()).child("players")
     val currentGameID = ""
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,18 +37,16 @@ class LobbyFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
-        LobbyData.lobbyModel.observe(this){
-            lobbyModel = it
-            setUI()
-        }
+
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
             view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
-        lobbyRef.child(lobbyModel?.gameID ?: "").addValueEventListener(lobbyListener)
+        lobbyRef.addValueEventListener(lobbyListener)
         playerRef.addValueEventListener(playerListener)
+        setUI()
         return view;
     }
     val lobbyListener = object : ValueEventListener {

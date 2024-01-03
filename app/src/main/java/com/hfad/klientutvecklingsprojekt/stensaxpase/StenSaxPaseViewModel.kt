@@ -63,13 +63,16 @@ class StenSaxPaseViewModel() : ViewModel() {
     }
 
     //add bussiness logic for sten sax pase mini-game
-    var gameID = ""
+    var gameID = "not set"
 
-    fun setGameID() {
-        println(gameModel?.gameID)
+    private fun setGameID() {
+        if(gameModel?.gameID != null) gameID = gameModel.gameID
+        println("----------${gameModel?.gameID}------$gameID")
     }
 
-    fun initPlayers() {
+    fun initGame() {
+        setGameID()
+
         //load two players from lobby
         loadFromDatabase()
 

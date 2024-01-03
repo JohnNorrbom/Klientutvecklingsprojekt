@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt
 
 import android.content.pm.ActivityInfo
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +15,9 @@ import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
 
 
 class StartScreenFragment : Fragment() {
+
+    private var mediaPlayer: MediaPlayer? = null
+
     private var _binding: FragmentStartScreenBinding? = null
     private val binding get()  = _binding!!
     override fun onCreateView(
@@ -23,6 +27,11 @@ class StartScreenFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentStartScreenBinding.inflate(inflater,container,false)
         val view = binding.root
+
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song1_140bpm)
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
+
         //  Changes view when button is clicked
         //  board button
         binding.startButton.setOnClickListener {
@@ -65,5 +74,7 @@ class StartScreenFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

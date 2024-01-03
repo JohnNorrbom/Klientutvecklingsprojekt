@@ -9,12 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentArgs
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentDirections
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -30,6 +34,8 @@ class LobbyFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
+    val myRef = database.getReference("Space Party").child("Players")
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
@@ -37,6 +43,18 @@ class LobbyFragment : Fragment() {
         LobbyData.lobbyModel.observe(this){
             lobbyModel = it
             setUI()
+        }
+        myRef.addValueEventListener(lobbyListener)
+        //  Button for starting game, loading BoardFragment. Everyone can click it right now.
+        binding.testBtn.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+
+            // For safeargs
+            val gameID = LobbyFragmentArgs.fromBundle(requireArguments()).gameID
+            val action = LobbyFragmentDirections.actionLobbyFragmentToBoardFragment(gameID)
+            view.findNavController().navigate(action)
+
+            //view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
         lobbyRef.addValueEventListener(lobbyListener)
         playerRef.addValueEventListener(playerListener)

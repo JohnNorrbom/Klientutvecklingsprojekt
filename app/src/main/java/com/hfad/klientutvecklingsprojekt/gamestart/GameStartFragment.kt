@@ -13,6 +13,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
+import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
@@ -23,25 +24,25 @@ class GameStartFragment : Fragment() {
     private val binding get()  = _binding!!
     private lateinit var view : LinearLayout
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-   private val myRef = database.getReference("Space Party")
+    private val myRef = database.getReference("Space Party")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentGameStartBinding.inflate(inflater,container,false)
+        _binding = FragmentGameStartBinding.inflate(inflater, container, false)
         view = binding.root
 
-        binding.playOfflineBtn.setOnClickListener{
+        binding.playOfflineBtn.setOnClickListener {
             createOfflinGame()
         }
 
-        binding.createOnlineGameBtn.setOnClickListener{
+        binding.createOnlineGameBtn.setOnClickListener {
             createOnlineGame()
         }
 
-        binding.joinOnlineGameBtn.setOnClickListener(){
+        binding.joinOnlineGameBtn.setOnClickListener() {
             joinOnlineGame()
         }
 
@@ -49,8 +50,8 @@ class GameStartFragment : Fragment() {
     }
 
     fun createOfflinGame(){
-        GameData.saveGameModel(
-            GameModel(
+        PlayerData.savePlayerModel(
+            PlayerModel(
                 gameID = "-1",
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
@@ -62,7 +63,7 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        startGame()
+        joinLobby()
     }
     fun createOnlineGame(){
         GameData.saveGameModel(
@@ -78,17 +79,29 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        startGame()
+        joinLobby(gameID)
     }
 
-    fun joinOnlineGame(){
+    fun joinOnlineGame() {
         var gameID = binding.gameIdInput.text.toString()
-        if(gameID.isEmpty()){
-            binding.gameIdInput.error=(getText(R.string.please_enter_game_id))
+        //  Checks if the user wrote anything
+        if (gameID.isEmpty()) {
+            binding.gameIdInput.error = (getText(R.string.please_enter_game_id))
             return
         }
-
+        //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
+            val model = it?.getValue(PlayerModel::class.java)
+            //  Checks if the server has that gameID
+            if (model == null) {
+                Log.d("Om null", "den är null")
+                binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
+            } else {
+                //  Create array of colors to compare them with the colors in the lobby to see
+                //  which of them are are taken
+                val color = listOf("white", "red", "blue", "green", "yellow")
+                PlayerData.savePlayerModel(model)
+                Log.d("Om success", "model: ${model}")
             val model = it?.getValue(GameModel::class.java)
 
             if (model == null){
@@ -99,11 +112,14 @@ class GameStartFragment : Fragment() {
                 GameData.saveGameModel(model)
                 Log.d("Om success","model: ${model}")
                 model?.apply {
-                    if (status != Progress.FINISHED){
+                    //  Should not check status, because that only check the current player not the
+                    //  game/lobby.
+                    if (status != Progress.FINISHED) {
                         var count = 0
-                        for (i in 0 until color.size){
-                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN){
-                                count ++
+                        for (i in 0 until color.size) {
+                            //  Cheks which positions are free in the lobby
+                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN) {
+                                count++
                             }
                         }
                         if (count == 5) {
@@ -113,19 +129,26 @@ class GameStartFragment : Fragment() {
                                 )
                             )
                         }
-                        startGame()
-                    }else{
-                        binding.gameIdInput.error=(getText(R.string.game_is_full))
+                        joinLobby()
+                    } else {
+                        binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }
                 }
             }
-        }.addOnFailureListener{
-            binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
+        }.addOnFailureListener {
+            binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
 
     }
 
-    fun startGame(){
+    //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
+    fun joinLobby(gameID:String) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        val action = GameStartFragmentDirections.actionGameStartFragmentToPlayerInfoFragment(gameID)
+        view.findNavController().navigate(action)
+    }
+    // For offline mode
+    fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         view.findNavController().navigate(R.id.action_gameStartFragment_to_playerInfoFragment)
     }

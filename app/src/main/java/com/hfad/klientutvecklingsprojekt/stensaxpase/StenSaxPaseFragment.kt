@@ -1,12 +1,17 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,6 +32,11 @@ class StenSaxPaseFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var viewModel: StenSaxPaseViewModel
 
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Sten Sax Pase")
+
+    var stenSaxPaseModel : StenSaxPaseModel? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -40,12 +50,61 @@ class StenSaxPaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
+        println("Currently in gameID: $gameID")
+
+
+        stenSaxPaseModel?.apply {
+            // lägg till de variabler som ska in i firebase
+        }
+
+        fun loadFromDatabase() {
+            var spaceParty = database.getReference("Space Party").child(gameID)
+
+            spaceParty.get().addOnSuccessListener {
+                Log.i("firebase", "Got value ${it.value}")
+            }.addOnFailureListener{
+                Log.e("firebase", "Error getting data", it)
+            }
+
+        }
+
+        fun saveToDatabase() {
+
+            //Use this once gameID is passed through the use of safeargs
+            //loadFromDatabase(gameID)
+
+            val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
+
+            players.put("playerIDplaceholder1", mutableMapOf(
+                "nickname" to "nicknamePlaceholder",
+                "color" to "colorPlaceholder",
+                "choice" to "choicePlacerholder"
+            ))
+
+            players.put("playerIDplaceholder2", mutableMapOf(
+                "nickname" to "nicknamePlaceholder",
+                "color" to "colorPlaceholder",
+                "choice" to "choicePlacerholder"
+            ))
+
+            stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
+            var lobbyID:String = gameID
+            myRef.child(lobbyID).setValue(stenSaxPaseModel)
+        }
+
+        // change gameID to the gameID which the overall game uses, possibly by safeARGS
+        saveToDatabase()
+
         // establish binding
         _binding = FragmentStenSaxPaseBinding.inflate(inflater, container, false)
         val view = binding.root
 
         // establish viewModel
         viewModel = ViewModelProvider(this).get(StenSaxPaseViewModel::class.java)
+
+        // load in players
+        viewModel.initPlayers()
 
         // add view code here
         val sten = binding.sten

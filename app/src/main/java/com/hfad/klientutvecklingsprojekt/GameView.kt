@@ -9,8 +9,12 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 import kotlin.random.Random
 
 class GameView : ConstraintLayout {
@@ -18,6 +22,8 @@ class GameView : ConstraintLayout {
     private var currentImageViewIndex: Int = 0
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Space Party")
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 
@@ -25,8 +31,12 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
+    // For safeargs
+    var gameID = ""
+
     // Constructors for creating the view programmatically
-    constructor(context: Context) : super(context) {
+    constructor(context: Context, gameID:String) : super(context) {
+        this.gameID = gameID
         init(context)
     }
 
@@ -107,7 +117,7 @@ class GameView : ConstraintLayout {
         layoutParams.topToTop = targetedImageView.id
         layoutParams.endToEnd = targetedImageView.id
         player.layoutParams = layoutParams
-
+        //  Check what type of tile player is standing on
         if (targetedImageView.tag == _binding.tile2.tag) {
             println("Plus 1")
         } else if (targetedImageView.tag == _binding.tile3.tag) {
@@ -117,20 +127,32 @@ class GameView : ConstraintLayout {
         } else if (targetedImageView.tag == _binding.tile5.tag) {
             println("Minus 5")
         } else if (targetedImageView.tag == _binding.tile6.tag) {
+            //  Change to portrait view
             val activity: AppCompatActivity? = context as? AppCompatActivity
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            //  Pick random game
             val randomVal = Random.nextInt(3)
-            if(randomVal == 0) {
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
-            } else if(randomVal == 1) {
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
+
+            if (randomVal == 0) {
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToStensaxpaseFragment(gameID)
+
+                view.findNavController().navigate(action)
+            } else if (randomVal == 1) {
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToSoccerFragment(gameID)
+
+                view.findNavController().navigate(action)
             } else {
-                view.findNavController().navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToGavleRouletteFragment(gameID)
+
+                view.findNavController().navigate(action)
             }
         }
     }
 
-    //  New solution WIP
+    //  Alternative solution WIP
     fun initTileBlocks(size: Int, geometry: Int) {
         var tileBlockArray = arrayOf(TileBlock(0, 0, TileTypes.TileStart, 0, 0, 100, 100))
 

@@ -117,6 +117,7 @@ class QuizFragment : Fragment() {
             binding.option2Button.visibility = View.GONE
             binding.option3Button.visibility = View.GONE
             binding.option4Button.visibility = View.GONE
+            binding.scoreTextView.visibility = View.GONE
 
             // Visa poängen
             val scoreText = "Ditt slutresultat: $score poäng"

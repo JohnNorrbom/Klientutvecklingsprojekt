@@ -105,10 +105,6 @@ class PlayerInfoFragment : Fragment() {
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
 
-            )
-        )
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
         //  Crashes after executing the line below
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }

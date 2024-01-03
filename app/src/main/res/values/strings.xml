@@ -24,4 +24,5 @@
     <string name="game_ID">Game ID </string>
     <string name="game_is_full">Game is full</string>
     <string name="play_online">play online</string>
+    <string name="press_the_character">Press the character you want to challange?</string>
 </resources>

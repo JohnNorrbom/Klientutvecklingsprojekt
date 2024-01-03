@@ -16,6 +16,11 @@ import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 import kotlinx.coroutines.delay
@@ -30,11 +35,67 @@ class SoccerFragment : Fragment() {
 
     private var _binding: FragmentSoccerBinding? = null
     private val binding get() = _binding!!
+
+    //database
+
+    //getting firebase database from the url
+    var databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+
+    var playerColor = "not assigned"
+    var opponentFound = false
+    var opponentsColor = "not assigned"
+    var opponentsUniqueId = "0"
+    // values must bne matching or waiting. When a user create a new connection/room
+    // and he is waiting for other to join the value will be waiting.
+    var status = "matching"
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater,container,false)
         val view = binding.root
+
+        //making uniqueID for player
+        var playerUniqueId = System.currentTimeMillis().toString()
+
+        val valueEventListener = object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //look for opponent
+                if(opponentFound){
+                    //look for any opponent in the node
+                    if (snapshot.hasChildren()){
+                        //checking all connections if other users are also waiting for a user to play the match
+                        for (connection: DataSnapshot in snapshot.children){
+
+                            //getting connection unique id
+                            val conID = connection.key?.toLong()
+
+                            //2 players are required to play the game.
+                            //If playercount is 1 it means other player is waiting for a opponent to play the game.
+                            //else if playerCount is 2 it means this connection has completed with 2 players.
+                            val playerCount = connection.childrenCount as Int
+                        }
+                        //if there is no connection available in the firebase then create a new connection
+                        // it is like creating a room and waiting for other players to join the room.
+                    }else{
+                        //generating unique id for the connection
+                        var connectionUniqueId = System.currentTimeMillis().toString()
+                        // adding first player to the connection and waiting for other to complete the connection
+                        val connectionRef = databaseReference.child(connectionUniqueId).child(playerUniqueId).child("player_color")
+                        status = "waiting"
+                    }
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        databaseReference.child("connection").addValueEventListener(valueEventListener)
+
+
         return view
     }
 

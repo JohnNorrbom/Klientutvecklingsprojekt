@@ -23,4 +23,5 @@
     <string name="join_online_game">Join Online Game</string>
     <string name="game_ID">Game ID </string>
     <string name="game_is_full">Game is full</string>
+    <string name="play_online">play online</string>
 </resources>

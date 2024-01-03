@@ -2,12 +2,17 @@ package com.hfad.klientutvecklingsprojekt
 
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.media.AudioManager
+import android.media.SoundPool
+import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.ActivityNavigator
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -26,6 +31,19 @@ class GameView : ConstraintLayout {
     private val myRef = database.getReference("Space Party")
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
+
+
+    //soundPool for dice
+    val maxStreams = 5 // Number of simultaneous sounds
+    val soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        SoundPool.Builder().setMaxStreams(maxStreams).build()
+    } else {
+        SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
+    }
+    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
+
+    //random generator
+    var random: Random = Random(6)
 
     fun setNavigateCallback(callback: () -> Unit) {
         this.navigateCallback = callback
@@ -57,6 +75,24 @@ class GameView : ConstraintLayout {
         view = binding.root
         // Now you can access the views using the binding
         player = _binding.player1
+
+        val tiles = arrayOf(_binding.tile1, _binding.tile2, _binding.tile3, _binding.tile4, _binding.tile5, _binding.tile6, _binding.tile7, _binding.tile8, _binding.tile9, _binding.tile10, _binding.tile11, _binding.tile12, _binding.tile13, _binding.tile14, _binding.tile15, _binding.tile16, _binding.tile17, _binding.tile18, _binding.tile19, _binding.tile20)
+
+
+
+        val dice = binding.diceButton
+
+        dice?.setOnClickListener{
+            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
+            var randomInt = random.nextInt(6) +1
+            var destination = "dice" + randomInt
+            Log.d("dice destination", destination)
+            val resourceId = resources.getIdentifier(destination, "drawable", "com.hfad.klientutvecklingsprojekt")
+            binding.diceButton?.setImageResource(resourceId)
+            currentImageViewIndex += randomInt
+            movePlayer(tiles[(currentImageViewIndex%20)])
+        }
+
 
         val mB: Button? = _binding.moveButton
         mB?.setOnClickListener {
@@ -234,7 +270,6 @@ class GameView : ConstraintLayout {
             else -> throw Exception("Invalid tileBlock type")
         }
     }
-
 
 }
 

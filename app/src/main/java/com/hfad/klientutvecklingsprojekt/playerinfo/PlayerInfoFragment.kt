@@ -109,7 +109,7 @@ class PlayerInfoFragment : Fragment() {
         playerModel?.apply {
             if ((takenPosition?.size ?: 1) <= 5) {
                 //  Changes text for TextView to the lobby gameID
-                binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
+                binding.gameId.text = "${getText(R.string.game_ID)}${gameID?:""}"
                 //  Loops through all 5 characters to see which of them are taken
                 for (i in 0 until characterColors.size) {
                     if (takenPosition?.get(characterColors[i]) == CharacterStatus.TAKEN) {

@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt
 
 import android.R
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -28,12 +29,7 @@ class BoardFragment : Fragment() {
         mediaPlayer?.isLooping = true // Disable built-in looping
         mediaPlayer?.start()
 
-
-
-        // For safeargs
-        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
-
-        gameView = GameView(requireContext(), gameID) // Replace with your custom game view
+        gameView = GameView(requireContext()) // Replace with your custom game view
 
         return gameView
     }

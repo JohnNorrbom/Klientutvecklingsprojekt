@@ -63,7 +63,7 @@ class StenSaxPaseViewModel() : ViewModel() {
     var gameID = ""
 
     fun setGameID() {
-        
+
     }
 
     fun initPlayers() {

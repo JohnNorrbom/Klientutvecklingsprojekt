@@ -17,7 +17,9 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
-    //val gameModel = GameModel?""
+    val gameModel : GameModel?=null
+
+
 
     /*
     stenSaxPaseModel?.apply {
@@ -26,6 +28,7 @@ class StenSaxPaseViewModel() : ViewModel() {
      */
 
     fun loadFromDatabase() {
+
         var spaceParty = database.getReference("Space Party").child(gameID)
 
         spaceParty.get().addOnSuccessListener {
@@ -63,7 +66,7 @@ class StenSaxPaseViewModel() : ViewModel() {
     var gameID = ""
 
     fun setGameID() {
-
+        println(gameModel?.gameID)
     }
 
     fun initPlayers() {

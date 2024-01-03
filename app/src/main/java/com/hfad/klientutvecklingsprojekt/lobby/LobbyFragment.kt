@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.lobby
 
 import android.content.ContentValues
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -33,10 +34,7 @@ class LobbyFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    val myRef = database.getReference("Space Party").child("Players")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
 
@@ -44,7 +42,8 @@ class LobbyFragment : Fragment() {
             lobbyModel = it
             setUI()
         }
-        myRef.addValueEventListener(lobbyListener)
+        lobbyRef.addValueEventListener(lobbyListener)
+        playerRef.addValueEventListener(playerListener)
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.testBtn.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE

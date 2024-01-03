@@ -17,26 +17,4 @@ object PlayerData {
                 myRef.child(model?.gameID ?: "").setValue(model)
             }
         }
-
-
-
-    fun fetchPlayerModel(){
-    private var _playerModel: MutableLiveData<PlayerModel> = MutableLiveData()
-    var playerModel: LiveData<PlayerModel> = _playerModel
-    val database =
-        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Space Party")
-    fun savePlayerModel(model: PlayerModel) {
-        _playerModel.postValue(model)
-        if (model.gameID != "-1") {
-            model.gameID?.let { myRef.child(it).setValue(model) }
-        }
-    }
-    fun fetchPlayerModel() {
-        playerModel.value?.apply {
-            if (gameID != "-1") {
-
-            }
-        }
-    }
 }

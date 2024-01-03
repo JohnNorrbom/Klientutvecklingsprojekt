@@ -13,7 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
@@ -50,8 +49,8 @@ class GameStartFragment : Fragment() {
     }
 
     fun createOfflinGame(){
-        PlayerData.savePlayerModel(
-            PlayerModel(
+        GameData.saveGameModel(
+            GameModel(
                 gameID = "-1",
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
@@ -79,7 +78,7 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        joinLobby(gameID)
+        joinLobby()
     }
 
     fun joinOnlineGame() {
@@ -135,10 +134,10 @@ class GameStartFragment : Fragment() {
                     }
                 }
             }
-        }.addOnFailureListener {
-            binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
-
+        }.addOnFailureListener {
+                binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
+            }
     }
 
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation

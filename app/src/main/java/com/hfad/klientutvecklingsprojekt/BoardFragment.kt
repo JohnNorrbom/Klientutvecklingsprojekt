@@ -27,12 +27,10 @@ class BoardFragment : Fragment() {
         super.onResume()
         startGameLoop()
     }
-
     override fun onPause() {
         stopGameLoop()
         super.onPause()
     }
-
     private fun startGameLoop() {
         isRunning = true
         gameLoopThread = Thread {
@@ -48,7 +46,6 @@ class BoardFragment : Fragment() {
         }
         gameLoopThread.start()
     }
-
     private fun stopGameLoop() {
         isRunning = false
         try {
@@ -57,12 +54,10 @@ class BoardFragment : Fragment() {
             e.printStackTrace()
         }
     }
-
     private fun updateGame() {
         // Update game logic here
 
     }
-
     private fun renderGame() {
         Handler(Looper.getMainLooper()).post {
             // Render game graphics on the UI thread

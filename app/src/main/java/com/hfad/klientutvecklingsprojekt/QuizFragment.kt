@@ -20,8 +20,7 @@ import java.nio.charset.Charset
 
 
 class QuizFragment : Fragment() {
-    private var _binding: FragmentQuizBinding? = null
-    private val binding get() = _binding!!
+
     private lateinit var questions: JSONArray
     private var currentQuestionIndex = 0
     private var score = 0 // Lägg till poängräknare
@@ -30,30 +29,33 @@ class QuizFragment : Fragment() {
 
     private lateinit var scoreTextView: TextView // Lägg till referens till textvy för poäng
     private var countDownTimer: CountDownTimer? = null
+    private var _binding: FragmentQuizBinding? = null
+    private val binding get() = _binding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        println("I AM IN CONSTRUCUTR RIGHT NOW !!!! !!! !")
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
         try {
+            //  Läs in frågorna från JSON-filen
+            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
             questions = JSONArray(jsonQuestions)
             displayQuestion()
-
-            // Sätt upp lyssnare för knapparna
+            // TOP LEFT BUTTON
             binding.option1Button.setOnClickListener {
                 checkAnswer(binding.option1Button.text.toString(), binding.option1Button)
             }
-
+            //  TOP RIGHT BUTTON
             binding.option2Button.setOnClickListener {
                 checkAnswer(binding.option2Button.text.toString(), binding.option2Button)
             }
-
+            //  BOTTOM LEFT BUTTON
             binding.option3Button.setOnClickListener {
                 checkAnswer(binding.option3Button.text.toString(), binding.option3Button)
             }
-
+            // BOTTOM RIGHT BUTTON
             binding.option4Button.setOnClickListener {
                 checkAnswer(binding.option4Button.text.toString(), binding.option4Button)
             }
@@ -68,8 +70,6 @@ class QuizFragment : Fragment() {
     }
 
 
-    // Läs in frågorna från JSON-filen
-    val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
 
 
     private fun loadJsonFromRawResource(resourceId: Int): String {
@@ -92,35 +92,8 @@ class QuizFragment : Fragment() {
         return json ?: ""
     }
 
-
-
-
-    private fun resetButtonColors() {
-        binding.option1Button.apply {
-            setBackgroundColor(Color.BLACK)
-            isEnabled = true
-            setClickable(true)
-        }
-        binding.option2Button.apply {
-            setBackgroundColor(Color.BLACK)
-            isEnabled = true
-            setClickable(true)
-        }
-        binding.option3Button.apply {
-            setBackgroundColor(Color.BLACK)
-            isEnabled = true
-            setClickable(true)
-        }
-        binding.option4Button.apply {
-            setBackgroundColor(Color.BLACK)
-            isEnabled = true
-            setClickable(true)
-        }
-    }
-
     private fun displayQuestion() {
         resetButtonColors()
-
         if (currentQuestionIndex < questions.length()) {
             val questionObject = questions.getJSONObject(currentQuestionIndex)
 
@@ -148,13 +121,37 @@ class QuizFragment : Fragment() {
             binding.option2Button.visibility = View.GONE
             binding.option3Button.visibility = View.GONE
             binding.option4Button.visibility = View.GONE
+            binding.scoreTextView.visibility = View.GONE
 
             // Visa poängen
             val scoreText = "Ditt slutresultat: $score poäng"
             binding.questionTextView.text = scoreText
         }
     }
-
+    private fun resetButtonColors() {
+        binding.option1Button.apply {
+            setBackgroundColor(Color.BLACK)
+            isEnabled = true
+            setClickable(true)
+        }
+        binding.option2Button.apply {
+            setBackgroundColor(Color.BLACK)
+            isEnabled = true
+            setClickable(true)
+        }
+        binding.option3Button.apply {
+            setBackgroundColor(Color.BLACK)
+            isEnabled = true
+            setClickable(true)
+        }
+        binding.option4Button.apply {
+            setBackgroundColor(Color.BLACK)
+            isEnabled = true
+            setClickable(true)
+        }
+    }
+//
+//
     private fun checkAnswer(selectedOption: String, selectedButton: View) {
         val correctAnswer = questions.getJSONObject(currentQuestionIndex).getString("correctAnswer")
 
@@ -194,11 +191,7 @@ class QuizFragment : Fragment() {
             displayQuestion() // Visa nästa fråga
         }, 2000) // 2000 ms = 2 sekunder
     }
-
-
-
-
-    // Uppdatera textvyen för att visa poängen
+//    // Uppdatera textvyen för att visa poängen
     private fun updateScore() {
         scoreTextView.text = "Poäng: $score"
     }
@@ -219,15 +212,11 @@ class QuizFragment : Fragment() {
                     binding.timerTextView.setTextColor(Color.BLACK)
 
             }
-
             override fun onFinish() {
                 currentQuestionIndex++
                 displayQuestion()
             }
         }
-
         countDownTimer?.start()
     }
-
-
 }

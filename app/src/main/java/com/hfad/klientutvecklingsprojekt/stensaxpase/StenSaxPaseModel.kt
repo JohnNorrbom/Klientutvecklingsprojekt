@@ -12,6 +12,3 @@ data class StenSaxPaseModel
     var status : Boolean? = null,
     var players: MutableMap<String, MutableMap<String,String>> = mutableMapOf()
     )
-
-private var _stenSaxPaseModel : MutableLiveData<PlayerModel> = MutableLiveData()
-var stenSaxPaseModel : LiveData<PlayerModel> = _stenSaxPaseModel

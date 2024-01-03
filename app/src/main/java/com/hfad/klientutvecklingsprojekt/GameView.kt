@@ -13,6 +13,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 import kotlin.random.Random
 
 class GameView : ConstraintLayout {
@@ -29,8 +31,12 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
+    // For safeargs
+    var gameID = ""
+
     // Constructors for creating the view programmatically
-    constructor(context: Context) : super(context) {
+    constructor(context: Context, gameID:String) : super(context) {
+        this.gameID = gameID
         init(context)
     }
 
@@ -126,12 +132,22 @@ class GameView : ConstraintLayout {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             //  Pick random game
             val randomVal = Random.nextInt(3)
+
             if (randomVal == 0) {
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToStensaxpaseFragment(gameID)
+
+                view.findNavController().navigate(action)
             } else if (randomVal == 1) {
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToSoccerFragment(gameID)
+
+                view.findNavController().navigate(action)
             } else {
-                view.findNavController().navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+                // For safeargs
+                val action = BoardFragmentDirections.actionBoardFragmentToGavleRouletteFragment(gameID)
+
+                view.findNavController().navigate(action)
             }
         }
     }

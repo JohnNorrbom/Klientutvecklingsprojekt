@@ -69,9 +69,11 @@ class GameStartFragment : Fragment() {
     }
 
     fun createOnlineGame() {
+        var gameID = (Random.nextInt(1000..9999)).toString()
+
         PlayerData.savePlayerModel(
             PlayerModel(
-                gameID = (Random.nextInt(1000..9999)).toString(),
+                gameID,
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
                     "white" to CharacterStatus.FREE,
@@ -82,7 +84,7 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        joinLobby()
+        joinLobby(gameID)
     }
 
     fun joinOnlineGame() {
@@ -132,6 +134,12 @@ class GameStartFragment : Fragment() {
     }
 
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
+    fun joinLobby(gameID:String) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        val action = GameStartFragmentDirections.actionGameStartFragmentToPlayerInfoFragment(gameID)
+        view.findNavController().navigate(action)
+    }
+    // For offline mode
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         view.findNavController().navigate(R.id.action_gameStartFragment_to_playerInfoFragment)

@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentArgs
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyFragmentDirections
 
 
 class BoardFragment : Fragment() {
@@ -19,7 +22,11 @@ class BoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        gameView = GameView(requireContext()) // Replace with your custom game view
+
+        // For safeargs
+        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
+
+        gameView = GameView(requireContext(), gameID) // Replace with your custom game view
 
         return gameView
     }

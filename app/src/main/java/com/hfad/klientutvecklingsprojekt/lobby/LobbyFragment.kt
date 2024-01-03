@@ -18,6 +18,8 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentArgs
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentDirections
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
@@ -41,7 +43,13 @@ class LobbyFragment : Fragment() {
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.testBtn.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
+
+            // For safeargs
+            val gameID = LobbyFragmentArgs.fromBundle(requireArguments()).gameID
+            val action = LobbyFragmentDirections.actionLobbyFragmentToBoardFragment(gameID)
+            view.findNavController().navigate(action)
+
+            //view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
         return view;
     }

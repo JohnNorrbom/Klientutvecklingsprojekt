@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.BoardFragmentArgs
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -47,12 +50,29 @@ class StenSaxPaseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
+        println("Currently in gameID: $gameID")
+
 
         stenSaxPaseModel?.apply {
             // lägg till de variabler som ska in i firebase
         }
 
-        fun saveToDatabase(gameID:String) {
+        fun loadFromDatabase() {
+            var spaceParty = database.getReference("Space Party").child(gameID)
+
+            spaceParty.get().addOnSuccessListener {
+                Log.i("firebase", "Got value ${it.value}")
+            }.addOnFailureListener{
+                Log.e("firebase", "Error getting data", it)
+            }
+
+        }
+
+        fun saveToDatabase() {
+
+            //Use this once gameID is passed through the use of safeargs
+            //loadFromDatabase(gameID)
 
             val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
 
@@ -74,11 +94,7 @@ class StenSaxPaseFragment : Fragment() {
         }
 
         // change gameID to the gameID which the overall game uses, possibly by safeARGS
-        saveToDatabase("0")
-
-        fun loadFromDatabase() {
-            var spaceParty = database.getReference("Space Party")
-        }
+        saveToDatabase()
 
         // establish binding
         _binding = FragmentStenSaxPaseBinding.inflate(inflater, container, false)

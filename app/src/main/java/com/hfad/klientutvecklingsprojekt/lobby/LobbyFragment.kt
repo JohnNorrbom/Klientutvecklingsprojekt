@@ -27,10 +27,7 @@ class LobbyFragment : Fragment() {
     private var lobbyModel : LobbyModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Space Party").child("Players")
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root

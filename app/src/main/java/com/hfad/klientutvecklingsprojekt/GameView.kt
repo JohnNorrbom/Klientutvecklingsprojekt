@@ -9,6 +9,8 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
 import kotlin.random.Random
@@ -18,6 +20,8 @@ class GameView : ConstraintLayout {
     private var currentImageViewIndex: Int = 0
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Space Party")
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 

@@ -25,8 +25,7 @@ class GameStartFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var view: LinearLayout
     private var playerModel: PlayerModel? = null
-    private val database =
-        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
 
     override fun onCreateView(
@@ -101,24 +100,24 @@ class GameStartFragment : Fragment() {
                 Log.d("Om null", "den är null")
                 binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
             } else {
-
+                //  Create array of colors to compare them with the colors in the lobby to see
+                //  which of them are are taken
                 val color = listOf("white", "red", "blue", "green", "yellow")
                 PlayerData.savePlayerModel(model)
                 Log.d("Om success", "model: ${model}")
                 model?.apply {
+                    //  Should not check status, because that only check the current player not the
+                    //  game/lobby.
                     if (status != Progress.FINISHED) {
                         var count = 0
                         for (i in 0 until color.size) {
+                            //  Cheks which positions are free in the lobby
                             if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN) {
                                 count++
                             }
                         }
                         if (count == 5) {
-                            PlayerData.savePlayerModel(
-                                PlayerModel(
-                                    status = Progress.FINISHED
-                                )
-                            )
+                            PlayerData.savePlayerModel(PlayerModel(status = Progress.FINISHED))
                         }
                         joinLobby()
                     } else {

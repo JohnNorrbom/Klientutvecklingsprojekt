@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="true">
+    <item android:drawable="@drawable/zgreenleftmiss00" android:duration="1000"/>
+    <item android:drawable="@drawable/zgreenleftmiss01" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss02" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss03" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss04" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss05" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss06" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss07" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss08" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss09" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss10" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss11" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss12" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss13" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss14" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss15" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss16" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss17" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss18" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss19" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss20" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss21" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss22" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss23" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss24" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss25" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss26" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss27" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss28" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss29" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss30" android:duration="30"/>
+    <item android:drawable="@drawable/zgreenleftmiss31" android:duration="30"/>
+
+
+    </animation-list>

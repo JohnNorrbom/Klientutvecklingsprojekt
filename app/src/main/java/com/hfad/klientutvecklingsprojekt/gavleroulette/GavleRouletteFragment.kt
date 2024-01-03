@@ -13,7 +13,7 @@ import kotlin.random.Random
 class GavleRouletteFragment : Fragment(), View.OnClickListener{
     private var _binding: FragmentGavleRouletteBinding? = null
     private val binding get() = _binding!!
-    private var gameModel: GameModel? = null
+    private var rouletteModel: RouletteModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,8 +29,8 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
         }
         binding.rouletAction.setOnClickListener(this)
 
-        GameData.gameModel.observe(this) {
-            gameModel = it
+        RouletteData.rouletteModel.observe(this) {
+            rouletteModel = it
             setUi()
         }
 
@@ -44,7 +44,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
 
 
     fun setUi() {
-        gameModel?.apply {
+        rouletteModel?.apply {
             binding.startGameBtn.visibility = View.VISIBLE
 
             binding.gameStatusText.text =
@@ -91,7 +91,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 
     fun pullTheTrigger() {
-        gameModel?.apply {
+        rouletteModel?.apply {
             currentBullet = Random.nextInt(6) + 1
             attempts += 1
             if (attempts == nbrOfPlayers) {
@@ -105,7 +105,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 
     fun addBullet() {
-        gameModel?.apply {
+        rouletteModel?.apply {
             if (laps == 2 && luckyNumber[1].isEmpty()) {
                 var temp: String
                 do {
@@ -153,14 +153,14 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 
     fun startGame() {
-        gameModel?.apply {
+        rouletteModel?.apply {
             val initialParticipants = mutableListOf(
                 Pair("1", PlayerStatus.ALIVE),
                 Pair("2", PlayerStatus.ALIVE),
                 Pair("3", PlayerStatus.ALIVE)
             )
             updateGameData(
-                GameModel(
+                RouletteModel(
                     gameId = gameId,
                     gameStatus = GameStatus.INPROGRESS,
                     offlineParticipants = initialParticipants,
@@ -194,11 +194,11 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 */
 
-    fun updateGameData(model: GameModel) {
-        GameData.saveGameModel(model)
+    fun updateGameData(model: RouletteModel) {
+        RouletteData.saveGameModel(model)
     }
     fun changePlayer(){
-        gameModel?.apply {
+        rouletteModel?.apply {
             for (i in 0 until offlineParticipants.size) {
                 if (currentPlayer == offlineParticipants[i].first) {
                     var j = i + 1
@@ -221,7 +221,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
         }
     }
     fun checkForRemainingPlayers() {
-        gameModel?.apply {
+        rouletteModel?.apply {
             if (luckyNumber.contains(currentBullet.toString())) {
                 for (i in 0 until offlineParticipants.size) {
                         val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
@@ -244,7 +244,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
         }
     }
     fun checkForWinner(){
-        gameModel?.apply {
+        rouletteModel?.apply {
             if (aliveCount == 1) {
                 for (i in 0 until offlineParticipants.size) {
                     if (offlineParticipants[i].second == PlayerStatus.ALIVE){
@@ -258,7 +258,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 
     override fun onClick(v: View?) {
-        gameModel?.apply {
+        rouletteModel?.apply {
             if (gameStatus != GameStatus.INPROGRESS) {
                 Toast.makeText(requireContext().applicationContext, "Game not started", Toast.LENGTH_SHORT).show()
                 return

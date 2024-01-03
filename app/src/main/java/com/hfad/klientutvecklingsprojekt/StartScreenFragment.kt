@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt
 
 import android.content.pm.ActivityInfo
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,16 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameData
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
 import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.Progress
-import kotlin.random.Random
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
+
 
 class StartScreenFragment : Fragment() {
+
+    private var mediaPlayer: MediaPlayer? = null
+
     private var _binding: FragmentStartScreenBinding? = null
     private val binding get()  = _binding!!
     override fun onCreateView(
@@ -27,6 +27,11 @@ class StartScreenFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentStartScreenBinding.inflate(inflater,container,false)
         val view = binding.root
+
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song1_140bpm)
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
+
         //  Changes view when button is clicked
         //  board button
         binding.startButton.setOnClickListener {
@@ -44,26 +49,21 @@ class StartScreenFragment : Fragment() {
             view.findNavController().navigate(R.id.action_startScreenFragment_to_stensaxpaseFragment)
         }
         //  roulette button
-        binding.rouletteMiniGameButton.setOnClickListener{
+      /*  binding.rouletteMiniGameButton.setOnClickListener{
 
-            GameData.saveGameModel(
-                GameModel(
+            RouletteData.saveGameModel(
+                RouletteModel(
                     gameStatus = GameStatus.JOINED
                 )
             )
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             //  Crashes after executing the line below
             view.findNavController().navigate(R.id.action_startScreenFragment_to_gavleRouletteFragment)
-        }
+        }*/
 
         binding.playerCreateButton.setOnClickListener {
-            PlayerData.savePlayerModel(
-                PlayerModel(
-                    status = Progress.INPROGRESS
-            )
-            )
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_playerInfoFragment)
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_gameStartFragment)
         }
         return view
     }
@@ -74,5 +74,7 @@ class StartScreenFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

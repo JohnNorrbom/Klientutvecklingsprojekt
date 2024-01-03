@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SoccerFragment">
+    tools:context=".soccer.SoccerFragment">
 
+    <!-- background animations -->
     <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,96 +16,108 @@
         tools:layout_editor_absoluteX="224dp"
         tools:layout_editor_absoluteY="56dp" />
 
+
+
+    <!-- shooter animations -->
     <ImageView
-        android:id="@+id/ball_mid_in"
+        android:id="@+id/shooter_hit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:background="@drawable/zballmidinanim"/>
+        android:src="@drawable/zwhitelefthit"/>
+    <!-- Goalie animations -->
+    <ImageView
+        android:id="@+id/goalie"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/zbluegoalleft"/>
+    <!-- shooter animations -->
+    <ImageView
+        android:id="@+id/shooter_miss"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/zwhiteleftmiss"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/left_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="↖"
+            android:textSize="70dp"
+            android:backgroundTint="@color/darkgreen"/>
+
+        <Button
+            android:id="@+id/mid_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="⬆"
+            android:textSize="70dp"
+            android:backgroundTint="@color/darkgreen"/>
+
+        <Button
+            android:id="@+id/right_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="↗"
+            android:textSize="70dp"
+            android:backgroundTint="@color/darkgreen"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/score_board"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="100dp"
+        android:text="0-0 "
+        android:textColor="@color/white"
+        android:background="@color/darkgreen"
+        />
 
     <ImageView
-        android:id="@+id/ball_right_in"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zballrightinanim"/>
+        android:id="@+id/finished_game_screen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/space_background" />
 
-    <ImageView
-        android:id="@+id/ball_left_in"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zballleftinanim"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
-    <ImageView
-        android:id="@+id/blue_goalie_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluegoalrightanim"/>
+        <TextView
+            android:id="@+id/final_score_point"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="50dp"
+            android:textColor="@color/white"
+            />
 
-    <ImageView
-        android:id="@+id/blue_goalie_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zbluegoalleftanim"/>
+        <Button
+            android:id="@+id/finished_game_button"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End minigame" />
 
-    <ImageView
-        android:id="@+id/ball_right"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zballrightanim"/>
 
-    <ImageView
-        android:id="@+id/ball_left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zballleftanim"/>
 
-    <ImageView
-        android:id="@+id/ball_mid"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/zballmidanim"/>
 
-    <ImageView
-        android:id="@+id/white_shooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/whiteshotanim" />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/blue_shooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/blueshotanim" />
-
-    <ImageView
-        android:id="@+id/green_shooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/greenshotanim" />
-
-    <ImageView
-        android:id="@+id/red_shooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/redshotanim" />
-
-    <ImageView
-        android:id="@+id/yellow_shooter"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/yellowshotanim" />
 
 
 

@@ -12,24 +12,24 @@
         android:label="fragment_start_screen"
         tools:layout="@layout/fragment_start_screen" >
         <action
-            android:id="@+id/action_startScreenFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
+            android:id="@+id/action_startScreenFragment_to_gameStartFragment"
+            app:destination="@id/gameStartFragment" />
         <action
             android:id="@+id/action_startScreenFragment_to_boardFragment"
             app:destination="@id/boardFragment" />
         <action
-            android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
-            app:destination="@id/gavleRouletteFragment" />
+            android:id="@+id/action_startScreenFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
         <action
             android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
-            app:destination="@+id/stensaxpaseFragment" />
+            app:destination="@id/stensaxpaseFragment" />
         <action
-            android:id="@+id/action_startScreenFragment_to_playerInfoFragment"
-            app:destination="@id/playerInfoFragment" />
+            android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.SoccerFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerFragment"
         android:label="fragment_soccer"
         tools:layout="@layout/fragment_soccer" />
     <fragment
@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_boardFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />
+        <action
+            android:id="@+id/action_boardFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
     </fragment>
     <fragment
         android:id="@+id/gavleRouletteFragment"
@@ -50,7 +53,7 @@
         tools:layout="@layout/fragment_gavle_roulette" />
     <fragment
         android:id="@+id/stensaxpaseFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.StenSaxPaseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseFragment"
         android:label="StenSaxPaseFragment"
         tools:layout="@layout/fragment_sten_sax_pase" />
     <fragment
@@ -66,5 +69,18 @@
         android:id="@+id/lobbyFragment"
         android:name="com.hfad.klientutvecklingsprojekt.lobby.LobbyFragment"
         android:label="fragment_lobby"
-        tools:layout="@layout/fragment_lobby" />
+        tools:layout="@layout/fragment_lobby" >
+        <action
+            android:id="@+id/action_lobbyFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameStartFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment"
+        android:label="fragment_game_start"
+        tools:layout="@layout/fragment_game_start" >
+        <action
+            android:id="@+id/action_gameStartFragment_to_playerInfoFragment"
+            app:destination="@id/playerInfoFragment" />
+    </fragment>
 </navigation>

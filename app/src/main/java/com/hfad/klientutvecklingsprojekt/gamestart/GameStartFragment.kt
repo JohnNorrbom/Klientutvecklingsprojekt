@@ -13,6 +13,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
@@ -63,6 +64,8 @@ class GameStartFragment : Fragment() {
                     "green" to CharacterStatus.FREE,
                     "yellow" to CharacterStatus.FREE
                 )
+                ,
+                players = ArrayList<LobbyModel>()
             )
         )
         joinLobby()
@@ -80,6 +83,8 @@ class GameStartFragment : Fragment() {
                     "green" to CharacterStatus.FREE,
                     "yellow" to CharacterStatus.FREE
                 )
+                ,
+                players = ArrayList<LobbyModel>()
             )
         )
         joinLobby()
@@ -130,7 +135,6 @@ class GameStartFragment : Fragment() {
         }
 
     }
-
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

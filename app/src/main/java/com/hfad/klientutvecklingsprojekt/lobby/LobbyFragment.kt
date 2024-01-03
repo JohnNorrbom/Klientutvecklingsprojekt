@@ -18,7 +18,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
 class LobbyFragment : Fragment() {
@@ -39,7 +38,7 @@ class LobbyFragment : Fragment() {
         }
         myRef.addValueEventListener(lobbyListener)
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
-        binding.testBtn.setOnClickListener {
+        binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }

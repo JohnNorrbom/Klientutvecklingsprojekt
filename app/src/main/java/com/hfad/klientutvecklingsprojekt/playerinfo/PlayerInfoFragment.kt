@@ -91,6 +91,15 @@ class PlayerInfoFragment : Fragment() {
                 color = playerColor
             )
         )
+//        var newPlayer = ArrayList<LobbyModel>()
+//        newPlayer.add(LobbyModel())
+//        for(i in 0 until (playerModel?.players?.size ?: 1)) {
+//            newPlayer.add(playerModel.players.get(i))
+//        }
+//        PlayerModel(
+//            //  var players: ArrayList<LobbyModel>? = null
+//            players = newPlayer
+//        )
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         //  Crashes after executing the line below
         view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)

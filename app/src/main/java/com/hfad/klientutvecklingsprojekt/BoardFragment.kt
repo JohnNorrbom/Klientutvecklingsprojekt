@@ -13,15 +13,27 @@ import androidx.navigation.findNavController
 
 
 class BoardFragment : Fragment() {
+    private var mediaPlayer: MediaPlayer? = null
     private lateinit var gameView: GameView // Replace with your custom game view
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
         gameView = GameView(requireContext()) // Replace with your custom game view
+        mediaPlayer = MediaPlayer.create(requireContext(), com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm)
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
+
+
+
+        // For safeargs
+        val gameID = BoardFragmentArgs.fromBundle(requireArguments()).gameID
+
+        gameView = GameView(requireContext(), gameID) // Replace with your custom game view
 
         return gameView
     }
@@ -65,6 +77,12 @@ class BoardFragment : Fragment() {
             // Render game graphics on the UI thread
             gameView.invalidate()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }
 

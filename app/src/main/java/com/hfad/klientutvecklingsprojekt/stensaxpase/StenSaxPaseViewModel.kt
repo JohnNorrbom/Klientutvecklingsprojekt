@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import androidx.lifecycle.ViewModel
+import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import kotlin.random.Random
 
 class StenSaxPaseViewModel : ViewModel() {
@@ -9,6 +10,7 @@ class StenSaxPaseViewModel : ViewModel() {
     var players = ArrayList<Player>()
     var lobbies = ArrayList<Lobby>()
     var id: Int = -1
+    val gameModel : GameModel ?=null
     /*
     init {
         setPlayerCount()

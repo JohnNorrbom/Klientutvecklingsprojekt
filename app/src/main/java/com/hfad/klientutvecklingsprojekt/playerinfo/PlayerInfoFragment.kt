@@ -42,7 +42,7 @@ class PlayerInfoFragment : Fragment() {
     private var currentGameID = ""
     private var currentPlayerID = ""
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("PLayers")
+    private val myRef = database.getReference("Game Lobby")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,13 +68,9 @@ class PlayerInfoFragment : Fragment() {
 
     fun confirmCharacter() {
         currentPlayerID = Random.nextInt(1000..9999).toString()
-        val playerName = binding.nicknameInput.text.toString()
+        playerName = binding.nicknameInput.text.toString()
         if (playerName == "") {
             binding.nicknameInput.error = (getText(R.string.enter_user_name))
-        }
-
-        gameModel?.apply {
-            currentGameID = gameID ?: ""
         }
 
         checkName { isNameTaken ->
@@ -93,52 +89,32 @@ class PlayerInfoFragment : Fragment() {
                 ).show()
                 return@checkName
             }
-
-            playerModel?.apply {
-                gameID = currentGameID
-                playerID = currentPlayerID
-                nickname = playerName
-                color = playerColor
-
-                updatePlayerData(this)
-            }
-
             LobbyData.saveLobbyModel(
                 LobbyModel(
                     gameID = currentGameID
+                )
+            )
+            PlayerData.savePlayerModel(
+                PlayerModel(
+                playerID = currentPlayerID,
+                nickname = playerName,
+                color = playerColor
                 )
             )
 
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
-        if (playerColor == "") {
-            binding.confirmBtn.error = (getText(R.string.choose_character))
-        }
-        PlayerData.savePlayerModel(
-            PlayerModel(
-                gameID = currentGameID,
-                playerID = currentPlayerID,
-                nickname = playerName,
-                color = playerColor
-            )
-        )
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        // Code used for safeargs
-        val gameID = PlayerInfoFragmentArgs.fromBundle(requireArguments()).gameID
-        val action = PlayerInfoFragmentDirections.actionPlayerInfoFragmentToLobbyFragment(gameID)
-        view?.findNavController()?.navigate(action)
 
         //  Crashes after executing the line below
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }
     fun checkName(callback: (Boolean) -> Unit) {
-        myRef.get().addOnSuccessListener {
+        myRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
             val snapshot = it
             Log.d("snap children", "children: ${snapshot.children}")
-            for(child in snapshot.children){
-                if (child.child("gameID").value == currentGameID && child.child("nickname").value == playerName){
+            for(player in snapshot.children){
+                if (player.child("nickname").value == playerName){
                     callback(true)
                 }
             }
@@ -152,7 +128,7 @@ class PlayerInfoFragment : Fragment() {
     fun setUI() {
         gameModel?.apply {
             //  Changes text for TextView to the lobby gameID
-            binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
+            binding.gameId.text = "${getText(R.string.game_ID)}${gameID?:""}"
             //  Loops through all 5 character colors to see which of them are taken
             for (i in 0 until characterColors.size) {
                 // if a player color is taken

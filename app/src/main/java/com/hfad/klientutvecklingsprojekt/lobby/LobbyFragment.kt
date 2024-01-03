@@ -21,6 +21,7 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentArgs
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragmentDirections
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
@@ -29,21 +30,19 @@ class LobbyFragment : Fragment() {
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val lobbyRef = database.getReference("Lobby")
-    val playerRef = database.getReference("PLayers")
+    val lobbyRef = database.getReference("Game Lobby")
+    val playerRef = database.getReference("Game Lobby").child("Players")
+    val currentGameID = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
-
         LobbyData.lobbyModel.observe(this){
             lobbyModel = it
             setUI()
         }
-        lobbyRef.addValueEventListener(lobbyListener)
-        playerRef.addValueEventListener(playerListener)
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.testBtn.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -55,9 +54,8 @@ class LobbyFragment : Fragment() {
 
             //view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
-        lobbyRef.addValueEventListener(lobbyListener)
+        lobbyRef.child(lobbyModel?.gameID ?: "").addValueEventListener(lobbyListener)
         playerRef.addValueEventListener(playerListener)
-        addPlayersToLobby()
         return view;
     }
     val lobbyListener = object : ValueEventListener {
@@ -82,21 +80,13 @@ class LobbyFragment : Fragment() {
 
     val playerListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            lobbyModel?.apply {
-                val playerIdsList = mutableListOf<String>()
-
-                for (childSnapshot in dataSnapshot.children) {
-                    val gameModel = childSnapshot.getValue(PlayerModel::class.java)
-                    if (gameModel != null && gameModel.gameID == gameID) {
-                        // Add the playerId to the list if the gameID matches
-                        playerIdsList.add(gameModel?.playerID ?: "")
-                    }
-                }
-                lobby = playerIdsList
-                updateLobbyData(this)
-                setUI()
+            val model = dataSnapshot.getValue(PlayerModel::class.java)
+                if (model != null) {
+                    PlayerData.savePlayerModel(model)
+                    setUI()
                 }
             }
+
             // Get Post object and use the values to update the UI
 
             // ...
@@ -107,62 +97,40 @@ class LobbyFragment : Fragment() {
         }
 
     fun setUI() {
-        lobbyModel?.apply {
-            addPlayersToLobby()
-            val size = lobby?.size ?: 0
-            for (i in 0 until size){
-                playerRef.child(lobby?.get(i) ?: "").get().addOnSuccessListener {
-                    val snapshot = it
-                    for(i in 0 until size){
-                        var resId = resources.getIdentifier(
-                            "astro_${snapshot.child("color").value}",
-                            "drawable",
-                            requireContext().packageName
-                        )
-                        val playerId = resources.getIdentifier(
-                            "player_${i+1}",
-                            "id",
-                            requireContext().packageName
-                        )
-                        val playerImageView =
-                            binding.root.findViewById<ImageView>(playerId)
-                        playerImageView.setImageResource(resId)
-                        playerImageView.visibility = View.VISIBLE
+        playerRef.get().addOnSuccessListener {
+            val dataSnapshot = it
+            var i = 1
+            for (player in dataSnapshot.children) {
+                var resId = resources.getIdentifier(
+                    "astro_${player.child("color").value}",
+                    "drawable",
+                    requireContext().packageName)
 
-                        val playerTextId = resources.getIdentifier(
-                            "player_${i+1}_text",
-                            "id",
-                            requireContext().packageName
-                        )
-                        val playerTextView =
-                            binding.root.findViewById<TextView>(playerTextId)
-                        playerTextView.text = snapshot.child("nickname").value.toString()
-                        playerTextView.visibility = View.VISIBLE
-                    }
-                }
+                val playerId = resources.getIdentifier(
+                    "player_${i}",
+                    "id",
+                    requireContext().packageName
+                )
+                val playerImageView =
+                    binding.root.findViewById<ImageView>(playerId)
+                playerImageView.setImageResource(resId)
+                playerImageView.visibility = View.VISIBLE
+
+                val playerTextId = resources.getIdentifier(
+                    "player_${i}_text",
+                    "id",
+                    requireContext().packageName
+                )
+                val playerTextView =
+                    binding.root.findViewById<TextView>(playerTextId)
+                playerTextView.text = player.child("nickname").value.toString()
+                playerTextView.visibility = View.VISIBLE
+                i++
             }
-
-
         }
     }
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för
     //enkelt kunna ändra UI beronde på spelare i lobbyn
-    fun addPlayersToLobby(){
-        lobbyModel?.apply {
-            playerRef.get().addOnSuccessListener {
-                val snapshot = it
-                var playerList = mutableListOf<String>()
-                for (player in snapshot.children) {
-                    if (player.child("gameID").value == gameID) {
-                        playerList.add(player.child("playerID").value.toString())
-                    }
-                }
-                lobby = playerList
-                updateLobbyData(this)
-            }
-        }
-    }
-
 
     fun updateLobbyData(model: LobbyModel){
         LobbyData.saveLobbyModel(model)

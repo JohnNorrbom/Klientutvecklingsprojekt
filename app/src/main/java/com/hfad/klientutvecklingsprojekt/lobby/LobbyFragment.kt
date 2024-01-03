@@ -10,11 +10,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -39,6 +41,11 @@ class LobbyFragment : Fragment() {
             setUI()
         }
         myRef.addValueEventListener(lobbyListener)
+        //  Button for starting game, loading BoardFragment. Everyone can click it right now.
+        binding.testBtn.setOnClickListener {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
+        }
         return view;
     }
     val lobbyListener = object : ValueEventListener {

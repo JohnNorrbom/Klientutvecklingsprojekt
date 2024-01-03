@@ -1,7 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.gamestart
 
 import android.content.pm.ActivityInfo
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,9 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
@@ -26,36 +22,37 @@ import kotlin.random.nextInt
 
 class GameStartFragment : Fragment() {
     private var _binding: FragmentGameStartBinding? = null
-    private val binding get()  = _binding!!
-    private lateinit var view : LinearLayout
-    private var playerModel : PlayerModel? = null
-    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-   private val myRef = database.getReference("Space Party")
+    private val binding get() = _binding!!
+    private lateinit var view: LinearLayout
+    private var playerModel: PlayerModel? = null
+    private val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Space Party")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentGameStartBinding.inflate(inflater,container,false)
+        _binding = FragmentGameStartBinding.inflate(inflater, container, false)
         view = binding.root
 
-        binding.playOfflineBtn.setOnClickListener{
+        binding.playOfflineBtn.setOnClickListener {
             createOfflinGame()
         }
 
-        binding.createOnlineGameBtn.setOnClickListener{
+        binding.createOnlineGameBtn.setOnClickListener {
             createOnlineGame()
         }
 
-        binding.joinOnlineGameBtn.setOnClickListener(){
+        binding.joinOnlineGameBtn.setOnClickListener() {
             joinOnlineGame()
         }
 
         return view;
     }
 
-    fun createOfflinGame(){
+    fun createOfflinGame() {
         PlayerData.savePlayerModel(
             PlayerModel(
                 gameID = "-1",
@@ -69,9 +66,10 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        startGame()
+        joinLobby()
     }
-    fun createOnlineGame(){
+
+    fun createOnlineGame() {
         PlayerData.savePlayerModel(
             PlayerModel(
                 gameID = (Random.nextInt(1000..9999)).toString(),
@@ -85,32 +83,34 @@ class GameStartFragment : Fragment() {
                 )
             )
         )
-        startGame()
+        joinLobby()
     }
 
-    fun joinOnlineGame(){
+    fun joinOnlineGame() {
         var gameID = binding.gameIdInput.text.toString()
-        if(gameID.isEmpty()){
-            binding.gameIdInput.error=(getText(R.string.please_enter_game_id))
+        //  Checks if the user wrote anything
+        if (gameID.isEmpty()) {
+            binding.gameIdInput.error = (getText(R.string.please_enter_game_id))
             return
         }
-
+        //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
             val model = it?.getValue(PlayerModel::class.java)
+            //  Checks if the server has that gameID
+            if (model == null) {
+                Log.d("Om null", "den är null")
+                binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
+            } else {
 
-            if (model == null){
-                Log.d("Om null","den är null")
-                binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
-            }else {
-                val color = listOf("white","red","blue","green","yellow")
+                val color = listOf("white", "red", "blue", "green", "yellow")
                 PlayerData.savePlayerModel(model)
-                Log.d("Om success","model: ${model}")
+                Log.d("Om success", "model: ${model}")
                 model?.apply {
-                    if (status != Progress.FINISHED){
+                    if (status != Progress.FINISHED) {
                         var count = 0
-                        for (i in 0 until color.size){
-                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN){
-                                count ++
+                        for (i in 0 until color.size) {
+                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN) {
+                                count++
                             }
                         }
                         if (count == 5) {
@@ -120,19 +120,20 @@ class GameStartFragment : Fragment() {
                                 )
                             )
                         }
-                        startGame()
-                    }else{
-                        binding.gameIdInput.error=(getText(R.string.game_is_full))
+                        joinLobby()
+                    } else {
+                        binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }
                 }
             }
-        }.addOnFailureListener{
-            binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
+        }.addOnFailureListener {
+            binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
 
     }
 
-    fun startGame(){
+    //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
+    fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         view.findNavController().navigate(R.id.action_gameStartFragment_to_playerInfoFragment)
     }

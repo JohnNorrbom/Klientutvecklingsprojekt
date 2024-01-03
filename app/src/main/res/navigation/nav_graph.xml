@@ -60,7 +60,11 @@
         android:id="@+id/lobbyFragment"
         android:name="com.hfad.klientutvecklingsprojekt.lobby.LobbyFragment"
         android:label="fragment_lobby"
-        tools:layout="@layout/fragment_lobby" />
+        tools:layout="@layout/fragment_lobby" >
+        <action
+            android:id="@+id/action_lobbyFragment_to_boardFragment"
+            app:destination="@id/boardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/gameStartFragment"
         android:name="com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment"

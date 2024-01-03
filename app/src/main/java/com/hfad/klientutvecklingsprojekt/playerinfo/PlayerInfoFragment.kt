@@ -53,7 +53,7 @@ class PlayerInfoFragment : Fragment() {
         return view
     }
     fun confirmCharacter(){
-        val currentPlayerId = Random.nextInt(1000..9999).toString()
+        val currentPlayerID = Random.nextInt(1000..9999).toString()
         val playerName = binding.nicknameInput.text.toString()
         if (playerName == null){
             binding.nicknameInput.error=(getText(R.string.enter_user_name))
@@ -68,7 +68,7 @@ class PlayerInfoFragment : Fragment() {
         LobbyData.saveLobbyModel(
             LobbyModel(
                 gameID = currentGameID,
-                playerID = currentPlayerId,
+                playerID = currentPlayerID,
                 nickname = playerName,
                 color = playerColor
             )

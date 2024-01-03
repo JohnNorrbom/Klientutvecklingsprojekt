@@ -107,7 +107,7 @@ class GameView : ConstraintLayout {
         layoutParams.topToTop = targetedImageView.id
         layoutParams.endToEnd = targetedImageView.id
         player.layoutParams = layoutParams
-
+        //  Check what type of tile player is standing on
         if (targetedImageView.tag == _binding.tile2.tag) {
             println("Plus 1")
         } else if (targetedImageView.tag == _binding.tile3.tag) {
@@ -117,12 +117,14 @@ class GameView : ConstraintLayout {
         } else if (targetedImageView.tag == _binding.tile5.tag) {
             println("Minus 5")
         } else if (targetedImageView.tag == _binding.tile6.tag) {
+            //  Change to portrait view
             val activity: AppCompatActivity? = context as? AppCompatActivity
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            //  Pick random game
             val randomVal = Random.nextInt(3)
-            if(randomVal == 0) {
+            if (randomVal == 0) {
                 view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
-            } else if(randomVal == 1) {
+            } else if (randomVal == 1) {
                 view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
             } else {
                 view.findNavController().navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
@@ -130,7 +132,7 @@ class GameView : ConstraintLayout {
         }
     }
 
-    //  New solution WIP
+    //  Alternative solution WIP
     fun initTileBlocks(size: Int, geometry: Int) {
         var tileBlockArray = arrayOf(TileBlock(0, 0, TileTypes.TileStart, 0, 0, 100, 100))
 

@@ -9,20 +9,20 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.firebase.FirebaseFragment
 
 object PlayerData {
-        private var _playerModel : MutableLiveData<PlayerModel> = MutableLiveData()
-        var playerModel : LiveData<PlayerModel> = _playerModel
-        val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-        val myRef = database.getReference("Space Party")
-        fun savePlayerModel(model: PlayerModel){
-            _playerModel.postValue(model)
-            if(model.gameID!= "-1"){
-                model.gameID?.let { myRef.child(it).setValue(model) }
-            }
+    private var _playerModel: MutableLiveData<PlayerModel> = MutableLiveData()
+    var playerModel: LiveData<PlayerModel> = _playerModel
+    val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Space Party")
+    fun savePlayerModel(model: PlayerModel) {
+        _playerModel.postValue(model)
+        if (model.gameID != "-1") {
+            model.gameID?.let { myRef.child(it).setValue(model) }
         }
-
-    fun fetchPlayerModel(){
+    }
+    fun fetchPlayerModel() {
         playerModel.value?.apply {
-            if (gameID!= "-1"){
+            if (gameID != "-1") {
 
             }
         }

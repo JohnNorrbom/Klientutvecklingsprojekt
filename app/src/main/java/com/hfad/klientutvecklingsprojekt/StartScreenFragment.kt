@@ -30,7 +30,7 @@ class StartScreenFragment : Fragment() {
             view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
         }
         //  soccer button
-      /*  binding.soccerMiniGameButton.setOnClickListener {
+        binding.soccerMiniGameButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
         }
@@ -38,7 +38,7 @@ class StartScreenFragment : Fragment() {
         binding.stensaxpaseMiniGameButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_stensaxpaseFragment)
-        }*/
+        }
         //  roulette button
       /*  binding.rouletteMiniGameButton.setOnClickListener{
 

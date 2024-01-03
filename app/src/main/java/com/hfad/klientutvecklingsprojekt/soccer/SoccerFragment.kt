@@ -1,23 +1,32 @@
 package com.hfad.klientutvecklingsprojekt.soccer
 
 import android.graphics.drawable.AnimationDrawable
+import android.media.MediaPlayer
+import android.net.Uri
+import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 import kotlinx.coroutines.delay
+import java.net.URI
 import java.time.Duration
+import kotlin.concurrent.thread
 
 class SoccerFragment : Fragment() {
 
     private lateinit var soccerViewModel: SoccerViewModel
-    private val nbrOfPresses = 0
-    private val playerID = 0
+    private var mediaPlayer: MediaPlayer? = null
 
     private var _binding: FragmentSoccerBinding? = null
     private val binding get() = _binding!!
@@ -31,6 +40,13 @@ class SoccerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.finalScorePoint.visibility = View.INVISIBLE
+        binding.finishedGameButton.visibility = View.INVISIBLE
+        binding.finishedGameScreen.visibility = View.INVISIBLE
+        mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song3_140bpm)
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
+
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
         var goalieColor = "yellow"
         var shootercolor = "green"
@@ -79,6 +95,8 @@ class SoccerFragment : Fragment() {
             val destination = "z" + soccerViewModel.shooterColor + soccerViewModel.shooterChoice + hitStatus
             val resourceId = resources.getIdentifier(destination, "drawable", "com.hfad.klientutvecklingsprojekt")
             currentImageView.setImageResource(resourceId)
+            val shooterAnimation = currentImageView.drawable as AnimationDrawable
+            shooterAnimation.start()
 
             val goalDestination: String
 
@@ -92,28 +110,36 @@ class SoccerFragment : Fragment() {
                 goalDestination = "z" + soccerViewModel.goalieColor + "goal" + soccerViewModel.goalieChoice
                 val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
                 binding.goalie.setImageResource(resourceId)
-                val goalieAnimation  = binding.goalie.drawable as AnimationDrawable
+                var goalieAnimation  = binding.goalie.drawable as AnimationDrawable
                 goalieAnimation.start()
+
             }
             Log.d("Goal Destination", goalDestination)
             Log.d("all choices", soccerViewModel.shooterColor+"shooter: " + soccerViewModel.shooterChoice + " " + soccerViewModel.goalieColor+"goalie: " + soccerViewModel.goalieChoice)
 
-
-
-            val shooterAnimation = currentImageView.drawable as AnimationDrawable
-
-            shooterAnimation.start()
-
-            binding.scoreBoard.text = "" + soccerViewModel.points + "-" + soccerViewModel.enemyPoints
-
-
             soccerViewModel.switchType()
 
+            if (soccerViewModel.enemyPoints == 3 || soccerViewModel.points == 3){
+                binding.finalScorePoint.visibility = View.VISIBLE
+                binding.finishedGameButton.visibility = View.VISIBLE
+                binding.finishedGameScreen.visibility = View.VISIBLE
+                if(soccerViewModel.enemyPoints == 3){
+                    binding.finalScorePoint.text = "" + soccerViewModel.getEnemyColor() + " won!"
+                }
+                if(soccerViewModel.points == 3){
+                    binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
+                }
+                binding.finishedGameButton.setOnClickListener {
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

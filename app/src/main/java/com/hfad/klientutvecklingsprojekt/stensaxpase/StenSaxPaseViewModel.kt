@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.getValue
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import kotlin.random.Random
 
@@ -19,8 +20,6 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     val gameModel : GameModel?=null
 
-
-
     /*
     stenSaxPaseModel?.apply {
         // lägg till de variabler som ska in i firebase
@@ -29,14 +28,17 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     fun loadFromDatabase() {
 
-        var spaceParty = database.getReference("Space Party").child(gameID)
+        var spaceParty = database.getReference("Sten Sax Pase").child(gameID).child("players")
+        var str:String? = ""
 
         spaceParty.get().addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
+
         }.addOnFailureListener{
             Log.e("firebase", "Error getting data", it)
         }
 
+        println("-------:$str")
     }
 
     fun saveToDatabase() {
@@ -54,8 +56,28 @@ class StenSaxPaseViewModel() : ViewModel() {
             "choice" to "null",
             "score" to "0"
         ))
-
          */
+
+        players.put("1111", mutableMapOf(
+            "nickname" to "Bengt",
+            "color" to "black",
+            "choice" to "null",
+            "score" to "0"
+        ))
+
+        players.put("2222", mutableMapOf(
+            "nickname" to "Sven",
+            "color" to "white",
+            "choice" to "null",
+            "score" to "0"
+        ))
+
+        players.put("3333", mutableMapOf(
+            "nickname" to "Måns",
+            "color" to "green",
+            "choice" to "null",
+            "score" to "0"
+        ))
 
         stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
 
@@ -63,18 +85,22 @@ class StenSaxPaseViewModel() : ViewModel() {
     }
 
     //add bussiness logic for sten sax pase mini-game
-    var gameID = "not set"
+    var gameID = "-1"
 
     private fun setGameID() {
         if(gameModel?.gameID != null) gameID = gameModel.gameID
-        println("----------${gameModel?.gameID}------$gameID")
+        println("---------:${gameModel?.gameID}-----:$gameID")
     }
 
     fun initGame() {
+        // set game ID
         setGameID()
 
-        //load two players from lobby
+        // load two players from lobby
         loadFromDatabase()
+
+        // save to database
+        saveToDatabase()
 
         // execute gameLoop
         gameLoop()

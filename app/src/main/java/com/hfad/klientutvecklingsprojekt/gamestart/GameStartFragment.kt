@@ -13,19 +13,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.Progress
 import kotlin.random.Random
 import kotlin.random.nextInt
 
 class GameStartFragment : Fragment() {
     private var _binding: FragmentGameStartBinding? = null
-    private val binding get() = _binding!!
-    private lateinit var view: LinearLayout
-    private var playerModel: PlayerModel? = null
+    private val binding get()  = _binding!!
+    private lateinit var view : LinearLayout
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
 
@@ -52,9 +48,9 @@ class GameStartFragment : Fragment() {
         return view;
     }
 
-    fun createOfflinGame() {
-        PlayerData.savePlayerModel(
-            PlayerModel(
+    fun createOfflinGame(){
+        GameData.saveGameModel(
+            GameModel(
                 gameID = "-1",
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
@@ -64,19 +60,14 @@ class GameStartFragment : Fragment() {
                     "green" to CharacterStatus.FREE,
                     "yellow" to CharacterStatus.FREE
                 )
-                ,
-                players = ArrayList<LobbyModel>()
             )
         )
         joinLobby()
     }
-
-    fun createOnlineGame() {
-        var gameID = (Random.nextInt(1000..9999)).toString()
-
-        PlayerData.savePlayerModel(
-            PlayerModel(
-                gameID,
+    fun createOnlineGame(){
+        GameData.saveGameModel(
+            GameModel(
+                gameID = (Random.nextInt(1000..9999)).toString(),
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
                     "white" to CharacterStatus.FREE,
@@ -85,11 +76,9 @@ class GameStartFragment : Fragment() {
                     "green" to CharacterStatus.FREE,
                     "yellow" to CharacterStatus.FREE
                 )
-                ,
-                players = ArrayList<LobbyModel>()
             )
         )
-        joinLobby(gameID)
+        joinLobby()
     }
 
     fun joinOnlineGame() {
@@ -112,6 +101,15 @@ class GameStartFragment : Fragment() {
                 val color = listOf("white", "red", "blue", "green", "yellow")
                 PlayerData.savePlayerModel(model)
                 Log.d("Om success", "model: ${model}")
+            val model = it?.getValue(GameModel::class.java)
+
+            if (model == null){
+                Log.d("Om null","den är null")
+                binding.gameIdInput.error=(getText(R.string.please_enter_valid_game_id))
+            }else {
+                val color = listOf("white","red","blue","green","yellow")
+                GameData.saveGameModel(model)
+                Log.d("Om success","model: ${model}")
                 model?.apply {
                     //  Should not check status, because that only check the current player not the
                     //  game/lobby.
@@ -124,19 +122,24 @@ class GameStartFragment : Fragment() {
                             }
                         }
                         if (count == 5) {
-                            PlayerData.savePlayerModel(PlayerModel(status = Progress.FINISHED))
+                            GameData.saveGameModel(
+                                GameModel(
+                                    status = Progress.FINISHED
+                                )
+                            )
                         }
-                        joinLobby()
+                        joinLobby(gameID)
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))
                     }
                 }
             }
-        }.addOnFailureListener {
-            binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
-
+        }.addOnFailureListener {
+                binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
+            }
     }
+
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
     fun joinLobby(gameID:String) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

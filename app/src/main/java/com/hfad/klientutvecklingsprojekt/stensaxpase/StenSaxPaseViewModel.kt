@@ -80,7 +80,7 @@ class StenSaxPaseViewModel : ViewModel() {
         for(player in players) {
             if(player.id == id) player.choice = choice
         }
-        gameLoop()
+        //gameLoop()
     }
 
     class Player(id:Int) {

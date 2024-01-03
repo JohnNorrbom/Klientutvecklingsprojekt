@@ -7,6 +7,7 @@
     <string name="start_button">Board</string>
     <string name="nickname">Nickname</string>
     <string name="enter_user_name">Enter user name</string>
+    <string name="enter_valid_user_name">Enter valid user name</string>
     <string name="choose_character">Choose Character</string>
     <string name="confirm">Confirm</string>
     <string name="choose_your_name_and_character">Choose your name and character</string>
@@ -21,7 +22,7 @@
     <string name="create_game_oline">Create Game Online</string>
     <string name="enter_game_id">Enter game ID</string>
     <string name="join_online_game">Join Online Game</string>
-    <string name="game_ID">Game ID </string>
+    <string name="game_ID">Game ID:</string>
     <string name="game_is_full">Game is full</string>
     <string name="play_online">play online</string>
     <string name="press_the_character">Press the character you want to challange?</string>

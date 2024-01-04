@@ -26,8 +26,6 @@ object PlayerData {
             val nickname = model.nickname ?: ""
             Log.d("p ID","${nickname}")
             Log.d("g ID","${gameID}")
-
-
             // Skapa en referens till den specifika spelarens nod
             val playerRef = myRef.child(gameID).child("players").child(nickname)
             playerRef.setValue(model)

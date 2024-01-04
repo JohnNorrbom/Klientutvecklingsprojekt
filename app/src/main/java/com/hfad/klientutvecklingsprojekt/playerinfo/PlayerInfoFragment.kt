@@ -31,6 +31,9 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+//
+//  PLAYERDATA IS SAVED AT LOBBY DATA
+//
 
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null

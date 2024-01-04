@@ -79,6 +79,11 @@ class GameView : ConstraintLayout {
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
 
+        getPlayerToBoard()
+
+        //TODO MOST BE REMOVED
+        player = binding.playerBlue
+
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
                 this@GameView.meModel = it
@@ -93,18 +98,6 @@ class GameView : ConstraintLayout {
         //sets the right reference for the playersRef Removes the players and adds the visuals that it needs
         playerRef = database.getReference("Player Data").child(currentGameID)
         playersRef = playerRef.child("players")
-
-        binding.playerWhite.visibility = View.INVISIBLE
-        binding.playerRed.visibility = View.INVISIBLE
-        binding.playerYellow.visibility = View.INVISIBLE
-        binding.playerGreen.visibility = View.INVISIBLE
-        binding.playerBlue.visibility = View.INVISIBLE
-        getPlayerToBoard()
-
-
-
-        // Now you can access the views using the binding
-        player = _binding.playerWhite
 
 
         val dice = binding.diceButton
@@ -149,6 +142,8 @@ class GameView : ConstraintLayout {
             println("current tileImage " + tileImage + " current tile" + tile)
             movePlayer(tileImage)
         }
+
+
     }
 
     fun setText(){
@@ -162,31 +157,63 @@ class GameView : ConstraintLayout {
         playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 var playerCount: Int = 0
+                var colors = arrayOf("green","red","white","yellow","blue")
+                for (i in 0..4) {
+                    var hasFoundIt: Boolean = false
+                    for (playerSnapshot in dataSnapshot.children) {
+                        val playerColor = playerSnapshot.child("color").value
+                        val playerName = playerSnapshot.child("nickname").value
+                        if (colors[i] == playerColor){
+                            hasFoundIt = true
+                        }
+                        playerCount++
+                        println(playerColor)
+                        println(playerName)
+                    }
+                    if (!hasFoundIt){
+                        if (i == 0){
+                            binding.playerGreen.visibility = View.INVISIBLE
+                        }
+                        if (i == 1){
+                            binding.playerRed.visibility = View.INVISIBLE
+                        }
+                        if (i == 2){
+                            binding.playerWhite.visibility = View.INVISIBLE
+                        }
+                        if (i == 3){
+                            binding.playerYellow.visibility = View.INVISIBLE
+                        }
+                        if (i == 4){
+                            binding.playerBlue.visibility = View.INVISIBLE
+                        }
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("Failed to fetch player data: ${databaseError.message}")
+            }
+        })
+    }
+    /*
+    fun getPlayerToBoard() {
+        playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var playerCount: Int = 0
                 for (playerSnapshot in dataSnapshot.children) {
-                    val playerColor = playerSnapshot.child("color").value
-                    val playerName = playerSnapshot.child("nickname").value
+                    val playerColor = playerSnapshot.child("color").value as String? // Ensure it's cast as String
+
                     playerCount++
                     println(playerColor)
-                    println(playerName)
+                    val playerView = when (playerColor) {
+                        "green" -> binding.playerGreen
+                        "red" -> binding.playerRed
+                        "white" -> binding.playerWhite
+                        "yellow" -> binding.playerYellow
+                        "blue" -> binding.playerBlue
+                        else -> null // Handle other colors or invalid cases
+                    }
 
-                    if(playerColor == "green"){
-                        binding.playerGreen.visibility = View.VISIBLE
-                    }
-                    if(playerColor == "red"){
-                        binding.playerRed.visibility = View.VISIBLE
-                    }
-                    if(playerColor == "white"){
-                        println("went in i white")
-                        binding.playerWhite.visibility = View.VISIBLE
-                    }
-                    if(playerColor == "yellow"){
-                        println("went in i yellow")
-                        binding.playerYellow.visibility = View.VISIBLE
-                    }
-                    if(playerColor == "blue"){
-                        println("went in i blue")
-                        binding.playerBlue.visibility = View.VISIBLE
-                    }
+                    playerView?.visibility = View.VISIBLE // Set visibility if the view exists
                 }
             }
 
@@ -195,6 +222,8 @@ class GameView : ConstraintLayout {
             }
         })
     }
+
+     */
 
     private fun movePlayer(targetedImageView: ImageView) {
         // Update constraints to move player to next tile

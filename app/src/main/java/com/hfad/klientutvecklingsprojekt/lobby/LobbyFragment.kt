@@ -19,6 +19,7 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -28,8 +29,8 @@ class LobbyFragment : Fragment() {
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val playerRef = database.getReference("Game Lobby")
-    val currentGameID = ""
+    val myRef = database.getReference("Game Lobby")
+    var currentGameID = ""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -37,21 +38,41 @@ class LobbyFragment : Fragment() {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
 
+        myRef.addValueEventListener(lobbyListener)
+
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-
             view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
         return view
     }
+    val lobbyListener = object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            lobbyModel?.apply {
+                val gameID = gameID ?: ""
+                val gameModel = dataSnapshot.child(gameID).getValue(LobbyModel::class.java)
+                if (gameModel != null) {
+                    Log.d("model","${gameModel}")
+                    // Check if the data has changed before updating and setting UI
+                    updateLobbyData(gameModel)
+                    currentGameID = gameID
+                    setUI()
+                }
+            }
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }
 
     fun setUI() {
-        playerRef.get().addOnSuccessListener {
+        Log.d("setUI","Jag är här")
+        myRef.child(currentGameID).get().addOnSuccessListener {
             val dataSnapshot = it
-            val players = dataSnapshot.child(lobbyModel?.gameID?:"")
             var i = 1
-            for (player in players.children) {
+            for (player in dataSnapshot.children) {
                 var resId = resources.getIdentifier(
                     "astro_${player.child("color").value}",
                     "drawable",
@@ -80,6 +101,13 @@ class LobbyFragment : Fragment() {
             }
         }
     }
+    fun updatePlayerData(model: PlayerModel,gameID : String) {
+        PlayerData.savePlayerModel(model,gameID)
+    }
+    fun updateLobbyData(model: LobbyModel) {
+        LobbyData.saveLobbyModel(model)
+    }
+
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för
     //enkelt kunna ändra UI beronde på spelare i lobbyn
 

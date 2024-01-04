@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.gamestart
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
@@ -13,9 +14,9 @@ object GameData {
     val myRef = database.getReference("Space Party")
 
     fun saveGameModel(model: GameModel){
+        Log.d("GameModel","${model}")
         _gameModel.postValue(model)
-        if(model.gameID!= "-1"){
-            model.gameID?.let { myRef.child(it).setValue(model) }
-        }
+        myRef.child(model.gameID?:"").setValue(model)
+
     }
 }

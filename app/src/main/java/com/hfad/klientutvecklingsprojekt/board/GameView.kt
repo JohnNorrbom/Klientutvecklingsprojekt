@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.board
 
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -6,18 +6,16 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentStartScreenBinding
 import kotlin.random.Random
 
 class GameView : ConstraintLayout {

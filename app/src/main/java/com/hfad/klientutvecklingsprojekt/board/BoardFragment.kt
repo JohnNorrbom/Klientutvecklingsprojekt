@@ -1,6 +1,5 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.board
 
-import android.R
 import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -9,9 +8,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
 
 
 class BoardFragment : Fragment() {
@@ -26,7 +23,9 @@ class BoardFragment : Fragment() {
     ): View? {
 
         gameView = GameView(requireContext()) // Replace with your custom game view
-        mediaPlayer = MediaPlayer.create(requireContext(), com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm)
+        mediaPlayer = MediaPlayer.create(requireContext(),
+            com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm
+        )
         mediaPlayer?.isLooping = true // Disable built-in looping
         mediaPlayer?.start()
 

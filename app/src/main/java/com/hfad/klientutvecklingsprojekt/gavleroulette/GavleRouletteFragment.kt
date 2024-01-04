@@ -42,7 +42,6 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
         _binding = null
     }
 
-
     fun setUi() {
         rouletteModel?.apply {
             binding.startGameBtn.visibility = View.VISIBLE

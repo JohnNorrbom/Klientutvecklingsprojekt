@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.board
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

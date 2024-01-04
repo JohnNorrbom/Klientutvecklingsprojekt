@@ -22,8 +22,7 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
-import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
-import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragmentDirections
+import com.hfad.klientutvecklingsprojekt.gamestart.Progress
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import kotlin.random.Random
@@ -41,7 +40,8 @@ class PlayerInfoFragment : Fragment() {
     private var currentGameID = ""
     private var currentPlayerID = ""
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Game Lobby")
+    private val myRef = database.getReference("Space Party")
+    private val lobbyRef = database.getReference("Game Lobby")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,20 +50,30 @@ class PlayerInfoFragment : Fragment() {
     ): View? {
         _binding = FragmentPlayerInfoBinding.inflate(inflater, container, false)
         val view = binding.root
+        GameData.fetchGameModel()
        binding.confirmBtn.setOnClickListener{
            confirmCharacter()
        }
 
-        GameData.gameModel.observe(viewLifecycleOwner) {
+        GameData.gameModel.observe(this) {
             gameModel = it
             setUI()
         }
 
-        myRef.addValueEventListener(gameListener)
         return view
     }
 
     fun confirmCharacter() {
+        currentGameID = gameModel?.gameID?:""
+        myRef.child(currentGameID).child("status").get().addOnSuccessListener {
+            if (it.value == Progress.FINISHED) {
+                Toast.makeText(
+                requireContext().applicationContext,
+                getText(R.string.game_is_full),
+                Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }
+        }
         currentPlayerID = Random.nextInt(1000..9999).toString()
         playerName = binding.nicknameInput.text.toString()
         if (playerName == "") {
@@ -77,6 +87,7 @@ class PlayerInfoFragment : Fragment() {
                 return@checkName
             }
 
+
             setPlayerInfo()
 
             if (playerColor == "") {
@@ -87,27 +98,24 @@ class PlayerInfoFragment : Fragment() {
                 ).show()
                 return@checkName
             }
-
-
-
-
-
-
+            gameModel?.apply {
+                takenPosition?.put(playerColor, CharacterStatus.TAKEN)
+                updateGameData(this)
+            }
             PlayerData.savePlayerModel(
                 PlayerModel(
                     playerID = currentPlayerID,
                     nickname = playerName,
                     color = playerColor
-                ),
-                gameModel?.gameID?:""
+                ), currentGameID
             )
-            Log.d("playermodel","playerModel ${playerModel}")
 
             LobbyData.saveLobbyModel(
                 LobbyModel(
-                    gameID = gameModel?.gameID?:""
+                    gameID = currentGameID
                 )
             )
+            checkSizeOfLobby()
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
@@ -116,16 +124,14 @@ class PlayerInfoFragment : Fragment() {
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     }
     fun checkName(callback: (Boolean) -> Unit) {
-        myRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
-            val snapshot = it
-            Log.d("snap children", "children: ${snapshot}")
-            for(player in snapshot.children){
-                if (player.child("nickname").value == playerName){
-                    callback(true)
-                    return@addOnSuccessListener
-                }
+        lobbyRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
+            var check = false
+            Log.d("player","${it.child("players").child(playerName).child("nickname").value}")
+           Log.d("realName","${playerName}")
+            if (it.child("players").child(playerName).child("nickname").value == playerName){
+                check = true
             }
-            callback(false)
+            callback(check)
         }.addOnFailureListener {
             callback(false)
         }
@@ -198,21 +204,57 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
-    val gameListener = object : ValueEventListener {
+    /*val gameListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
-            gameModel?.apply {
-                val gameID = gameID ?: ""
-                val gameModel = dataSnapshot.child(gameID).getValue(GameModel::class.java)
-                if (gameModel != null) {
-                    // Check if the data has changed before updating and setting UI
-                    updateGameData(gameModel)
-                    setUI()
+            val newGameModel = dataSnapshot.child(gameModel?.gameID ?: "").getValue(GameModel::class.java)
+            if (newGameModel != null && newGameModel != gameModel) {
+                Log.d("onDataChange", "GameModel retrieved: $newGameModel")
+
+                // Check if the data has changed before updating and setting UI
+                if (newGameModel.status != Progress.FINISHED || gameModel?.status != Progress.FINISHED) {
+                    requireActivity().runOnUiThread {
+
+                        val gameModel : GameModel = newGameModel // Uppdatera gameModel
+                        updateGameData(gameModel)
+                        setUI()
+                    }
                 }
             }
         }
 
         override fun onCancelled(databaseError: DatabaseError) {
             Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
+        }
+    }*/
+
+    fun checkSizeOfLobby() {
+        gameModel?.apply {
+            if (status != Progress.FINISHED) {
+                var allPositionsTaken = true
+
+                for (i in 0 until characterColors.size) {
+                    if (takenPosition?.get(characterColors[i]) != CharacterStatus.TAKEN) {
+                        allPositionsTaken = false
+                        break
+                    }
+                }
+
+                Log.d("checkSizeOfLobby", "allPositionsTaken: $allPositionsTaken")
+
+                if (allPositionsTaken) {
+                    // Kontrollera om statusen faktiskt ändras innan du uppdaterar
+                    if (status != Progress.FINISHED) {
+                            GameData.saveGameModel(
+                                GameModel(
+                                    gameID = gameID,
+                                    status = Progress.FINISHED,
+                                    takenPosition= takenPosition
+                                )
+                            )
+                        Log.d("checkSizeOfLobby", "Status updated to FINISHED")
+                    }
+                }
+            }
         }
     }
 
@@ -232,11 +274,9 @@ class PlayerInfoFragment : Fragment() {
                         if (color.second.isChecked) {
                             Log.d("inför Apply", "bra")
                             //  Set position to taken
-                            takenPosition?.set(color.first, CharacterStatus.TAKEN)
                             playerColor = color.first
                             Log.d("takenPosition", "taken: ${takenPosition}")
                             Log.d("this", "this: ${this}")
-                               updateGameData(this)
                         }
                     }
                 }
@@ -244,9 +284,7 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
-    fun updatePlayerData(model: PlayerModel,gameID : String) {
-        PlayerData.savePlayerModel(model,gameID)
-    }
+
     fun updateGameData(model: GameModel){
         GameData.saveGameModel(model)
     }

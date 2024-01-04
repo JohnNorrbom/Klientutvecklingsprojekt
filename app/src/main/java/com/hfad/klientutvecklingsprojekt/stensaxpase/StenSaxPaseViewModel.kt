@@ -20,11 +20,6 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     val gameModel : GameModel?=null
 
-    /*
-    stenSaxPaseModel?.apply {
-    }
-     */
-
     var playerMap : MutableMap<String, MutableMap<String,String>>? = null
 
     fun loadFromDatabase() {

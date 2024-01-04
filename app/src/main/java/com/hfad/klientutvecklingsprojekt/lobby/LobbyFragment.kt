@@ -31,7 +31,7 @@ class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
-    private var meModel : MeModel?= null
+    private var meModel : MeModel?= null//den här
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Lobby Data")
     var currentGameID = ""
@@ -49,6 +49,7 @@ class LobbyFragment : Fragment() {
             startGame()
         }
 
+        //den här
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@LobbyFragment.meModel = it
@@ -68,6 +69,7 @@ class LobbyFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
     fun setText(){
+        //den här
         currentGameID= meModel?.gameID?:""
         currentPlayerID = meModel?.playerID?:""
         Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")

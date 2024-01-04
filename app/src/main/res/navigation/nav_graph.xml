@@ -41,7 +41,7 @@
         android:label="BoardFragment" >
         <action
             android:id="@+id/action_boardFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
+            app:destination="@id/soccerChooseFragment" />
         <action
             android:id="@+id/action_boardFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />

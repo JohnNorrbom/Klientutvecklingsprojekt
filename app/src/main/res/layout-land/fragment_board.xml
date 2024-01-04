@@ -230,12 +230,44 @@
         android:tag="mini_game"/>
 
     <ImageView
-        android:id="@+id/player1"
+        android:id="@+id/player_white"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:src="@drawable/astro_white"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
-        app:layout_constraintEnd_toEndOf="@+id/tile1"/>
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
+
+    <ImageView
+        android:id="@+id/player_red"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/astro_red"
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
+
+    <ImageView
+        android:id="@+id/player_blue"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/astro_blue"
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
+
+    <ImageView
+        android:id="@+id/player_yellow"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/astro_yellow"
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
+
+    <ImageView
+        android:id="@+id/player_green"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/astro_green"
+        app:layout_constraintEnd_toEndOf="@+id/tile1"
+        app:layout_constraintTop_toTopOf="@+id/tile1" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/moveButton"

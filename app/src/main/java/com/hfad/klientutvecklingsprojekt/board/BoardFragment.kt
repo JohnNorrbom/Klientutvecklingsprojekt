@@ -5,10 +5,15 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
 class BoardFragment : Fragment() {
@@ -16,13 +21,30 @@ class BoardFragment : Fragment() {
     private lateinit var gameView: GameView // Replace with your custom game view
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
+    private var playerModel : PlayerModel? = null
+    private var meModel : MeModel? = null
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        gameView = GameView(requireContext()) // Replace with your custom game view
+        PlayerData.playerModel.observe(this) {
+            playerModel = it
+        }
+
+        //den här
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@BoardFragment.meModel = it
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+        println("TESTESTETSETSET " + meModel)
         mediaPlayer = MediaPlayer.create(requireContext(),
             com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm
         )

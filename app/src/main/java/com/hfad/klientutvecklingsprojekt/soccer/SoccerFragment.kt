@@ -20,11 +20,13 @@ class SoccerFragment : Fragment() {
     private var mediaPlayer: MediaPlayer? = null
     private var soccerModel : SoccerModel? = null
     private var _binding: FragmentSoccerBinding? = null
+
     private val binding get() = _binding!!
 
     private var goalieColor = "yellow"
     private var shooterColor = "red"
     var text: String = ""
+    private var yourColor = ""
 
     //variable that see if you are p1 or p2
     private var youArePlayerOne: Boolean = false
@@ -49,11 +51,13 @@ class SoccerFragment : Fragment() {
         soccerModel?.apply {
             shooterColor = p1Color.toString()
             goalieColor = p2Color.toString()
-            binding.finalScorePoint.text = p1Color
         }
         Log.d("shooter","shooter: "+ shooterColor)
         Log.d("goalie","goalie: "+ goalieColor)
 
+
+        //sets player1 and 2 locally  (p1 starts as shooter)
+        youArePlayerOne = yourColor == shooterColor
 
         soccerViewModel.setColors(shooterColor,goalieColor, 1)
 
@@ -74,7 +78,6 @@ class SoccerFragment : Fragment() {
         Log.d("onViewCreated after observe model", shooterColor)
         Log.d("onViewCreated after observe model", goalieColor)
 
-
         binding.finalScorePoint.visibility = View.INVISIBLE
         binding.finishedGameButton.visibility = View.INVISIBLE
         binding.finishedGameScreen.visibility = View.INVISIBLE
@@ -87,14 +90,17 @@ class SoccerFragment : Fragment() {
 
         binding.leftButton.setOnClickListener {
             soccerViewModel.leftButtonClick()
+            sendChoiceOnline("left")
             doAnimation(soccerViewModel)
         }
         binding.rightButton.setOnClickListener {
             soccerViewModel.rightButtonClick()
+            sendChoiceOnline("right")
             doAnimation(soccerViewModel)
         }
         binding.midButton.setOnClickListener {
             soccerViewModel.midButtonClick()
+            sendChoiceOnline("mid")
             doAnimation(soccerViewModel)
         }
 
@@ -105,16 +111,24 @@ class SoccerFragment : Fragment() {
 
     fun checkOtherPlayerReady(): Boolean {
         soccerModel?.apply {
-            shooterColor = p1Color.toString()
-            goalieColor = p2Color.toString()
-            binding.finalScorePoint.text = p1Color
+
         }
         return false
     }
 
 
     fun sendChoiceOnline(choice: String){
-
+        if (youArePlayerOne){
+            soccerModel?.apply {
+                p1Choice = choice
+                SoccerData.updateSoccerData(this)
+            }
+        }else{
+            soccerModel?.apply {
+                p2Choice = choice
+                SoccerData.updateSoccerData(this)
+            }
+        }
     }
 
 

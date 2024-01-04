@@ -8,33 +8,52 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
+import com.google.android.gms.common.api.internal.LifecycleActivity
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
+import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
-//  TODO add more ImageViews for each player and set it as GONE
+//  TODO add more ImageViews for each player and set it as GONE         //John
 //  TODO connect each ImageView with it's corresponding player/color
 //  TODO keep track of local player in order to keep track of turns
 
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
-    private val meModel : MeModel ? =null
+    private var meModel : MeModel ? =null
+    private var playerModel: PlayerModel ? = null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    var currentGameID =""
+    var currentPlayerID =""
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
+
+
+
+    //player references
+    var playerRef = database.getReference("Player Data").child("7496")
+    var playersRef = playerRef.child("players")
+
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 
@@ -55,28 +74,38 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
-    // Constructors for creating the view programmatically
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle
-    ) {
-        init(context)
-    }
-
     private fun init(context: Context) {
+    // characters players
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
+
+        MeData.meModel.observe(context as LifecycleOwner) { meModel ->
+            meModel?.let {
+                this@GameView.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+            println("gameID in gameView: "+currentGameID)
+        }
+
+        //sets the right reference for the playersRef Removes the players and adds the visuals that it needs
+        playerRef = database.getReference("Player Data").child(currentGameID)
+        playersRef = playerRef.child("players")
+
+        binding.playerWhite.visibility = View.INVISIBLE
+        binding.playerRed.visibility = View.INVISIBLE
+        binding.playerYellow.visibility = View.INVISIBLE
+        binding.playerGreen.visibility = View.INVISIBLE
+        binding.playerBlue.visibility = View.INVISIBLE
+        getPlayerToBoard()
+
+
+
         // Now you can access the views using the binding
-        player = _binding.player1
+        player = _binding.playerWhite
+
 
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
@@ -91,6 +120,11 @@ class GameView : ConstraintLayout {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
+
+            playerModel?.apply {
+                position = currentImageViewIndex
+            }
+
             val tile = resources.getIdentifier(
                 "tile${(currentImageViewIndex%20) + 1}",
                 "id",
@@ -115,6 +149,51 @@ class GameView : ConstraintLayout {
             println("current tileImage " + tileImage + " current tile" + tile)
             movePlayer(tileImage)
         }
+    }
+
+    fun setText(){
+        //den här
+        currentGameID= meModel?.gameID?:""
+        currentPlayerID = meModel?.playerID?:""
+        Log.d("meModelView","playerID: ${currentPlayerID} GameID: ${currentGameID}")
+    }
+
+    fun getPlayerToBoard(){
+        playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var playerCount: Int = 0
+                for (playerSnapshot in dataSnapshot.children) {
+                    val playerColor = playerSnapshot.child("color").value
+                    val playerName = playerSnapshot.child("nickname").value
+                    playerCount++
+                    println(playerColor)
+                    println(playerName)
+
+                    if(playerColor == "green"){
+                        binding.playerGreen.visibility = View.VISIBLE
+                    }
+                    if(playerColor == "red"){
+                        binding.playerRed.visibility = View.VISIBLE
+                    }
+                    if(playerColor == "white"){
+                        println("went in i white")
+                        binding.playerWhite.visibility = View.VISIBLE
+                    }
+                    if(playerColor == "yellow"){
+                        println("went in i yellow")
+                        binding.playerYellow.visibility = View.VISIBLE
+                    }
+                    if(playerColor == "blue"){
+                        println("went in i blue")
+                        binding.playerBlue.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                println("Failed to fetch player data: ${databaseError.message}")
+            }
+        })
     }
 
     private fun movePlayer(targetedImageView: ImageView) {
@@ -153,7 +232,7 @@ class GameView : ConstraintLayout {
                 view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
+                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
@@ -163,5 +242,21 @@ class GameView : ConstraintLayout {
                     .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
+    }
+    // Constructors for creating the view programmatically
+    constructor(context: Context) : super(context) {
+        init(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
+        init(context)
     }
 }

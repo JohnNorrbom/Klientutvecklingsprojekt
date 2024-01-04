@@ -9,4 +9,5 @@ data class PlayerModel(
     var nickname : String? = null,
     var color : String? = null,
     var score : String? = null,
+    var currentImageViewIndex : String? = null,
 )

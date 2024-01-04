@@ -74,22 +74,8 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
-
-    fun setPlayerModel(model: PlayerModel?){
-        playerModel  = model
-    }
-
-    fun setMeModel(model: MeModel?){
-        meModel = model
-        var gameId: String = meModel?.gameID?:""
-
-        playerRef = database.getReference("Player Data").child(gameId)
-        println("GAMEID: " + gameId)
-        getPlayerToBoard()
-    }
-
     private fun init(context: Context) {
-// characters players
+    // characters players
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
 
@@ -108,7 +94,7 @@ class GameView : ConstraintLayout {
         binding.playerYellow.visibility = View.GONE
         binding.playerGreen.visibility = View.GONE
         binding.playerBlue.visibility = View.GONE
-
+        getPlayerToBoard()
 
 
 

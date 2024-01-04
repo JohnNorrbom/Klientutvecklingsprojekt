@@ -54,8 +54,6 @@ class BoardFragment : Fragment() {
         mediaPlayer?.start()
 
         gameView = GameView(requireContext()) // Replace with your custom game view
-        gameView.setPlayerModel(playerModel)
-        gameView.setMeModel(meModel)
 
         return gameView
     }

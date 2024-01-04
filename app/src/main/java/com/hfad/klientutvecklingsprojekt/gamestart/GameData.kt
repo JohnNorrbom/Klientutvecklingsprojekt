@@ -19,10 +19,8 @@ object GameData {
     val myRef = database.getReference("Game Data")
 
     fun saveGameModel(model: GameModel){
-        Log.d("GameModel","${model}")
         _gameModel.postValue(model)
         myRef.child(model.gameID?:"").setValue(model)
-
     }
 
     fun fetchGameModel(){
@@ -31,7 +29,7 @@ object GameData {
         }
     }
 
-    val gameListener = object : ValueEventListener {
+    private val gameListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             val id = gameModel.value?.gameID
             val model = snapshot.child(id ?: "").getValue(GameModel::class.java)

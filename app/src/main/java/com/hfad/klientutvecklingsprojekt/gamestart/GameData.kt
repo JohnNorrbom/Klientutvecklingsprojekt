@@ -16,7 +16,7 @@ object GameData {
     private var _gameModel : MutableLiveData<GameModel?> = MutableLiveData()
     var gameModel : MutableLiveData<GameModel?> = _gameModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Space Party")
+    val myRef = database.getReference("Game Data")
 
     fun saveGameModel(model: GameModel){
         Log.d("GameModel","${model}")

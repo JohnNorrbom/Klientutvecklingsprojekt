@@ -13,12 +13,13 @@ import kotlin.random.Random
 
 class StenSaxPaseViewModel() : ViewModel() {
 
-    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Sten Sax Pase")
 
-    private var stenSaxPaseModel : StenSaxPaseModel? = null
+    private var stenSaxPaseModel: StenSaxPaseModel? = null
 
-    val gameModel : GameModel?=null
+    val gameModel: GameModel? = null
 
     /*
     stenSaxPaseModel?.apply {
@@ -29,12 +30,12 @@ class StenSaxPaseViewModel() : ViewModel() {
     fun loadFromDatabase() {
 
         var spaceParty = database.getReference("Sten Sax Pase").child(gameID).child("players")
-        var str:String? = ""
+        var str: String? = ""
 
         spaceParty.get().addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
 
-        }.addOnFailureListener{
+        }.addOnFailureListener {
             Log.e("firebase", "Error getting data", it)
         }
 
@@ -45,7 +46,7 @@ class StenSaxPaseViewModel() : ViewModel() {
 
         //loadFromDatabase()
 
-        val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
+        val players: MutableMap<String, MutableMap<String, String>> = mutableMapOf()
 
         /*
         // for each player in lobby, get this from loadFromDatabase(), or possibly safeargs
@@ -58,26 +59,32 @@ class StenSaxPaseViewModel() : ViewModel() {
         ))
          */
 
-        players.put("1111", mutableMapOf(
-            "nickname" to "Bengt",
-            "color" to "black",
-            "choice" to "null",
-            "score" to "0"
-        ))
+        players.put(
+            "1111", mutableMapOf(
+                "nickname" to "Bengt",
+                "color" to "black",
+                "choice" to "null",
+                "score" to "0"
+            )
+        )
 
-        players.put("2222", mutableMapOf(
-            "nickname" to "Sven",
-            "color" to "white",
-            "choice" to "null",
-            "score" to "0"
-        ))
+        players.put(
+            "2222", mutableMapOf(
+                "nickname" to "Sven",
+                "color" to "white",
+                "choice" to "null",
+                "score" to "0"
+            )
+        )
 
-        players.put("3333", mutableMapOf(
-            "nickname" to "Måns",
-            "color" to "green",
-            "choice" to "null",
-            "score" to "0"
-        ))
+        players.put(
+            "3333", mutableMapOf(
+                "nickname" to "Måns",
+                "color" to "green",
+                "choice" to "null",
+                "score" to "0"
+            )
+        )
 
         stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
 
@@ -88,7 +95,7 @@ class StenSaxPaseViewModel() : ViewModel() {
     var gameID = "-1"
 
     private fun setGameID() {
-        if(gameModel?.gameID != null) gameID = gameModel.gameID
+        if (gameModel?.gameID != null) gameID = gameModel.gameID
         println("---------:${gameModel?.gameID}-----:$gameID")
     }
 
@@ -108,16 +115,17 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     val gameStatus = database.getReference("Sten Sax Pase").child(gameID).child("status")
 
-        fun gameLoop() {
-            gameStatus.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot){
-                    val status = dataSnapshot.getValue()
-                }
-                override fun onCancelled(error: DatabaseError) {
-                    // Failed to read value
-                    Log.w("db_error", "Failed to read value.", error.toException())
-                }
-            })
+    fun gameLoop() {
+        gameStatus.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val status = dataSnapshot.getValue()
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("db_error", "Failed to read value.", error.toException())
+            }
+        })
     }
 
 }

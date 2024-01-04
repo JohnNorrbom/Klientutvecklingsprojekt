@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.quiz
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,10 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.json.JSONArray
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.databinding.ActivityMainBinding
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizBinding
 import org.json.JSONException
 import org.json.JSONObject
@@ -68,15 +67,11 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
-
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         return binding.root
     }
-
-
-
 
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null

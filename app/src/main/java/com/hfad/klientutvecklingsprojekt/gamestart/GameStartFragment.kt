@@ -42,10 +42,9 @@ class GameStartFragment : Fragment() {
         binding.joinOnlineGameBtn.setOnClickListener() {
             joinOnlineGame()
         }
-
         return view;
     }
-
+    //  THIS WILL NOT BE INCLUDED IN THE FINAL PRODUCT. FOCUS ON ONLINE PLEASE
     fun createOfflinGame(){
         GameData.saveGameModel(
             GameModel(
@@ -86,6 +85,7 @@ class GameStartFragment : Fragment() {
             binding.gameIdInput.error = (getText(R.string.please_enter_game_id))
             return
         }
+        println("CHECKING DIFSN GAME ID " + gameID + " " + myRef.child(gameID).get().toString())
         //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
             val model = it?.getValue(GameModel::class.java)
@@ -113,7 +113,6 @@ class GameStartFragment : Fragment() {
             binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
     }
-
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

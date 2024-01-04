@@ -7,17 +7,47 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.google.firebase.database.getValue
-import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import kotlin.random.Random
 
 class StenSaxPaseViewModel() : ViewModel() {
 
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Sten Sax Pase")
+    private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
+    private val playerDataRef = database.getReference("Player Data")
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
+    var playerID: String = "noPlayerID"
+    var gameID: String = "noGameID"
+
+    fun initGame() {
+        // write code here in sequential order of which they should execute :-P
+
+    }
+
+    fun setID(currentGameID:String, currentPlayerID:String) {
+        gameID = currentGameID
+        playerID = currentPlayerID
+    }
+
+    fun loadPlayersFromGameID() {
+        playerDataRef.child(gameID).get().addOnSuccessListener {
+            Log.i("firebase", "Got value ${it.value}")
+            // Prepare Map which players will go into
+            val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
+            // Loop through all players and add to local 'players' Map
+            for(player in it.child("players").children) {
+                players.put("${player.child("playerID").value}", mutableMapOf(
+                    "nickname" to "${player.child("nickname").value}",
+                    "color" to "${player.child("color").value}",
+                    "choice" to "null",
+                    "score" to "0"
+                ))
+            }
+        }
+    }
+
+    /*
     var playerMap : MutableMap<String, MutableMap<String,String>>? = null
 
     fun loadPlayersFromLobby() {
@@ -84,13 +114,14 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     fun initialSaveToDatabase(playersArr:MutableMap<String,MutableMap<String,String>>) {
 
-        val players = playersArr
+        var players:MutableMap<String,MutableMap<String,String>> = mutableMapOf()
+        //if(!playersArr.isEmpty()) players = playersArr
         println("playerArr: $playersArr")
 
         // just for testing
         if(players.isEmpty() || players == null) {
             players.put(
-                "$pID", mutableMapOf(
+                "10", mutableMapOf(
                     "nickname" to "Bengt",
                     "color" to "black",
                     "choice" to "null",
@@ -120,18 +151,17 @@ class StenSaxPaseViewModel() : ViewModel() {
 
         // Save to Database
         stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
-
+        println("----$gameID----$stenSaxPaseModel")
         myRef.child(gameID).setValue(stenSaxPaseModel)
     }
 
     //add bussiness logic for sten sax pase mini-game
-    var gameID = "-1"
+    var gameID = "10"
 
     private fun setGameID() {
-        //if(gameModel?.gameID != null) gameID = gameModel.gameID
-        //else
-            gameID = gID
-        //println("------:${gameModel?.gameID}-----:$gameID")
+        if(!gID.isEmpty()) gameID = gID
+        else gameID = "10"
+        println("-----:$gameID")
     }
 
     fun initGame() {
@@ -226,4 +256,5 @@ class StenSaxPaseViewModel() : ViewModel() {
             }
         })
     }
+     */
 }

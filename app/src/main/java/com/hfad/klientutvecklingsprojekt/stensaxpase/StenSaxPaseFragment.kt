@@ -8,29 +8,35 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.Firebase
-import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.board.GameView
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
-import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
-import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 import com.hfad.klientutvecklingsprojekt.player.MeData
-import kotlin.random.Random
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 
 class StenSaxPaseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: StenSaxPaseViewModel
+    private var meModel : MeModel? = null
+
+    var currentGameID : String = ""
+    var currentPlayerID : String = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val gID = StenSaxPaseFragmentArgs.fromBundle(requireArguments()).gameID
-        //val pID = StenSaxPaseFragmentArgs.fromBundle(requireArguments()).playerID
-        val pID = Random.nextInt(1000,9999).toString()
+        MeData.meModel.observe(context as LifecycleOwner) { meModel ->
+            meModel?.let {
+                this@StenSaxPaseFragment.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
 
         // establish binding
         _binding = FragmentStenSaxPaseBinding.inflate(inflater, container, false)
@@ -39,7 +45,7 @@ class StenSaxPaseFragment : Fragment() {
         // establish viewModel
         viewModel = ViewModelProvider(this).get(StenSaxPaseViewModel::class.java)
 
-        viewModel.setIdTest(gID, pID)
+        viewModel.setID(currentGameID, currentPlayerID)
 
         // initialize game
         viewModel.initGame()
@@ -52,23 +58,30 @@ class StenSaxPaseFragment : Fragment() {
         sten.setOnClickListener {
             //sax.visibility = View.INVISIBLE
             //pase.visibility = View.INVISIBLE
-            viewModel.setChoice("sten", pID)
-            setActionText("$pID valde: Sten")
+            //viewModel.setChoice("sten", currentPlayerID)
+            setActionText("$currentPlayerID valde: Sten")
         }
         sax.setOnClickListener {
             //sten.visibility = View.INVISIBLE
             //pase.visibility = View.INVISIBLE
-            viewModel.setChoice("sax", pID)
-            setActionText("$pID valde: Sax")
+            //viewModel.setChoice("sax", currentPlayerID)
+            setActionText("$currentPlayerID valde: Sax")
         }
         pase.setOnClickListener {
             //sten.visibility = View.INVISIBLE
             //sax.visibility = View.INVISIBLE
-            viewModel.setChoice("pase", pID)
-            setActionText("$pID valde: Påse")
+            //viewModel.setChoice("pase", currentPlayerID)
+            setActionText("$currentPlayerID valde: Påse")
         }
 
         return view
+    }
+
+    fun setText() {
+        //den här
+        currentGameID = meModel?.gameID ?: ""
+        currentPlayerID = meModel?.playerID ?: ""
+        Log.d("StenSaxPaseFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
 
     private fun setActionText(text: String) {

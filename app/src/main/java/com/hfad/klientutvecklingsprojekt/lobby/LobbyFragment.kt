@@ -104,7 +104,7 @@ class LobbyFragment : Fragment() {
         myRef.child(localGameID).get().addOnSuccessListener {
             val snapshot = it.child("players")
             for (player in snapshot.children){
-                players.set((player.value).toString()).to(PlayerStatus.ALIVE)
+                //players.set((player.value).toString()).to(PlayerStatus.ALIVE)
             }
         }
         RouletteData.saveGameModel(

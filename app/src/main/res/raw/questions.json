@@ -524,5 +524,45 @@
     "question": "Who betrays you in Call of Duty Modern Warfare 2?",
     "options": ["Ghost", "Shepherd", "Graves", "Sergant Pepper"],
     "correctAnswer": "Shepherd"
+  },
+  {
+    "question": "Who composed the classical piece 'Für Elise'?",
+    "options": ["Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"],
+    "correctAnswer": "Ludwig van Beethoven"
+  },
+  {
+    "question": "In the video game 'The Legend of Zelda,' what is the protagonist's name?",
+    "options": ["Link", "Ganon", "Zelda", "Malon"],
+    "correctAnswer": "Link"
+  },
+  {
+    "question": "In computer science, what does 'HTTP' stand for?",
+    "options": ["HyperText Transfer Protocol", "High-Tech Transfer Process", "Human Tolerance Test Procedure", "HyperTransfer Text Protocol"],
+    "correctAnswer": "HyperText Transfer Protocol"
+  },
+  {
+    "question": "What is the currency of Japan?",
+    "options": ["Yuan", "Won", "Ringgit", "Yen"],
+    "correctAnswer": "Yen"
+  },
+  {
+    "question": "Who is generally considered the inventor of the motor car?",
+    "options": ["Henry Ford", "Karl Benz", "Hans Volvo", "Henry M. Leland"],
+    "correctAnswer": "Karl Benz"
+  },
+  {
+    "question": "What number was the Apollo mission that successfully put a man on the moon for the first time in human history?",
+    "options": ["Apollo 9", "Apollo 11", "Apollo 13", "Apollo 14"],
+    "correctAnswer": "Apollo 11"
+  },
+  {
+    "question": "What is the largest US state (by landmass)?",
+    "options": ["Alaska", "California", "Texas", "Montana"],
+    "correctAnswer": "Alaska"
+  },
+  {
+    "question": "Who severed Anakin Skywalker's arm with his light sabre?",
+    "options": ["Darth Maul", "General Grievous", "Count Dooku", "Palpatine"],
+    "correctAnswer": "Count Dooku"
   }
 ]

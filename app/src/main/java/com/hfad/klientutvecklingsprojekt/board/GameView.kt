@@ -13,7 +13,10 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
+import com.google.android.gms.common.api.internal.LifecycleActivity
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,6 +24,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
+import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
@@ -38,9 +42,13 @@ class GameView : ConstraintLayout {
     private var playerModel: PlayerModel ? = null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    var currentGameID =""
+    var currentPlayerID =""
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
+
+
 
     //player references
     var playerRef = database.getReference("Player Data").child("7496")
@@ -85,6 +93,15 @@ class GameView : ConstraintLayout {
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
 
+        MeData.meModel.observe(context as LifecycleOwner) { meModel ->
+            meModel?.let {
+                this@GameView.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
 
         binding.playerWhite.visibility = View.GONE
         binding.playerRed.visibility = View.GONE
@@ -141,6 +158,13 @@ class GameView : ConstraintLayout {
             println("current tileImage " + tileImage + " current tile" + tile)
             movePlayer(tileImage)
         }
+    }
+
+    fun setText(){
+        //den här
+        currentGameID= meModel?.gameID?:""
+        currentPlayerID = meModel?.playerID?:""
+        Log.d("meModelView","playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
 
     fun getPlayerToBoard(){

@@ -13,8 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -44,10 +42,9 @@ class GameStartFragment : Fragment() {
         binding.joinOnlineGameBtn.setOnClickListener() {
             joinOnlineGame()
         }
-
         return view;
     }
-
+    //  THIS WILL NOT BE INCLUDED IN THE FINAL PRODUCT. FOCUS ON ONLINE PLEASE
     fun createOfflinGame(){
         GameData.saveGameModel(
             GameModel(
@@ -88,6 +85,7 @@ class GameStartFragment : Fragment() {
             binding.gameIdInput.error = (getText(R.string.please_enter_game_id))
             return
         }
+        println("CHECKING DIFSN GAME ID " + gameID + " " + myRef.child(gameID).get().toString())
         //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
             val model = it?.getValue(GameModel::class.java)
@@ -99,27 +97,12 @@ class GameStartFragment : Fragment() {
                 //  Create array of colors to compare them with the colors in the lobby to see
                 //  which of them are are taken
                 val color = listOf("white", "red", "blue", "green", "yellow")
-
                 GameData.saveGameModel(model)
                 Log.d("Om success","model: ${model}")
                 model?.apply {
                     //  Should not check status, because that only check the current player not the
                     //  game/lobby.
                     if (status != Progress.FINISHED) {
-                        var count = 0
-                        for (i in 0 until color.size) {
-                            //  Cheks which positions are free in the lobby
-                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN) {
-                                count++
-                            }
-                        }
-                        if (count == 5) {
-                            GameData.saveGameModel(
-                                GameModel(
-                                    status = Progress.FINISHED
-                                )
-                            )
-                        }
                         joinLobby()
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))
@@ -130,7 +113,6 @@ class GameStartFragment : Fragment() {
             binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
     }
-
     //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

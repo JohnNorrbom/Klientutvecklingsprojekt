@@ -84,16 +84,12 @@ class PlayerInfoFragment : Fragment() {
             binding.nicknameInput.error = (getText(R.string.enter_user_name))
             return
         }
-
         checkName { isNameTaken ->
             if (isNameTaken) {
                 binding.nicknameInput.error = getText(R.string.enter_valid_user_name)
                 return@checkName
             }
-
-
             setPlayerInfo()
-
             if (playerColor == "") {
                 Toast.makeText(
                     requireContext().applicationContext,
@@ -113,15 +109,12 @@ class PlayerInfoFragment : Fragment() {
                     color = playerColor
                 ), currentGameID
             )
-
             LobbyData.saveLobbyModel(
                 LobbyModel(
                     gameID = currentGameID
                 )
             )
             checkSizeOfLobby()
-
-
             MeData.saveMeModel(
                 MeModel(
                     gameID = currentGameID,
@@ -129,20 +122,14 @@ class PlayerInfoFragment : Fragment() {
                 )
             )
             }
-
-
-
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
-
-        //  Crashes after executing the line below
-        // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     fun checkName(callback: (Boolean) -> Unit) {
         lobbyRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
             var check = false
             Log.d("player","${it.child("players").child(playerName).child("nickname").value}")
-           Log.d("realName","${playerName}")
+            Log.d("realName","${playerName}")
             if (it.child("players").child(playerName).child("nickname").value == playerName){
                 check = true
             }
@@ -275,7 +262,6 @@ class PlayerInfoFragment : Fragment() {
             }
         }
     }
-
 
     fun updateGameData(model: GameModel){
         GameData.saveGameModel(model)

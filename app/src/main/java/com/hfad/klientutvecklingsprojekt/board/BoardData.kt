@@ -34,12 +34,11 @@ object BoardData {
         override fun onDataChange(snapshot: DataSnapshot) {
             //  ID for right boardmodel
             val id = boardModel.value?.gameID
-            //  Saves database board model
+            //  Saves boardmodel from database
             val model = snapshot.child(id ?: "").getValue(BoardModel::class.java)
             //  Writes over local board model
-            _boardModel.postValue(model)
+            _boardModel.postValue(model)    //  Saves locally
         }
-
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }

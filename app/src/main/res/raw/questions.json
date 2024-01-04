@@ -48,5 +48,105 @@
     "question": "Vad är Schrödingers katt?",
     "options": ["En katt med kvantmekaniska egenskaper", "En skröna", "En berömd konstverk", "En populär filmkaraktär"],
     "correctAnswer": "En skröna"
+  },
+  {
+    "question": "Hur många planeter finns det i vårt solsystem?",
+    "options": ["7", "8", "9", "10"],
+    "correctAnswer": "8"
+  },
+  {
+    "question": "Vad är den första primtalet större än 10?",
+    "options": ["11", "13", "15", "17"],
+    "correctAnswer": "11"
+  },
+  {
+    "question": "Vilken är den ljusaste stjärnan på natthimlen?",
+    "options": ["Sirius", "Vega", "Deneb", "Antares"],
+    "correctAnswer": "Sirius"
+  },
+  {
+    "question": "Vad är π (pi) i matematiken?",
+    "options": ["3.141", "2.718", "1.618", "4.669"],
+    "correctAnswer": "3.141"
+  },
+  {
+    "question": "Vad kallas den tid det tar för jorden att rotera ett varv runt sin egen axel?",
+    "options": ["Dygn", "Vecka", "Månad", "År"],
+    "correctAnswer": "Dygn"
+  },
+  {
+    "question": "Vad är Hubble-teleskopet?",
+    "options": ["En satellit", "En bilmodell", "En rymdstation", "Ett teleskop"],
+    "correctAnswer": "Ett teleskop"
+  },
+  {
+    "question": "Vad är kvantmekanik?",
+    "options": ["Studien av små partiklar", "Studien av stora galaxer", "Studien av ekosystem", "Studien av själva universum"],
+    "correctAnswer": "Studien av små partiklar"
+  },
+  {
+    "question": "Vad är euklidisk geometri?",
+    "options": ["Geometri baserad på parallella linjer", "Geometri baserad på sfärer", "Geometri baserad på kurvor", "Geometri baserad på vågräta och lodräta linjer"],
+    "correctAnswer": "Geometri baserad på parallella linjer"
+  },
+  {
+    "question": "Vilken är världens längsta flod?",
+    "options": ["Amazonfloden", "Nilen", "Mississippifloden", "Ganges"],
+    "correctAnswer": "Nilen"
+  },
+  {
+    "question": "Vad är Heptagon?",
+    "options": ["En form med sju sidor", "En rymdfarkost", "En maträtt", "En insekt"],
+    "correctAnswer": "En form med sju sidor"
+  },
+  {
+    "question": "Vilket element har kemiskt symbol 'O'?",
+    "options": ["Syre", "Kol", "Guld", "Natrium"],
+    "correctAnswer": "Syre"
+  },
+  {
+    "question": "Vad är accelerationen på grund av tyngdkraften på jorden?",
+    "options": ["9.8 m/s²", "5.0 m/s²", "12.3 m/s²", "7.2 m/s²"],
+    "correctAnswer": "9.8 m/s²"
+  },
+  {
+    "question": "Vem upptäckte penicillinet?",
+    "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Jonas Salk"],
+    "correctAnswer": "Alexander Fleming"
+  },
+  {
+    "question": "Vilken är världens största öken?",
+    "options": ["Saharaöknen", "Antarktis", "Gobiöknen", "Karakumöknen"],
+    "correctAnswer": "Antarktis"
+  },
+  {
+    "question": "Vad är kvoten mellan en cirkels omkrets och dess diameter känd som?",
+    "options": ["Pi (π)", "Epsilon (ε)", "Theta (θ)", "Sigma (σ)"],
+    "correctAnswer": "Pi (π)"
+  },
+  {
+    "question": "Vad är klorofyll?",
+    "options": ["En grön pigment i växter", "En metall", "En gas", "En typ av mineral"],
+    "correctAnswer": "En grön pigment i växter"
+  },
+  {
+    "question": "Vilken planet är känd som 'Röda planeten'?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturnus"],
+    "correctAnswer": "Mars"
+  },
+  {
+    "question": "Vad är Eukaryota?",
+    "options": ["En typ av cellstruktur", "En maträtt", "En politisk ideologi", "En berömd konstnär"],
+    "correctAnswer": "En typ av cellstruktur"
+  },
+  {
+    "question": "Vilken enhet används för att mäta elektriskt motstånd?",
+    "options": ["Ohm", "Ampere", "Volt", "Watt"],
+    "correctAnswer": "Ohm"
+  },
+  {
+    "question": "Vad är en baryon?",
+    "options": ["En partikel", "En subatomär partikel", "En stjärna", "En exoplanet"],
+    "correctAnswer": "En partikel"
   }
 ]

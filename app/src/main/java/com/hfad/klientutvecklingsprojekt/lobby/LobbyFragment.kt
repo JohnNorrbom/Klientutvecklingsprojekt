@@ -91,7 +91,7 @@ class LobbyFragment : Fragment() {
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
     }
     fun setUI() {
         Log.d("setUI","I setUI")

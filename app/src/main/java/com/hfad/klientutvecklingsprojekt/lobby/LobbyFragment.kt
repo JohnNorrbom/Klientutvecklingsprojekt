@@ -48,7 +48,6 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
-
         //den här
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -59,8 +58,6 @@ class LobbyFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
-
         return view
     }
 

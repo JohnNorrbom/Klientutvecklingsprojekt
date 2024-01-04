@@ -24,6 +24,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
+            android:id="@+id/astro_blue"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginLeft="5dp"

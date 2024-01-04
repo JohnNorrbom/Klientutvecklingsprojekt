@@ -23,6 +23,9 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+import com.hfad.klientutvecklingsprojekt.soccer.SoccerData.soccerModel
 import kotlinx.coroutines.delay
 import java.net.URI
 import java.time.Duration
@@ -32,9 +35,13 @@ class SoccerFragment : Fragment() {
 
     private lateinit var soccerViewModel: SoccerViewModel
     private var mediaPlayer: MediaPlayer? = null
-
+    private var soccerModel : SoccerModel? = null
     private var _binding: FragmentSoccerBinding? = null
     private val binding get() = _binding!!
+
+    private var goalieColor = "yellow"
+    private var shootercolor = "green"
+    var text: String = ""
 
 
 
@@ -46,8 +53,26 @@ class SoccerFragment : Fragment() {
         return view
     }
 
+    //this retrieves the game data from last fragment
+    fun setValues(){
+        soccerModel?.apply {
+            shootercolor = p1Color
+            goalieColor = p2Color
+            binding.finalScorePoint.text = p1Color
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        SoccerData.soccerModel.observe(this) {
+            soccerModel = it
+            Log.d("somgosdkmg", soccerModel.toString())
+            setValues()
+
+        }
+        Log.d("somgosdkmg", soccerModel.toString())
+
         binding.finalScorePoint.visibility = View.INVISIBLE
         binding.finishedGameButton.visibility = View.INVISIBLE
         binding.finishedGameScreen.visibility = View.INVISIBLE
@@ -56,8 +81,7 @@ class SoccerFragment : Fragment() {
         mediaPlayer?.start()
 
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
-        var goalieColor = "yellow"
-        var shootercolor = "green"
+
 
         soccerViewModel.setColors(shootercolor,goalieColor, 1)
 

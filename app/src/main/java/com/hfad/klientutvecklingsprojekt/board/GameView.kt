@@ -6,6 +6,7 @@ import android.media.AudioManager
 import android.media.SoundPool
 import android.os.Build
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.ImageView
@@ -16,12 +17,15 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
+import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
+import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
-    private var boardModel : BoardModel?=null
+    private val meModel : MeModel ? =null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
     private val database =
@@ -132,6 +136,15 @@ class GameView : ConstraintLayout {
 
             if (randomVal == 0) {
                 println("STEN SAX PÅSE")
+                var id = meModel?.gameID
+                Log.d("Game ID", "${id}")
+                Log.d("Player ID", "${meModel?.playerID}")
+                StenSaxPaseData.saveGameModel(
+                    StenSaxPaseModel(
+                        gameID = id,
+                        status = false,
+                    )
+                )
                 view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")

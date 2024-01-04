@@ -20,6 +20,7 @@ import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -28,6 +29,7 @@ class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
+    private var meModel : MeModel?= null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Game Lobby")
     var currentGameID = ""
@@ -47,6 +49,7 @@ class LobbyFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("meModel","${meModel}")
         setUI()
         super.onViewCreated(view, savedInstanceState)
     }

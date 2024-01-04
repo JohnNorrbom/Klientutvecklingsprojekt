@@ -1,4 +1,4 @@
-package com.hfad.klientutvecklingsprojekt
+package com.hfad.klientutvecklingsprojekt.quiz
 
 import android.graphics.Color
 import android.os.Bundle
@@ -10,10 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import org.json.JSONArray
-import androidx.appcompat.app.AppCompatActivity
-import com.hfad.klientutvecklingsprojekt.databinding.ActivityMainBinding
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizBinding
 import org.json.JSONException
+import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
@@ -31,7 +33,8 @@ class QuizFragment : Fragment() {
     private var countDownTimer: CountDownTimer? = null
     private var _binding: FragmentQuizBinding? = null
     private val binding get() = _binding!!
-
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Quiz")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,7 +44,9 @@ class QuizFragment : Fragment() {
         try {
             //  Läs in frågorna från JSON-filen
             val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
-            questions = JSONArray(jsonQuestions)
+            val allQuestions = JSONArray(jsonQuestions)
+            // Slumpmässigt välj 10 frågor
+            questions = JSONArray(selectRandomQuestions(allQuestions, 10).toString())
             displayQuestion()
             // TOP LEFT BUTTON
             binding.option1Button.setOnClickListener {
@@ -62,15 +67,11 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
-
         } catch (e: JSONException) {
             e.printStackTrace()
         }
         return binding.root
     }
-
-
-
 
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null
@@ -90,6 +91,7 @@ class QuizFragment : Fragment() {
             e.printStackTrace()
         }
         return json ?: ""
+
     }
 
     private fun displayQuestion() {
@@ -121,6 +123,7 @@ class QuizFragment : Fragment() {
             binding.option2Button.visibility = View.GONE
             binding.option3Button.visibility = View.GONE
             binding.option4Button.visibility = View.GONE
+            binding.scoreTextView.visibility = View.GONE
 
             // Visa poängen
             val scoreText = "Ditt slutresultat: $score poäng"
@@ -132,6 +135,7 @@ class QuizFragment : Fragment() {
             setBackgroundColor(Color.BLACK)
             isEnabled = true
             setClickable(true)
+
         }
         binding.option2Button.apply {
             setBackgroundColor(Color.BLACK)
@@ -217,5 +221,22 @@ class QuizFragment : Fragment() {
             }
         }
         countDownTimer?.start()
+    }
+    private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int): List<JSONObject> {
+        val selectedQuestions = mutableListOf<JSONObject>()
+        val totalQuestions = allQuestions.length()
+
+        // Skapa en lista med alla frågornas index
+        val allQuestionsIndices = (0 until totalQuestions).toMutableList()
+
+        // Slumpmässigt välj 10 index från listan
+        val randomIndices = allQuestionsIndices.shuffled().take(numberOfQuestions)
+
+        // Lägg till de slumpmässigt valda frågorna i den nya listan
+        for (index in randomIndices) {
+            selectedQuestions.add(allQuestions.getJSONObject(index))
+        }
+
+        return selectedQuestions
     }
 }

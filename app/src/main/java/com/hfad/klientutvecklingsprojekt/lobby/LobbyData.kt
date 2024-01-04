@@ -11,12 +11,9 @@ object LobbyData {
     private var _lobbyModel : MutableLiveData<LobbyModel> = MutableLiveData()
     var lobbyModel : LiveData<LobbyModel> = _lobbyModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Game Lobby")
+    val myRef = database.getReference("Lobby Data")
 
     fun saveLobbyModel(model: LobbyModel){
         _lobbyModel.postValue(model)
-        if(model.gameID!= "-1"){
-            myRef.child(model?.gameID ?:"" ).setValue(model)
-        }
     }
 }

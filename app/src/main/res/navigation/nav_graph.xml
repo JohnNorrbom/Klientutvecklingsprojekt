@@ -37,7 +37,7 @@
         tools:layout="@layout/fragment_soccer" />
     <fragment
         android:id="@+id/boardFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.BoardFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.board.BoardFragment"
         android:label="BoardFragment" >
         <action
             android:id="@+id/action_boardFragment_to_soccerFragment"
@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/quizFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.QuizFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizFragment"
         android:label="fragment_quiz"
         tools:layout="@layout/fragment_quiz" />
     <fragment

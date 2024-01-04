@@ -93,21 +93,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
-        Log.d("color", "EFTER SETTEXT I ONCREATEVIEW playerID: ${currentPlayerID} GameID: ${currentGameID}")
-
-        //  POST gör så att man kör på mainthread
-
-        binding.playerBlue.visibility = View.GONE
-        binding.playerWhite.visibility = View.GONE
-        binding.playerRed.visibility = View.GONE
-        binding.playerYellow.visibility = View.GONE
-        binding.playerGreen.visibility = View.GONE
-
-
-        player = binding.playerBlue
-        binding.playerBlue.visibility = View.VISIBLE
-
         diceButton()
         // Inflate the layout for this fragment
         return view
@@ -118,6 +103,11 @@ class TestBoardFragment : Fragment() {
             currentPlayerID = playerID ?: ""
             playerRef = database.getReference("Player Data").child(currentGameID)
             playersRef = playerRef.child("players")
+            binding.playerBlue.visibility = View.GONE
+            binding.playerWhite.visibility = View.GONE
+            binding.playerRed.visibility = View.GONE
+            binding.playerYellow.visibility = View.GONE
+            binding.playerGreen.visibility = View.GONE
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
         paintPlayer()
@@ -139,22 +129,22 @@ class TestBoardFragment : Fragment() {
                 }
                 if (color == "red") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerRed.visibility = View.VISIBLE
                     player = binding.playerRed
                 }
                 if (color == "green") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerGreen.visibility = View.VISIBLE
                     player = binding.playerGreen
                 }
                 if (color == "yellow") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerYellow.visibility = View.VISIBLE
                     player = binding.playerYellow
                 }
                 if (color == "white") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerWhite.visibility = View.VISIBLE
                     player = binding.playerWhite
                 }
             }

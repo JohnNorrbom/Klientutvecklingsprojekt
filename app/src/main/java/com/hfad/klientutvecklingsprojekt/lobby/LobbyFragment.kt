@@ -28,8 +28,7 @@ class LobbyFragment : Fragment() {
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val lobbyRef = database.getReference("Game Lobby").child(lobbyModel?.gameID.toString())
-    val playerRef = database.getReference("Game Lobby").child(lobbyModel?.gameID.toString()).child("players")
+    val playerRef = database.getReference("Game Lobby")
     val currentGameID = ""
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,54 +43,15 @@ class LobbyFragment : Fragment() {
 
             view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
         }
-        lobbyRef.addValueEventListener(lobbyListener)
-        playerRef.addValueEventListener(playerListener)
-        setUI()
-        return view;
+        return view
     }
-    val lobbyListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            lobbyModel?.apply {
-                val gameModel = dataSnapshot.child(gameID ?: "").getValue(LobbyModel::class.java)
-                if (gameModel != null) {
-                    updateLobbyData(gameModel)
-                    setUI()
-                }
-            }
-            // Get Post object and use the values to update the UI
-
-            // ...
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            // Getting Post failed, log a message
-            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-        }
-    }
-
-    val playerListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            val model = dataSnapshot.getValue(PlayerModel::class.java)
-                if (model != null) {
-                    PlayerData.savePlayerModel(model)
-                    setUI()
-                }
-            }
-
-            // Get Post object and use the values to update the UI
-
-            // ...
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Getting Post failed, log a message
-                Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-            }
-        }
 
     fun setUI() {
         playerRef.get().addOnSuccessListener {
             val dataSnapshot = it
+            val players = dataSnapshot.child(lobbyModel?.gameID?:"")
             var i = 1
-            for (player in dataSnapshot.children) {
+            for (player in players.children) {
                 var resId = resources.getIdentifier(
                     "astro_${player.child("color").value}",
                     "drawable",
@@ -123,7 +83,4 @@ class LobbyFragment : Fragment() {
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för
     //enkelt kunna ändra UI beronde på spelare i lobbyn
 
-    fun updateLobbyData(model: LobbyModel){
-        LobbyData.saveLobbyModel(model)
-    }
 }

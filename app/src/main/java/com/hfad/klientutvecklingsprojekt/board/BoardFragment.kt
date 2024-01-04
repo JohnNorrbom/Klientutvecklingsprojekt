@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,10 +35,16 @@ class BoardFragment : Fragment() {
             playerModel = it
         }
 
-        MeData.meModel.observe(this){
-            meModel = it
+        //den här
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@BoardFragment.meModel = it
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
         }
-        println(meModel)
+        println("TESTESTETSETSET " + meModel)
 
         gameView = GameView(requireContext()) // Replace with your custom game view
         mediaPlayer = MediaPlayer.create(requireContext(),

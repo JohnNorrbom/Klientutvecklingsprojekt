@@ -49,8 +49,14 @@ class LobbyFragment : Fragment() {
             startGame()
         }
 
-        MeData.meModel.observe(this){
-            meModel = it
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@LobbyFragment.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
         }
 
 
@@ -58,7 +64,6 @@ class LobbyFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setText()
         setUI()
         super.onViewCreated(view, savedInstanceState)
     }

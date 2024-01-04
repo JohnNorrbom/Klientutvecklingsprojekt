@@ -22,6 +22,10 @@ import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
+//  TODO add more ImageViews for each player and set it as GONE
+//  TODO connect each ImageView with it's corresponding player/color
+//  TODO keep track of local player in order to keep track of turns
+
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
@@ -88,7 +92,7 @@ class GameView : ConstraintLayout {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
             val tile = resources.getIdentifier(
-                "tile${currentImageViewIndex%20}",
+                "tile${(currentImageViewIndex%20) + 1}",
                 "id",
                 context.packageName
             )
@@ -103,11 +107,12 @@ class GameView : ConstraintLayout {
             currentImageViewIndex++
             // If index is greater than the array size, reset to 0
             val tile = resources.getIdentifier(
-                "tile${currentImageViewIndex%20}",
+                "tile${(currentImageViewIndex%20) + 1}",
                 "id",
                 context.packageName
             )
             val tileImage = binding.root.findViewById<ImageView>(tile)
+            println("current tileImage " + tileImage + " current tile" + tile)
             movePlayer(tileImage)
         }
     }

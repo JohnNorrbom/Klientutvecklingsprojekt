@@ -31,6 +31,9 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+//
+//  PLAYERDATA IS SAVED AT LOBBY DATA
+//
 
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null
@@ -44,8 +47,8 @@ class PlayerInfoFragment : Fragment() {
     private var currentGameID = ""
     private var currentPlayerID = ""
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Space Party")
-    private val lobbyRef = database.getReference("Game Lobby")
+    private val myRef = database.getReference("Game Data")
+    private val lobbyRef = database.getReference("Lobby Data")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,16 +87,12 @@ class PlayerInfoFragment : Fragment() {
             binding.nicknameInput.error = (getText(R.string.enter_user_name))
             return
         }
-
         checkName { isNameTaken ->
             if (isNameTaken) {
                 binding.nicknameInput.error = getText(R.string.enter_valid_user_name)
                 return@checkName
             }
-
-
             setPlayerInfo()
-
             if (playerColor == "") {
                 Toast.makeText(
                     requireContext().applicationContext,
@@ -106,6 +105,11 @@ class PlayerInfoFragment : Fragment() {
                 takenPosition?.put(playerColor, CharacterStatus.TAKEN)
                 updateGameData(this)
             }
+            LobbyData.saveLobbyModel(
+                LobbyModel(
+                    gameID = currentGameID
+                )
+            )
             PlayerData.savePlayerModel(
                 PlayerModel(
                     playerID = currentPlayerID,
@@ -114,14 +118,7 @@ class PlayerInfoFragment : Fragment() {
                 ), currentGameID
             )
 
-            LobbyData.saveLobbyModel(
-                LobbyModel(
-                    gameID = currentGameID
-                )
-            )
             checkSizeOfLobby()
-
-
             MeData.saveMeModel(
                 MeModel(
                     gameID = currentGameID,
@@ -129,20 +126,14 @@ class PlayerInfoFragment : Fragment() {
                 )
             )
             }
-
-
-
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
-
-        //  Crashes after executing the line below
-        // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
     fun checkName(callback: (Boolean) -> Unit) {
         lobbyRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
             var check = false
             Log.d("player","${it.child("players").child(playerName).child("nickname").value}")
-           Log.d("realName","${playerName}")
+            Log.d("realName","${playerName}")
             if (it.child("players").child(playerName).child("nickname").value == playerName){
                 check = true
             }
@@ -275,7 +266,6 @@ class PlayerInfoFragment : Fragment() {
             }
         }
     }
-
 
     fun updateGameData(model: GameModel){
         GameData.saveGameModel(model)

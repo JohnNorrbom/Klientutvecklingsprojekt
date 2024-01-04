@@ -18,8 +18,6 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
-    val gameModel : GameModel?=null
-
     var playerMap : MutableMap<String, MutableMap<String,String>>? = null
 
     fun loadPlayersFromLobby() {
@@ -130,9 +128,10 @@ class StenSaxPaseViewModel() : ViewModel() {
     var gameID = "-1"
 
     private fun setGameID() {
-        if(gameModel?.gameID != null) gameID = gameModel.gameID
-        else gameID = gID
-        println("------:${gameModel?.gameID}-----:$gameID")
+        //if(gameModel?.gameID != null) gameID = gameModel.gameID
+        //else
+            gameID = gID
+        //println("------:${gameModel?.gameID}-----:$gameID")
     }
 
     fun initGame() {
@@ -148,6 +147,7 @@ class StenSaxPaseViewModel() : ViewModel() {
     }
 
     fun setChoice(choice:String, player:String) {
+        //playerMap.forEach { entry -> if(entry.value.containsValue("choice\"") ) }
         if(player == pID) setChoiceInDatabase(choice)
     }
 

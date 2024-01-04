@@ -20,41 +20,48 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentTestBoardBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData.gameModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.playerModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
-
+// TODO GIVE PLAYING PLAYER CORRECT COLOR
+// TODO GIVE EVERYONE CORRECT COLOR
+// TODO MAKE PLAYERS TAKE TURNS
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null
     private val binding get() = _binding!!
     private lateinit var view: ConstraintLayout
+
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
-    var playerRef = database.getReference("Player Data").child("")
-    var playersRef = playerRef.child("players")
+    private var playerRef = database.getReference("Player Data").child(gameID)
+    private var playersRef = playerRef.child("players")
 
     //  meModel
-    var currentGameID = ""
-    var currentPlayerID = ""
-    private var meModel : MeModel? = null
+    private var currentGameID = ""
+    private var currentPlayerID = ""
+    private var meModel: MeModel? = null
+
     // PLAYER
-    private var playerModel : PlayerModel? = null
+    private var playerModel: PlayerModel? = null
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+
     //  DICE SOUND
-    val maxStreams = 5 // Number of simultaneous sounds
-    var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+    private val maxStreams = 5 // Number of simultaneous sounds
+    private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         SoundPool.Builder().setMaxStreams(maxStreams).build()
     } else {
         SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
@@ -67,22 +74,9 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
-        diceButton()
-
         PlayerData.playerModel.observe(this) {
             playerModel = it
         }
-        //den här
-        MeData.meModel.observe(this) { meModel ->
-            meModel?.let {
-                this@TestBoardFragment.meModel = it
-            } ?: run {
-                // Handle the case when meModel is null
-                Log.e("LobbyFragment", "meModel is null")
-            }
-        }
-        paintPlayer()
-        println("TESTESTETSETSET " + meModel)
         mediaPlayer = MediaPlayer.create(
             requireContext(),
             R.raw.android_song2_140bpm
@@ -112,11 +106,22 @@ class TestBoardFragment : Fragment() {
 
         player = binding.playerBlue
         binding.playerBlue.visibility = View.VISIBLE
+        paintPlayer()
+        diceButton()
         // Inflate the layout for this fragment
         return view
     }
+    private fun setText() {
+        //den här
+        meModel?.apply{
+            currentGameID = gameID ?: ""
+            currentPlayerID = playerID ?: ""
+            Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
+        }
+    }
     private fun paintPlayer() {
         var color = ""
+        Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         myRef.child(currentGameID).child("players").child(currentPlayerID).get()
             .addOnSuccessListener {
                 val snapshot = it
@@ -127,7 +132,6 @@ class TestBoardFragment : Fragment() {
                     Log.d("color", "färgen är ${color}")
                     binding.playerBlue.visibility = View.VISIBLE
                     player = binding.playerBlue
-
                 }
                 if (color == "red") {
                     Log.d("color", "färgen är ${color}")
@@ -149,9 +153,9 @@ class TestBoardFragment : Fragment() {
                     binding.playerBlue.visibility = View.VISIBLE
                     player = binding.playerWhite
                 }
-
             }
     }
+
     private fun movePlayer(targetedImageView: ImageView) {
         // Update constraints to move player to next tile
         val layoutParams = player?.layoutParams as ConstraintLayout.LayoutParams
@@ -187,16 +191,19 @@ class TestBoardFragment : Fragment() {
 //                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                view?.findNavController()
+                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
             } else {
                 println("ROULETTE WILLIAM")
-                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                view?.findNavController()
+                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
             }
         }
     }
+
     fun diceButton() {
         //  DICE BUTTON
         val dice = binding.diceButton
@@ -224,16 +231,12 @@ class TestBoardFragment : Fragment() {
             movePlayer(tileImage)
         }
     }
-    fun setText() {
-        //den här
-        currentGameID = meModel?.gameID ?: ""
-        currentPlayerID = meModel?.playerID ?: ""
-        Log.d("meModelView", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
-    }
+
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
+
     override fun onDestroy() {
         super.onDestroy()
         soundPool?.release()

@@ -126,7 +126,7 @@ class QuizFragment : Fragment() {
             binding.scoreTextView.visibility = View.GONE
 
             // Visa poängen
-            val scoreText = "Ditt slutresultat: $score poäng"
+            val scoreText = "End result: $score points"
             binding.questionTextView.text = scoreText
         }
     }
@@ -196,7 +196,7 @@ class QuizFragment : Fragment() {
     }
 //    // Uppdatera textvyen för att visa poängen
     private fun updateScore() {
-        scoreTextView.text = "Poäng: $score"
+        scoreTextView.text = "Points: $score"
     }
     private fun startTimer() {
         // Avbryt den befintliga timern om det finns en
@@ -206,7 +206,7 @@ class QuizFragment : Fragment() {
         var time = 10
         countDownTimer = object : CountDownTimer(10000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                binding.timerTextView.text = "Tid kvar: $time s"
+                binding.timerTextView.text = "Time left: $time s"
                 time--
                 if (time < 4){
                     binding.timerTextView.setTextColor(Color.RED)

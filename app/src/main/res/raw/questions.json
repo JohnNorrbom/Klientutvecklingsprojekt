@@ -16,7 +16,7 @@
   },
   {
     "question": "The album 'Abbey Road' by The Beatles opens with which track?",
-    "options": ["Something", "Come Together", "Here Comes the Sun", "Come Together"],
+    "options": ["Something", "Come Together", "Here Comes the Sun", "Hey Jude"],
     "correctAnswer": "Come Together"
   },
   {
@@ -454,5 +454,115 @@
     "question": "The incredible album 'Are You Experienced' by Jimi Hendrix opens with which track?",
     "options": ["All Along the Watchtower", "Little Wing", "Purple Haze", "Hey Joe"],
     "correctAnswer": "Purple Haze"
+  },
+  {
+    "question": "Who directed the science fiction film '2001: A Space Odyssey'?",
+    "options": ["Stanley Kubrick", "Steven Spielberg", "Christopher Nolan", "Ridley Scott"],
+    "correctAnswer": "Stanley Kubrick"
+  },
+  {
+    "question": "Who directed the 1994 film 'Pulp Fiction'?",
+    "options": ["Christopher Nolan", "Quentin Tarantino", "Martin Scorsese", "Steven Spielberg"],
+    "correctAnswer": "Quentin Tarantino"
+  },
+  {
+    "question": "Which film features a character named Norman Bates and a famous shower scene?",
+    "options": ["Psycho", "The Shining", "The Silence of the Lambs", "Halloween"],
+    "correctAnswer": "Psycho"
+  },
+  {
+    "question": "In the TV series 'The Office,' who is the regional manager of Dunder Mifflin's Scranton branch?",
+    "options": ["Jim Halpert", "Dwight Schrute", "Michael Scott", "Pam Beesly"],
+    "correctAnswer": "Michael Scott"
+  },
+  {
+    "question": "In the game 'World of Warcraft,' what is the name of the continent where the majority of the game is set?",
+    "options": ["Azeroth", "Outland", "Pandaria", "Northrend"],
+    "correctAnswer": "Azeroth"
+  },
+  {
+    "question": "Which video game series features a character named Geralt of Rivia, a monster hunter for hire?",
+    "options": ["The Witcher", "Dark Souls", "Bloodborne", "Monster Hunter"],
+    "correctAnswer": "The Witcher"
+  },
+  {
+    "question": "Which video game series features a character named Ezio Auditore da Firenze?",
+    "options": ["Assassin's Creed", "Prince of Persia", "Dishonored", "Hitman"],
+    "correctAnswer": "Assassin's Creed"
+  },
+  {
+    "question": "What song holds the record for the longest-running No. 1 hit on the Billboard Hot 100 chart?",
+    "options": ["Old Town Road", "Despacito", "One Sweet Day", "I Will Always Love You"],
+    "correctAnswer": "Old Town Road"
+  },
+  {
+    "question": "Who sang the famous song 'Like a Rolling Stone'?",
+    "options": ["Bob Dylan", "John Lennon", "Elvis Presley", "Johnny Cash"],
+    "correctAnswer": "Bob Dylan"
+  },
+  {
+    "question": "Who is the lead singer of the American Rock Band 'The Doors'?",
+    "options": ["Mick Jagger", "Jim Morrison", "Joey Ramone", "Roger Waters"],
+    "correctAnswer": "Jim Morrison"
+  },
+  {
+    "question": "Who wrote the song 'All Along the Watchtower'?",
+    "options": ["Jimi Hendrix", "Bob Dylan", "Paul McCartney", "Original writer unknown"],
+    "correctAnswer": "Bob Dylan"
+  },
+  {
+    "question": "Who played the guitar solo on the song 'While my Guitar Gently Weeps' by The Beatles?",
+    "options": ["John Lennon", "George Harrison", "Paul McCartney", "Eric Clapton"],
+    "correctAnswer": "Eric Clapton"
+  },
+  {
+    "question": "Who played the guitar solo on the song 'While my Guitar Gently Weeps' by The Beatles?",
+    "options": ["John Lennon", "George Harrison", "Paul McCartney", "Eric Clapton"],
+    "correctAnswer": "Eric Clapton"
+  },
+  {
+    "question": "Who betrays you in Call of Duty Modern Warfare 2?",
+    "options": ["Ghost", "Shepherd", "Graves", "Sergant Pepper"],
+    "correctAnswer": "Shepherd"
+  },
+  {
+    "question": "Who composed the classical piece 'Für Elise'?",
+    "options": ["Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"],
+    "correctAnswer": "Ludwig van Beethoven"
+  },
+  {
+    "question": "In the video game 'The Legend of Zelda,' what is the protagonist's name?",
+    "options": ["Link", "Ganon", "Zelda", "Malon"],
+    "correctAnswer": "Link"
+  },
+  {
+    "question": "In computer science, what does 'HTTP' stand for?",
+    "options": ["HyperText Transfer Protocol", "High-Tech Transfer Process", "Human Tolerance Test Procedure", "HyperTransfer Text Protocol"],
+    "correctAnswer": "HyperText Transfer Protocol"
+  },
+  {
+    "question": "What is the currency of Japan?",
+    "options": ["Yuan", "Won", "Ringgit", "Yen"],
+    "correctAnswer": "Yen"
+  },
+  {
+    "question": "Who is generally considered the inventor of the motor car?",
+    "options": ["Henry Ford", "Karl Benz", "Hans Volvo", "Henry M. Leland"],
+    "correctAnswer": "Karl Benz"
+  },
+  {
+    "question": "What number was the Apollo mission that successfully put a man on the moon for the first time in human history?",
+    "options": ["Apollo 9", "Apollo 11", "Apollo 13", "Apollo 14"],
+    "correctAnswer": "Apollo 11"
+  },
+  {
+    "question": "What is the largest US state (by landmass)?",
+    "options": ["Alaska", "California", "Texas", "Montana"],
+    "correctAnswer": "Alaska"
+  },
+  {
+    "question": "Who severed Anakin Skywalker's arm with his light sabre?",
+    "options": ["Darth Maul", "General Grievous", "Count Dooku", "Palpatine"],
+    "correctAnswer": "Count Dooku"
   }
 ]

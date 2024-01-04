@@ -19,7 +19,10 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -28,9 +31,11 @@ class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
+    private var meModel : MeModel?= null//den här
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Game Lobby")
+    val myRef = database.getReference("Lobby Data")
     var currentGameID = ""
+    var currentPlayerID =""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +48,19 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
+
+        //den här
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@LobbyFragment.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+
+
         return view
     }
 
@@ -50,13 +68,19 @@ class LobbyFragment : Fragment() {
         setUI()
         super.onViewCreated(view, savedInstanceState)
     }
+    fun setText(){
+        //den här
+        currentGameID= meModel?.gameID?:""
+        currentPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
+    }
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
     }
     fun setUI() {
-        Log.d("setUI","Jag är här")
+        Log.d("setUI","I setUI")
         myRef.child(currentGameID).get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1

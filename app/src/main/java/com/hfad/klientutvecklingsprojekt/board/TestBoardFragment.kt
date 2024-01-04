@@ -16,9 +16,6 @@ import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
@@ -96,22 +93,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
-
-        Log.d("color", "EFTER SETTEXT I ONCREATEVIEW playerID: ${currentPlayerID} GameID: ${currentGameID}")
-
-        //  POST gör så att man kör på mainthread
-
-        binding.playerBlue.visibility = View.GONE
-        binding.playerWhite.visibility = View.GONE
-        binding.playerRed.visibility = View.GONE
-        binding.playerYellow.visibility = View.GONE
-        binding.playerGreen.visibility = View.GONE
-
-
-        player = binding.playerBlue
-        binding.playerBlue.visibility = View.VISIBLE
-
         diceButton()
         // Inflate the layout for this fragment
         return view
@@ -120,11 +101,15 @@ class TestBoardFragment : Fragment() {
         meModel?.apply{
             currentGameID = gameID ?: ""
             currentPlayerID = playerID ?: ""
+            playerRef = database.getReference("Player Data").child(currentGameID)
+            playersRef = playerRef.child("players")
+            binding.playerBlue.visibility = View.GONE
+            binding.playerWhite.visibility = View.GONE
+            binding.playerRed.visibility = View.GONE
+            binding.playerYellow.visibility = View.GONE
+            binding.playerGreen.visibility = View.GONE
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
-        playerRef = database.getReference("Player Data").child(currentGameID)
-        playersRef = playerRef.child("players")
-        assertColorAndName()
         paintPlayer()
         Log.d("color", "UTANFÖR APPLY playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
@@ -144,49 +129,25 @@ class TestBoardFragment : Fragment() {
                 }
                 if (color == "red") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerRed.visibility = View.VISIBLE
                     player = binding.playerRed
                 }
                 if (color == "green") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerGreen.visibility = View.VISIBLE
                     player = binding.playerGreen
                 }
                 if (color == "yellow") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerYellow.visibility = View.VISIBLE
                     player = binding.playerYellow
                 }
                 if (color == "white") {
                     Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
+                    binding.playerWhite.visibility = View.VISIBLE
                     player = binding.playerWhite
                 }
             }
-    }
-
-
-    private fun assertColorAndName(){
-        playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (playerSnapshot in dataSnapshot.children) {
-                    val playerId = playerSnapshot.child("playerID").value
-                    val playerColor = playerSnapshot.child("color").value
-                    val playerName = playerSnapshot.child("nickname").value
-                    val playerPosition = playerSnapshot.child("position").value
-                    val playerScore = playerSnapshot.child("score").value
-                    println(playerId)
-                    println(playerColor)
-                    println(playerName)
-                    println(playerPosition)
-                    println(playerScore)
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("Failed to fetch player data: ${databaseError.message}")
-            }
-        })
     }
 
     private fun movePlayer(targetedImageView: ImageView) {

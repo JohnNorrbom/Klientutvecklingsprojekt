@@ -21,10 +21,13 @@ import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData.gameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.Progress
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -33,6 +36,7 @@ class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null
     private val binding get()  = _binding!!
     private var playerModel : PlayerModel? = null
+    private var meModel : MeModel?= null
     private var gameModel : GameModel? = null
     private val characterColors = listOf("white","red","blue","green","yellow")
     private var playerColor = ""
@@ -116,13 +120,24 @@ class PlayerInfoFragment : Fragment() {
                 )
             )
             checkSizeOfLobby()
+
+
+            MeData.saveMeModel(
+                MeModel(
+                    gameID = currentGameID,
+                    playerID = currentPlayerID
+                )
+            )
+            }
+
+
+
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
 
         //  Crashes after executing the line below
         // view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
-    }
     fun checkName(callback: (Boolean) -> Unit) {
         lobbyRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
             var check = false
@@ -203,29 +218,6 @@ class PlayerInfoFragment : Fragment() {
             }
         }
     }
-
-    /*val gameListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            val newGameModel = dataSnapshot.child(gameModel?.gameID ?: "").getValue(GameModel::class.java)
-            if (newGameModel != null && newGameModel != gameModel) {
-                Log.d("onDataChange", "GameModel retrieved: $newGameModel")
-
-                // Check if the data has changed before updating and setting UI
-                if (newGameModel.status != Progress.FINISHED || gameModel?.status != Progress.FINISHED) {
-                    requireActivity().runOnUiThread {
-
-                        val gameModel : GameModel = newGameModel // Uppdatera gameModel
-                        updateGameData(gameModel)
-                        setUI()
-                    }
-                }
-            }
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
-        }
-    }*/
 
     fun checkSizeOfLobby() {
         gameModel?.apply {

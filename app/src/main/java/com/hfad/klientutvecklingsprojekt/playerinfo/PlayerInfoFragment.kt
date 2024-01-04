@@ -54,7 +54,7 @@ class PlayerInfoFragment : Fragment() {
            confirmCharacter()
        }
 
-        GameData.gameModel.observe(this) {
+        GameData.gameModel.observe(viewLifecycleOwner) {
             gameModel = it
             setUI()
         }
@@ -88,19 +88,24 @@ class PlayerInfoFragment : Fragment() {
                 return@checkName
             }
 
-            playerModel?.apply {
-                playerID = currentPlayerID
-                nickname = playerName
-                color = playerColor
 
-                updatePlayerData(this)
-            }
 
+
+
+
+            PlayerData.savePlayerModel(
+                PlayerModel(
+                    playerID = currentPlayerID,
+                    nickname = playerName,
+                    color = playerColor
+                ),
+                gameModel?.gameID?:""
+            )
             Log.d("playermodel","playerModel ${playerModel}")
+
             LobbyData.saveLobbyModel(
                 LobbyModel(
-                    gameID = gameModel?.gameID,
-                    players = playerModel
+                    gameID = gameModel?.gameID?:""
                 )
             )
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -113,7 +118,7 @@ class PlayerInfoFragment : Fragment() {
     fun checkName(callback: (Boolean) -> Unit) {
         myRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
             val snapshot = it
-            Log.d("snap children", "children: ${snapshot.children}")
+            Log.d("snap children", "children: ${snapshot}")
             for(player in snapshot.children){
                 if (player.child("nickname").value == playerName){
                     callback(true)
@@ -196,13 +201,12 @@ class PlayerInfoFragment : Fragment() {
     val gameListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             gameModel?.apply {
-                val gameModel = dataSnapshot.child(gameID ?: "").getValue(PlayerModel::class.java)
+                val gameID = gameID ?: ""
+                val gameModel = dataSnapshot.child(gameID).getValue(GameModel::class.java)
                 if (gameModel != null) {
                     // Check if the data has changed before updating and setting UI
-                    if (!gameModel.equals(this)) {
-                        updatePlayerData(gameModel)
-                        setUI()
-                    }
+                    updateGameData(gameModel)
+                    setUI()
                 }
             }
         }
@@ -226,15 +230,13 @@ class PlayerInfoFragment : Fragment() {
                     Log.d("inför Apply", "bra")
                     for (color in colors) {
                         if (color.second.isChecked) {
-                            gameModel?.apply {
-                                Log.d("inför Apply", "bra")
-                                //  Set position to taken
-                                takenPosition?.set(color.first, CharacterStatus.TAKEN)
-                                playerColor = color.first
-                                Log.d("takenPosition", "taken: ${takenPosition}")
-                                Log.d("this", "this: ${this}")
-                                updateGameData(this)
-                            }
+                            Log.d("inför Apply", "bra")
+                            //  Set position to taken
+                            takenPosition?.set(color.first, CharacterStatus.TAKEN)
+                            playerColor = color.first
+                            Log.d("takenPosition", "taken: ${takenPosition}")
+                            Log.d("this", "this: ${this}")
+                               updateGameData(this)
                         }
                     }
                 }
@@ -242,8 +244,8 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
-    fun updatePlayerData(model: PlayerModel) {
-        PlayerData.savePlayerModel(model)
+    fun updatePlayerData(model: PlayerModel,gameID : String) {
+        PlayerData.savePlayerModel(model,gameID)
     }
     fun updateGameData(model: GameModel){
         GameData.saveGameModel(model)

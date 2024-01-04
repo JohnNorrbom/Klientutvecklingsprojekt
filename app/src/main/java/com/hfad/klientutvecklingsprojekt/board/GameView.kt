@@ -8,6 +8,7 @@ import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -22,7 +23,7 @@ import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
-//  TODO add more ImageViews for each player and set it as GONE
+//  TODO add more ImageViews for each player and set it as GONE         //John
 //  TODO connect each ImageView with it's corresponding player/color
 //  TODO keep track of local player in order to keep track of turns
 
@@ -76,7 +77,13 @@ class GameView : ConstraintLayout {
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
         // Now you can access the views using the binding
-        player = _binding.player1
+        player = _binding.playerWhite
+        // characters players
+        binding.playerWhite.visibility = View.GONE
+        binding.playerRed.visibility = View.GONE
+        binding.playerYellow.visibility = View.GONE
+        binding.playerGreen.visibility = View.GONE
+        binding.playerBlue.visibility = View.GONE
 
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER

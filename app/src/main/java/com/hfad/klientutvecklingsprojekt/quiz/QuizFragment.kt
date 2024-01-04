@@ -132,8 +132,6 @@ class QuizFragment : Fragment() {
             //LADDA UPP POÄNG PÅ DATABASEN!
             myRef.child("GameID").child("userID").child("Score").setValue(score)
 
-
-
             val scoreRef = myRef.child("GameID").child("userID").child("Score")
 
 // Hämta poängen från databasen

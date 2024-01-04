@@ -147,5 +147,8 @@ class LobbyFragment : Fragment() {
 
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för
     //enkelt kunna ändra UI beronde på spelare i lobbyn
-
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 }

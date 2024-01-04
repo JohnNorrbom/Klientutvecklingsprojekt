@@ -43,7 +43,7 @@ class TestBoardFragment : Fragment() {
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
-    private var playerRef = database.getReference("Player Data").child(gameID)
+    private var playerRef = database.getReference("Player Data").child("")
     private var playersRef = playerRef.child("players")
 
     //  meModel
@@ -93,10 +93,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-        playerRef = database.getReference("Player Data").child(currentGameID)
-        playersRef = playerRef.child("players")
-        //  POST gör så att man kör på mainthread
-
         binding.playerBlue.visibility = View.GONE
         binding.playerWhite.visibility = View.GONE
         binding.playerRed.visibility = View.GONE
@@ -116,6 +112,8 @@ class TestBoardFragment : Fragment() {
         meModel?.apply{
             currentGameID = gameID ?: ""
             currentPlayerID = playerID ?: ""
+            playerRef = database.getReference("Player Data").child(currentGameID)
+            playersRef = playerRef.child("players")
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
     }

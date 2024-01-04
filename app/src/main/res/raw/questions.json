@@ -1,152 +1,568 @@
 [
   {
-    "question": "Vilket år upptäcktes neutronen?",
+    "question": "In which year was the neutron discovered?",
     "options": ["1911", "1932", "1956", "1969"],
     "correctAnswer": "1932"
   },
   {
-    "question": "Vad är Vantablack?",
-    "options": ["En extremt svart färg", "En ny typ av batteri", "En exoplanet", "En maträtt"],
-    "correctAnswer": "En extremt svart färg"
+    "question": "What is Vantablack?",
+    "options": ["An extremely black color", "A new type of battery", "An exoplanet", "A dish"],
+    "correctAnswer": "An extremely black color"
   },
   {
-    "question": "Vad är Heisenbergs osäkerhetsprincip?",
-    "options": ["Möjligheten att förutsäga en partikels position och rörelse samtidigt", "Lagen om energins bevarande", "Ett matlagningskoncept", "Teorin om relativitet"],
-    "correctAnswer": "Möjligheten att förutsäga en partikels position och rörelse samtidigt"
+    "question": "What is Heisenberg's uncertainty principle?",
+    "options": ["The ability to predict a particle's position and motion simultaneously", "The law of conservation of energy", "A cooking concept", "Theory of relativity"],
+    "correctAnswer": "The ability to predict a particle's position and motion simultaneously"
   },
   {
-    "question": "Vilken gas används i neonlampor?",
-    "options": ["Argon", "Xenon", "Krypton", "Neon"],
-    "correctAnswer": "Neon"
+    "question": "The album 'Abbey Road' by The Beatles opens with which track?",
+    "options": ["Something", "Come Together", "Here Comes the Sun", "Hey Jude"],
+    "correctAnswer": "Come Together"
   },
   {
-    "question": "Vem formulerade E=mc²?",
+    "question": "Who formulated E=mc²?",
     "options": ["Niels Bohr", "Max Planck", "Albert Einstein", "Werner Heisenberg"],
     "correctAnswer": "Albert Einstein"
   },
   {
-    "question": "Vad är Turingtestet?",
-    "options": ["En testmetod för att avgöra artificiell intelligens", "Ett test för fysisk styrka", "En musiktävling", "En matlagningstävling"],
-    "correctAnswer": "En testmetod för att avgöra artificiell intelligens"
+    "question": "What is the Turing test?",
+    "options": ["A method to determine artificial intelligence", "A test of physical strength", "A music competition", "A cooking competition"],
+    "correctAnswer": "A method to determine artificial intelligence"
   },
   {
-    "question": "Vilken är världens största ö?",
-    "options": ["Grönland", "Australien", "Madagaskar", "Borneo"],
-    "correctAnswer": "Grönland"
+    "question": "What is the world's largest island?",
+    "options": ["Greenland", "Australia", "Madagascar", "Borneo"],
+    "correctAnswer": "Greenland"
   },
   {
-    "question": "Vad kallas den kemiska processen där väte omvandlas till helium?",
-    "options": ["Fission", "Fusion", "Förbränning", "Fotosyntes"],
+    "question": "What is the chemical process where hydrogen transforms into helium?",
+    "options": ["Fission", "Fusion", "Combustion", "Photosynthesis"],
     "correctAnswer": "Fusion"
   },
   {
-    "question": "Vilken planet kallas ibland för 'Aftonstjärnan' eller 'Morgonstjärnan'?",
-    "options": ["Mars", "Venus", "Jupiter", "Saturnus"],
+    "question": "Which planet is sometimes called the 'Evening Star' or 'Morning Star'?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturn"],
     "correctAnswer": "Venus"
   },
   {
-    "question": "Vad är Schrödingers katt?",
-    "options": ["En katt med kvantmekaniska egenskaper", "En skröna", "En berömd konstverk", "En populär filmkaraktär"],
-    "correctAnswer": "En skröna"
+    "question": "What is Schrödinger's cat?",
+    "options": ["A cat with quantum mechanical properties", "A hoax", "A famous artwork", "A popular movie character"],
+    "correctAnswer": "A hoax"
   },
   {
-    "question": "Hur många planeter finns det i vårt solsystem?",
+    "question": "How many planets are there in our solar system?",
     "options": ["7", "8", "9", "10"],
     "correctAnswer": "8"
   },
   {
-    "question": "Vad är den första primtalet större än 10?",
+    "question": "What is the first prime number greater than 10?",
     "options": ["11", "13", "15", "17"],
     "correctAnswer": "11"
   },
   {
-    "question": "Vilken är den ljusaste stjärnan på natthimlen?",
+    "question": "Which is the brightest star in the night sky?",
     "options": ["Sirius", "Vega", "Deneb", "Antares"],
     "correctAnswer": "Sirius"
   },
   {
-    "question": "Vad är π (pi) i matematiken?",
+    "question": "What is π (pi) in mathematics?",
     "options": ["3.141", "2.718", "1.618", "4.669"],
     "correctAnswer": "3.141"
   },
   {
-    "question": "Vad kallas den tid det tar för jorden att rotera ett varv runt sin egen axel?",
-    "options": ["Dygn", "Vecka", "Månad", "År"],
-    "correctAnswer": "Dygn"
+    "question": "What is the time it takes for the Earth to rotate once on its axis called?",
+    "options": ["Day", "Week", "Month", "Year"],
+    "correctAnswer": "Day"
   },
   {
-    "question": "Vad är Hubble-teleskopet?",
-    "options": ["En satellit", "En bilmodell", "En rymdstation", "Ett teleskop"],
-    "correctAnswer": "Ett teleskop"
+    "question": "What is the Hubble Space Telescope?",
+    "options": ["A satellite", "A car model", "A space station", "A telescope"],
+    "correctAnswer": "A telescope"
   },
   {
-    "question": "Vad är kvantmekanik?",
-    "options": ["Studien av små partiklar", "Studien av stora galaxer", "Studien av ekosystem", "Studien av själva universum"],
-    "correctAnswer": "Studien av små partiklar"
+    "question": "What is quantum mechanics?",
+    "options": ["The study of small particles", "The study of large galaxies", "The study of ecosystems", "The study of the universe itself"],
+    "correctAnswer": "The study of small particles"
   },
   {
-    "question": "Vad är euklidisk geometri?",
-    "options": ["Geometri baserad på parallella linjer", "Geometri baserad på sfärer", "Geometri baserad på kurvor", "Geometri baserad på vågräta och lodräta linjer"],
-    "correctAnswer": "Geometri baserad på parallella linjer"
+    "question": "What is Euclidean geometry?",
+    "options": ["Geometry based on parallel lines", "Geometry based on spheres", "Geometry based on curves", "Geometry based on horizontal and vertical lines"],
+    "correctAnswer": "Geometry based on parallel lines"
   },
   {
-    "question": "Vilken är världens längsta flod?",
-    "options": ["Amazonfloden", "Nilen", "Mississippifloden", "Ganges"],
-    "correctAnswer": "Nilen"
+    "question": "Which is the world's longest river?",
+    "options": ["Amazon River", "Nile River", "Mississippi-Missouri", "Ganges River"],
+    "correctAnswer": "Nile River"
   },
   {
-    "question": "Vad är Heptagon?",
-    "options": ["En form med sju sidor", "En rymdfarkost", "En maträtt", "En insekt"],
-    "correctAnswer": "En form med sju sidor"
+    "question": "What is a Heptagon?",
+    "options": ["A shape with seven sides", "A spacecraft", "A dish", "An insect"],
+    "correctAnswer": "A shape with seven sides"
   },
   {
-    "question": "Vilket element har kemiskt symbol 'O'?",
-    "options": ["Syre", "Kol", "Guld", "Natrium"],
-    "correctAnswer": "Syre"
+    "question": "Which element has the chemical symbol 'O'?",
+    "options": ["Oxygen", "Carbon", "Gold", "Sodium"],
+    "correctAnswer": "Oxygen"
   },
   {
-    "question": "Vad är accelerationen på grund av tyngdkraften på jorden?",
+    "question": "What is the acceleration due to gravity on Earth?",
     "options": ["9.8 m/s²", "5.0 m/s²", "12.3 m/s²", "7.2 m/s²"],
     "correctAnswer": "9.8 m/s²"
   },
   {
-    "question": "Vem upptäckte penicillinet?",
+    "question": "Who discovered penicillin?",
     "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Jonas Salk"],
     "correctAnswer": "Alexander Fleming"
   },
   {
-    "question": "Vilken är världens största öken?",
-    "options": ["Saharaöknen", "Antarktis", "Gobiöknen", "Karakumöknen"],
-    "correctAnswer": "Antarktis"
+    "question": "Which is the world's largest desert?",
+    "options": ["Sahara Desert", "Antarctica", "Gobi Desert", "Karakum Desert"],
+    "correctAnswer": "Antarctica"
   },
   {
-    "question": "Vad är kvoten mellan en cirkels omkrets och dess diameter känd som?",
+    "question": "What is the ratio of a circle's circumference to its diameter known as?",
     "options": ["Pi (π)", "Epsilon (ε)", "Theta (θ)", "Sigma (σ)"],
     "correctAnswer": "Pi (π)"
   },
   {
-    "question": "Vad är klorofyll?",
-    "options": ["En grön pigment i växter", "En metall", "En gas", "En typ av mineral"],
-    "correctAnswer": "En grön pigment i växter"
+    "question": "What is chlorophyll?",
+    "options": ["A green pigment in plants", "A metal", "A gas", "A type of mineral"],
+    "correctAnswer": "A green pigment in plants"
   },
   {
-    "question": "Vilken planet är känd som 'Röda planeten'?",
-    "options": ["Mars", "Venus", "Jupiter", "Saturnus"],
+    "question": "Which planet is known as the 'Red Planet'?",
+    "options": ["Mars", "Venus", "Jupiter", "Saturn"],
     "correctAnswer": "Mars"
   },
   {
-    "question": "Vad är Eukaryota?",
-    "options": ["En typ av cellstruktur", "En maträtt", "En politisk ideologi", "En berömd konstnär"],
-    "correctAnswer": "En typ av cellstruktur"
+    "question": "What is Eukaryota?",
+    "options": ["A type of cell structure", "A dish", "A political ideology", "A famous artist"],
+    "correctAnswer": "A type of cell structure"
   },
   {
-    "question": "Vilken enhet används för att mäta elektriskt motstånd?",
+    "question": "Which unit is used to measure electrical resistance?",
     "options": ["Ohm", "Ampere", "Volt", "Watt"],
     "correctAnswer": "Ohm"
   },
   {
-    "question": "Vad är en baryon?",
-    "options": ["En partikel", "En subatomär partikel", "En stjärna", "En exoplanet"],
-    "correctAnswer": "En partikel"
+    "question": "What is a baryon?",
+    "options": ["A particle", "A subatomic particle", "A star", "An exoplanet"],
+    "correctAnswer": "A particle"
+  },
+  {
+    "question": "Who wrote 'Romeo and Juliet'?",
+    "options": ["Charles Dickens", "Jane Austen", "William Shakespeare", "Leo Tolstoy"],
+    "correctAnswer": "William Shakespeare"
+  },
+  {
+    "question": "What is the largest species of elephants?",
+    "options": ["African elephant", "Indian elephant", "Sumatran elephant", "Mammoth"],
+    "correctAnswer": "African elephant"
+  },
+  {
+    "question": "In which year did the first moon landing occur?",
+    "options": ["1961", "1969", "1975", "1982"],
+    "correctAnswer": "1969"
+  },
+  {
+    "question": "Which is the world's longest river?",
+    "options": ["Nile", "Amazon", "Mississippi-Missouri", "Ganges"],
+    "correctAnswer": "Nile"
+  },
+  {
+    "question": "Who is known as the 'Father of Light'?",
+    "options": ["Thomas Edison", "Isaac Newton", "Galileo Galilei", "Nikola Tesla"],
+    "correctAnswer": "Thomas Edison"
+  },
+  {
+    "question": "What is the capital of Japan?",
+    "options": ["Beijing", "Seoul", "Hanoi", "Tokyo"],
+    "correctAnswer": "Tokyo"
+  },
+  {
+    "question": "Which country is known as the 'Land of the Rising Sun'?",
+    "options": ["Spain", "Italy", "Greece", "Japan"],
+    "correctAnswer": "Japan"
+  },
+  {
+    "question": "What is it called when the moon completely or partially covers the sun?",
+    "options": ["Sunset", "Solar eclipse", "Lunar eclipse", "Aurora Borealis"],
+    "correctAnswer": "Solar eclipse"
+  },
+  {
+    "question": "Who wrote 'A Midsummer Night's Dream'?",
+    "options": ["Charles Dickens", "Jane Austen", "William Shakespeare", "Leo Tolstoy"],
+    "correctAnswer": "William Shakespeare"
+  },
+  {
+    "question": "What color do you get when you mix blue and yellow?",
+    "options": ["Red", "Green", "Purple", "Orange"],
+    "correctAnswer": "Green"
+  },
+  {
+    "question": "What is the largest mammal on Earth?",
+    "options": ["Blue whale", "Elephant", "Rhinoceros", "Giraffe"],
+    "correctAnswer": "Blue whale"
+  },
+  {
+    "question": "Which element has the chemical symbol 'Ag'?",
+    "options": ["Copper", "Gold", "Silver", "Iron"],
+    "correctAnswer": "Silver"
+  },
+  {
+    "question": "Who painted the 'Mona Lisa'?",
+    "options": ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Claude Monet"],
+    "correctAnswer": "Leonardo da Vinci"
+  },
+  {
+    "question": "Which country is known as the 'Last Haven'?",
+    "options": ["Norway", "Sweden", "Switzerland", "Denmark"],
+    "correctAnswer": "Switzerland"
+  },
+  {
+    "question": "In which year was the United Nations (UN) founded?",
+    "options": ["1945", "1956", "1962", "1971"],
+    "correctAnswer": "1945"
+  },
+  {
+    "question": "What is the capital of Australia?",
+    "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+    "correctAnswer": "Canberra"
+  },
+  {
+    "question": "Who wrote 'Pride and Prejudice'?",
+    "options": ["Charles Dickens", "Jane Austen", "William Faulkner", "Emily Brontë"],
+    "correctAnswer": "Jane Austen"
+  },
+  {
+    "question": "Which is the world's second-highest mountain?",
+    "options": ["K2", "Mount Everest", "Kangchenjunga", "Lhotse"],
+    "correctAnswer": "K2"
+  },
+  {
+    "question": "What is the chemical compound H2O known as?",
+    "options": ["Carbon dioxide", "Hydrogen peroxide", "Oxygen", "Water"],
+    "correctAnswer": "Water"
+  },
+  {
+    "question": "What is the largest ocean on Earth?",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+    "correctAnswer": "Pacific Ocean"
+  },
+  {
+    "question": "Who developed the theory of general relativity?",
+    "options": ["Isaac Newton", "Albert Einstein", "Stephen Hawking", "Galileo Galilei"],
+    "correctAnswer": "Albert Einstein"
+  },
+  {
+    "question": "What is the capital of Canada?",
+    "options": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+    "correctAnswer": "Ottawa"
+  },
+  {
+    "question": "Which gas makes up the majority of Earth's atmosphere?",
+    "options": ["Nitrogen", "Oxygen", "Carbon Dioxide", "Argon"],
+    "correctAnswer": "Nitrogen"
+  },
+  {
+    "question": "Who wrote 'To Kill a Mockingbird'?",
+    "options": ["F. Scott Fitzgerald", "J.K. Rowling", "Harper Lee", "Ernest Hemingway"],
+    "correctAnswer": "Harper Lee"
+  },
+  {
+    "question": "What is the largest organ in the human body?",
+    "options": ["Liver", "Heart", "Skin", "Lungs"],
+    "correctAnswer": "Skin"
+  },
+  {
+    "question": "Which element has the chemical symbol 'Fe'?",
+    "options": ["Iron", "Gold", "Silver", "Copper"],
+    "correctAnswer": "Iron"
+  },
+  {
+    "question": "In which year did World War II end?",
+    "options": ["1943", "1945", "1947", "1950"],
+    "correctAnswer": "1945"
+  },
+  {
+    "question": "What is the currency of Japan?",
+    "options": ["Yuan", "Won", "Yen", "Ringgit"],
+    "correctAnswer": "Yen"
+  },
+  {
+    "question": "Who is the author of 'The Great Gatsby'?",
+    "options": ["F. Scott Fitzgerald", "George Orwell", "J.D. Salinger", "Virginia Woolf"],
+    "correctAnswer": "F. Scott Fitzgerald"
+  },
+  {
+    "question": "What is the speed of light in a vacuum?",
+    "options": ["300,000 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s"],
+    "correctAnswer": "300,000 km/s"
+  },
+  {
+    "question": "Which planet is known as the 'Morning Star'?",
+    "options": ["Mars", "Venus", "Jupiter", "Mercury"],
+    "correctAnswer": "Venus"
+  },
+  {
+    "question": "Who discovered penicillin?",
+    "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Joseph Lister"],
+    "correctAnswer": "Alexander Fleming"
+  },
+  {
+    "question": "What is the smallest prime number?",
+    "options": ["0", "1", "2", "3"],
+    "correctAnswer": "2"
+  },
+  {
+    "question": "Who painted the ceiling of the Sistine Chapel?",
+    "options": ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"],
+    "correctAnswer": "Michelangelo"
+  },
+  {
+    "question": "Which country is known as the 'Land of the Rising Sun'?",
+    "options": ["Spain", "Italy", "Greece", "Japan"],
+    "correctAnswer": "Japan"
+  },
+  {
+    "question": "What is the powerhouse of the cell?",
+    "options": ["Nucleus", "Mitochondria", "Endoplasmic Reticulum", "Golgi Apparatus"],
+    "correctAnswer": "Mitochondria"
+  },
+  {
+    "question": "Who is credited with the invention of the telephone?",
+    "options": ["Thomas Edison", "Alexander Graham Bell", "Nikola Tesla", "Marconi"],
+    "correctAnswer": "Alexander Graham Bell"
+  },
+  {
+    "question": "Which ocean is the largest?",
+    "options": ["Atlantic Ocean", "Indian Ocean", "Southern Ocean", "Pacific Ocean"],
+    "correctAnswer": "Pacific Ocean"
+  },
+  {
+    "question": "What is the capital of Brazil?",
+    "options": ["Buenos Aires", "Brasília", "Rio de Janeiro", "São Paulo"],
+    "correctAnswer": "Brasília"
+  },
+  {
+    "question": "Who wrote '1984'?",
+    "options": ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
+    "correctAnswer": "George Orwell"
+  },
+  {
+    "question": "What is the chemical symbol for gold?",
+    "options": ["Au", "Ag", "Fe", "Cu"],
+    "correctAnswer": "Au"
+  },
+  {
+    "question": "Which river is the longest in the world?",
+    "options": ["Nile", "Amazon", "Yangtze", "Mississippi-Missouri"],
+    "correctAnswer": "Nile"
+  },
+  {
+    "question": "What is 800°?",
+    "options": ["A temperature", "A number", "A song by Ebba Grön", "I don't know"],
+    "correctAnswer": "A song by Ebba Grön"
+  },
+
+    {
+      "question": "Who is known for his iconic performance of 'The Star-Spangled Banner' at Woodstock in 1969?",
+      "options": ["Eric Clapton", "Jimi Hendrix", "Jimmy Page", "Carlos Santana"],
+      "correctAnswer": "Jimi Hendrix"
+    },
+    {
+      "question": "Which guitarist is often referred to as 'The King of Blues'?",
+      "options": ["Stevie Ray Vaughan", "Eric Clapton", "B.B. King", "Carlos Santana"],
+      "correctAnswer": "B.B. King"
+    },
+    {
+      "question": "Kurt Cobain was the lead singer and guitarist for which famous band?",
+      "options": ["Pearl Jam", "Nirvana", "Soundgarden", "Alice in Chains"],
+      "correctAnswer": "Nirvana"
+    },
+    {
+      "question": "Metallica's drummer, Lars Ulrich, is originally from which country?",
+      "options": ["United States", "Denmark", "Sweden", "Norway"],
+      "correctAnswer": "Denmark"
+    },
+    {
+      "question": "Which Metallica album features the song 'Enter Sandman'?",
+      "options": ["Kill 'Em All", "Ride the Lightning", "Master of Puppets", "Metallica (The Black Album)"],
+      "correctAnswer": "Metallica (The Black Album)"
+    },
+    {
+      "question": "Who was the lead vocalist of the band Queen?",
+      "options": ["Freddie Mercury", "Roger Taylor", "Brian May", "John Deacon"],
+      "correctAnswer": "Freddie Mercury"
+    },
+    {
+      "question": "Stevie Ray Vaughan played which musical instrument?",
+      "options": ["Guitar", "Bass", "Drums", "Piano"],
+      "correctAnswer": "Guitar"
+    },
+    {
+      "question": "Which album is often considered Nirvana's breakthrough and features 'Smells Like Teen Spirit'?",
+      "options": ["In Utero", "Bleach", "Nevermind", "Incesticide"],
+      "correctAnswer": "Nevermind"
+    },
+    {
+      "question": "What is the nickname of the legendary blues guitarist Robert Johnson?",
+      "options": ["Blind Lemon", "King of the Delta Blues", "Sun House", "Crossroads Master"],
+      "correctAnswer": "King of the Delta Blues"
+    },
+    {
+      "question": "Who is the lead vocalist and co-founder of the band Led Zeppelin?",
+      "options": ["Robert Plant", "Jimmy Page", "John Bonham", "John Paul Jones"],
+      "correctAnswer": "Robert Plant"
+    },
+    {
+      "question": "In which year did Michael Jackson release his album 'Thriller'?",
+      "options": ["1982", "1984", "1986", "1988"],
+      "correctAnswer": "1982"
+    },
+    {
+      "question": "Who is often credited as the 'Godfather of Soul'?",
+      "options": ["Ray Charles", "Marvin Gaye", "James Brown", "Otis Redding"],
+      "correctAnswer": "James Brown"
+    },
+    {
+      "question": "Which rock band released the album 'Dark Side of the Moon'?",
+      "options": ["The Rolling Stones", "The Who", "Pink Floyd", "The Eagles"],
+      "correctAnswer": "Pink Floyd"
+    },
+    {
+      "question": "Which rock band has a lead singer named Axl Rose?",
+      "options": ["Guns N' Roses", "Aerosmith", "Metallica", "Nirvana"],
+      "correctAnswer": "Guns N' Roses"
+    },
+    {
+      "question": "Who is often called the 'Queen of Pop'?",
+      "options": ["Whitney Houston", "Madonna", "Celine Dion", "Beyoncé"],
+      "correctAnswer": "Madonna"
+    },
+    {
+      "question": "Which jazz trumpeter was known for his contributions to the development of cool jazz?",
+      "options": ["Miles Davis", "Louis Armstrong", "Chet Baker", "Dizzy Gillespie"],
+      "correctAnswer": "Miles Davis"
+    },
+    {
+      "question": "In which year did Elvis Presley pass away?",
+      "options": ["1975", "1977", "1980", "1982"],
+      "correctAnswer": "1977"
+    },
+  {
+    "question": "The incredible album 'Are You Experienced' by Jimi Hendrix opens with which track?",
+    "options": ["All Along the Watchtower", "Little Wing", "Purple Haze", "Hey Joe"],
+    "correctAnswer": "Purple Haze"
+  },
+  {
+    "question": "Who directed the science fiction film '2001: A Space Odyssey'?",
+    "options": ["Stanley Kubrick", "Steven Spielberg", "Christopher Nolan", "Ridley Scott"],
+    "correctAnswer": "Stanley Kubrick"
+  },
+  {
+    "question": "Who directed the 1994 film 'Pulp Fiction'?",
+    "options": ["Christopher Nolan", "Quentin Tarantino", "Martin Scorsese", "Steven Spielberg"],
+    "correctAnswer": "Quentin Tarantino"
+  },
+  {
+    "question": "Which film features a character named Norman Bates and a famous shower scene?",
+    "options": ["Psycho", "The Shining", "The Silence of the Lambs", "Halloween"],
+    "correctAnswer": "Psycho"
+  },
+  {
+    "question": "In the TV series 'The Office,' who is the regional manager of Dunder Mifflin's Scranton branch?",
+    "options": ["Jim Halpert", "Dwight Schrute", "Michael Scott", "Pam Beesly"],
+    "correctAnswer": "Michael Scott"
+  },
+  {
+    "question": "In the game 'World of Warcraft,' what is the name of the continent where the majority of the game is set?",
+    "options": ["Azeroth", "Outland", "Pandaria", "Northrend"],
+    "correctAnswer": "Azeroth"
+  },
+  {
+    "question": "Which video game series features a character named Geralt of Rivia, a monster hunter for hire?",
+    "options": ["The Witcher", "Dark Souls", "Bloodborne", "Monster Hunter"],
+    "correctAnswer": "The Witcher"
+  },
+  {
+    "question": "Which video game series features a character named Ezio Auditore da Firenze?",
+    "options": ["Assassin's Creed", "Prince of Persia", "Dishonored", "Hitman"],
+    "correctAnswer": "Assassin's Creed"
+  },
+  {
+    "question": "What song holds the record for the longest-running No. 1 hit on the Billboard Hot 100 chart?",
+    "options": ["Old Town Road", "Despacito", "One Sweet Day", "I Will Always Love You"],
+    "correctAnswer": "Old Town Road"
+  },
+  {
+    "question": "Who sang the famous song 'Like a Rolling Stone'?",
+    "options": ["Bob Dylan", "John Lennon", "Elvis Presley", "Johnny Cash"],
+    "correctAnswer": "Bob Dylan"
+  },
+  {
+    "question": "Who is the lead singer of the American Rock Band 'The Doors'?",
+    "options": ["Mick Jagger", "Jim Morrison", "Joey Ramone", "Roger Waters"],
+    "correctAnswer": "Jim Morrison"
+  },
+  {
+    "question": "Who wrote the song 'All Along the Watchtower'?",
+    "options": ["Jimi Hendrix", "Bob Dylan", "Paul McCartney", "Original writer unknown"],
+    "correctAnswer": "Bob Dylan"
+  },
+  {
+    "question": "Who played the guitar solo on the song 'While my Guitar Gently Weeps' by The Beatles?",
+    "options": ["John Lennon", "George Harrison", "Paul McCartney", "Eric Clapton"],
+    "correctAnswer": "Eric Clapton"
+  },
+  {
+    "question": "Who played the guitar solo on the song 'While my Guitar Gently Weeps' by The Beatles?",
+    "options": ["John Lennon", "George Harrison", "Paul McCartney", "Eric Clapton"],
+    "correctAnswer": "Eric Clapton"
+  },
+  {
+    "question": "Who betrays you in Call of Duty Modern Warfare 2?",
+    "options": ["Ghost", "Shepherd", "Graves", "Sergant Pepper"],
+    "correctAnswer": "Shepherd"
+  },
+  {
+    "question": "Who composed the classical piece 'Für Elise'?",
+    "options": ["Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Franz Schubert"],
+    "correctAnswer": "Ludwig van Beethoven"
+  },
+  {
+    "question": "In the video game 'The Legend of Zelda,' what is the protagonist's name?",
+    "options": ["Link", "Ganon", "Zelda", "Malon"],
+    "correctAnswer": "Link"
+  },
+  {
+    "question": "In computer science, what does 'HTTP' stand for?",
+    "options": ["HyperText Transfer Protocol", "High-Tech Transfer Process", "Human Tolerance Test Procedure", "HyperTransfer Text Protocol"],
+    "correctAnswer": "HyperText Transfer Protocol"
+  },
+  {
+    "question": "What is the currency of Japan?",
+    "options": ["Yuan", "Won", "Ringgit", "Yen"],
+    "correctAnswer": "Yen"
+  },
+  {
+    "question": "Who is generally considered the inventor of the motor car?",
+    "options": ["Henry Ford", "Karl Benz", "Hans Volvo", "Henry M. Leland"],
+    "correctAnswer": "Karl Benz"
+  },
+  {
+    "question": "What number was the Apollo mission that successfully put a man on the moon for the first time in human history?",
+    "options": ["Apollo 9", "Apollo 11", "Apollo 13", "Apollo 14"],
+    "correctAnswer": "Apollo 11"
+  },
+  {
+    "question": "What is the largest US state (by landmass)?",
+    "options": ["Alaska", "California", "Texas", "Montana"],
+    "correctAnswer": "Alaska"
+  },
+  {
+    "question": "Who severed Anakin Skywalker's arm with his light sabre?",
+    "options": ["Darth Maul", "General Grievous", "Count Dooku", "Palpatine"],
+    "correctAnswer": "Count Dooku"
   }
 ]

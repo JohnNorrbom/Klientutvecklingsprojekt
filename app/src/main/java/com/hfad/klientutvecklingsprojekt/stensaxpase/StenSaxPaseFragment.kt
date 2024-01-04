@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.GameStartFragment
 
 class StenSaxPaseFragment : Fragment() {
@@ -17,6 +18,7 @@ class StenSaxPaseFragment : Fragment() {
     private var _binding: FragmentStenSaxPaseBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: StenSaxPaseViewModel
+    private var gameModel : GameModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

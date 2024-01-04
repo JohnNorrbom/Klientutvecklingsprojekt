@@ -19,7 +19,10 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -28,47 +31,49 @@ class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
+    private var meModel : MeModel?= null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Game Lobby")
+    val myRef = database.getReference("Lobby Data")
     var currentGameID = ""
+    var currentPlayerID =""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
-
-        myRef.addValueEventListener(lobbyListener)
-
+        LobbyData.fetchLobbyModel()
+        PlayerData.fetchPlayerModel()
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.startButton.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            view.findNavController().navigate(R.id.action_lobbyFragment_to_boardFragment)
+            startGame()
         }
+
+        MeData.meModel.observe(this){
+            meModel = it
+        }
+
+
         return view
     }
-    val lobbyListener = object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            lobbyModel?.apply {
-                val gameID = gameID ?: ""
-                val gameModel = dataSnapshot.child(gameID).getValue(LobbyModel::class.java)
-                if (gameModel != null) {
-                    Log.d("model","${gameModel}")
-                    // Check if the data has changed before updating and setting UI
-                    updateLobbyData(gameModel)
-                    currentGameID = gameID
-                    setUI()
-                }
-            }
-        }
 
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.w(ContentValues.TAG, "loadPost:onCancelled", databaseError.toException())
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setText()
+        setUI()
+        super.onViewCreated(view, savedInstanceState)
+    }
+    fun setText(){
+        currentGameID= meModel?.gameID?:""
+        currentPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
     }
 
+    fun startGame(){
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
+    }
     fun setUI() {
-        Log.d("setUI","Jag är här")
+        Log.d("setUI","I setUI")
         myRef.child(currentGameID).get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1

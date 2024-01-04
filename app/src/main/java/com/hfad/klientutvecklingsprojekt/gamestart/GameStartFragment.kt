@@ -21,7 +21,7 @@ class GameStartFragment : Fragment() {
     private val binding get()  = _binding!!
     private lateinit var view : LinearLayout
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Space Party")
+    private val myRef = database.getReference("Game Data")
 
     override fun onCreateView(
         inflater: LayoutInflater,

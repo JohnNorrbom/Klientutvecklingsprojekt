@@ -73,6 +73,8 @@ class LobbyFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+        println("Me model in LobbyFragment"+meModel)
+        println("GameId in LobbyFragment: " + currentGameID)
         return view
     }
 

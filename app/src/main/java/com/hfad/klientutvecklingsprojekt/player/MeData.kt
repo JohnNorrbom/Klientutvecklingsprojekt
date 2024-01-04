@@ -11,5 +11,8 @@ object MeData {
     fun saveMeModel(model: MeModel){
         _meModel.postValue(model)
     }
+    fun fetchMeModel() : MutableLiveData<MeModel?>{
+        return _meModel
+    }
 
 }

@@ -52,7 +52,7 @@ class GameView : ConstraintLayout {
 
     //player references
     var playerRef = database.getReference("Player Data").child("7496")
-    val playersRef = playerRef.child("players")
+    var playersRef = playerRef.child("players")
 
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
@@ -74,22 +74,8 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
-
-    fun setPlayerModel(model: PlayerModel?){
-        playerModel  = model
-    }
-
-    fun setMeModel(model: MeModel?){
-        meModel = model
-        var gameId: String = meModel?.gameID?:""
-
-        playerRef = database.getReference("Player Data").child(gameId)
-        println("GAMEID: " + gameId)
-        getPlayerToBoard()
-    }
-
     private fun init(context: Context) {
-// characters players
+    // characters players
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
 
@@ -101,14 +87,19 @@ class GameView : ConstraintLayout {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
+            println("gameID in gameView: "+currentGameID)
         }
 
-        binding.playerWhite.visibility = View.GONE
-        binding.playerRed.visibility = View.GONE
-        binding.playerYellow.visibility = View.GONE
-        binding.playerGreen.visibility = View.GONE
-        binding.playerBlue.visibility = View.GONE
+        //sets the right reference for the playersRef Removes the players and adds the visuals that it needs
+        playerRef = database.getReference("Player Data").child(currentGameID)
+        playersRef = playerRef.child("players")
 
+        binding.playerWhite.visibility = View.INVISIBLE
+        binding.playerRed.visibility = View.INVISIBLE
+        binding.playerYellow.visibility = View.INVISIBLE
+        binding.playerGreen.visibility = View.INVISIBLE
+        binding.playerBlue.visibility = View.INVISIBLE
+        getPlayerToBoard()
 
 
 
@@ -170,11 +161,14 @@ class GameView : ConstraintLayout {
     fun getPlayerToBoard(){
         playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var playerCount: Int = 0
                 for (playerSnapshot in dataSnapshot.children) {
                     val playerColor = playerSnapshot.child("color").value
                     val playerName = playerSnapshot.child("nickname").value
+                    playerCount++
                     println(playerColor)
                     println(playerName)
+
                     if(playerColor == "green"){
                         binding.playerGreen.visibility = View.VISIBLE
                     }
@@ -182,12 +176,15 @@ class GameView : ConstraintLayout {
                         binding.playerRed.visibility = View.VISIBLE
                     }
                     if(playerColor == "white"){
+                        println("went in i white")
                         binding.playerWhite.visibility = View.VISIBLE
                     }
                     if(playerColor == "yellow"){
+                        println("went in i yellow")
                         binding.playerYellow.visibility = View.VISIBLE
                     }
                     if(playerColor == "blue"){
+                        println("went in i blue")
                         binding.playerBlue.visibility = View.VISIBLE
                     }
                 }

@@ -58,7 +58,6 @@ class SoccerChooseFragment : Fragment() {
                 getYourColor()
                 otherColors()
             } ?: run {
-                // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }

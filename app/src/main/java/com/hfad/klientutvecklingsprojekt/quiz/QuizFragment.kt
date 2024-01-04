@@ -14,6 +14,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -123,11 +124,30 @@ class QuizFragment : Fragment() {
             binding.option2Button.visibility = View.GONE
             binding.option3Button.visibility = View.GONE
             binding.option4Button.visibility = View.GONE
-            binding.scoreTextView.visibility = View.GONE
+            //binding.scoreTextView.visibility = View.GONE
 
             // Visa poängen
             val scoreText = "End result: $score points"
             binding.questionTextView.text = scoreText
+            //LADDA UPP POÄNG PÅ DATABASEN!
+            myRef.child("GameID").child("userID").child("Score").setValue(score)
+
+
+
+            val scoreRef = myRef.child("GameID").child("userID").child("Score")
+
+// Hämta poängen från databasen
+            scoreRef.get().addOnSuccessListener { dataSnapshot ->
+                // Hämta poängvärdet
+                val userScore = dataSnapshot.value
+
+                // Skriv ut användarpoängen
+                binding.scoreTextView.text = "$userScore"
+            }.addOnFailureListener { e ->
+                // Hantera fel här om det uppstår något problem med att hämta data
+                binding.scoreTextView.text = "Failed to load scoreboard."
+            }
+
         }
     }
     private fun resetButtonColors() {

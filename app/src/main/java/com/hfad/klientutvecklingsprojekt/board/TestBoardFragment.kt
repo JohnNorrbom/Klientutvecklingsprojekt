@@ -93,8 +93,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-        playerRef = database.getReference("Player Data").child(currentGameID)
-        playersRef = playerRef.child("players")
 
         Log.d("color", "EFTER SETTEXT I ONCREATEVIEW playerID: ${currentPlayerID} GameID: ${currentGameID}")
 
@@ -118,6 +116,8 @@ class TestBoardFragment : Fragment() {
         meModel?.apply{
             currentGameID = gameID ?: ""
             currentPlayerID = playerID ?: ""
+            playerRef = database.getReference("Player Data").child(currentGameID)
+            playersRef = playerRef.child("players")
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
         paintPlayer()

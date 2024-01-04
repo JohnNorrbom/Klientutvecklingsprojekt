@@ -21,6 +21,7 @@ import kotlin.random.Random
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
+    private var boardModel : BoardModel?=null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
     private val database =

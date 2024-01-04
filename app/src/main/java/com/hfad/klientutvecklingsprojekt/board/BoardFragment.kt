@@ -45,8 +45,6 @@ class BoardFragment : Fragment() {
             }
         }
         println("TESTESTETSETSET " + meModel)
-
-        gameView = GameView(requireContext()) // Replace with your custom game view
         mediaPlayer = MediaPlayer.create(requireContext(),
             com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm
         )

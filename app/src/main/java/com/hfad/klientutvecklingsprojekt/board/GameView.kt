@@ -20,11 +20,12 @@ import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+import com.hfad.klientutvecklingsprojekt.soccer.SoccerData
+import com.hfad.klientutvecklingsprojekt.soccer.SoccerModel
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
-
-//  TODO add more ImageViews for each player and set it as GONE         //John
 //  TODO connect each ImageView with it's corresponding player/color
 //  TODO keep track of local player in order to keep track of turns
 
@@ -34,6 +35,7 @@ class GameView : ConstraintLayout {
     private val meModel : MeModel ? =null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
+    private var playerModel : PlayerModel? = null
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
@@ -58,21 +60,10 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
-    // Constructors for creating the view programmatically
-    constructor(context: Context) : super(context) {
-        init(context)
-    }
 
-    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        init(context)
-    }
-
-    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
-        context,
-        attrs,
-        defStyle
-    ) {
-        init(context)
+    fun setPlayerModel(playerModel: PlayerModel?){
+        this.playerModel = playerModel
+        PlayerData.fetchPlayerModel()
     }
 
     private fun init(context: Context) {
@@ -80,7 +71,7 @@ class GameView : ConstraintLayout {
         view = binding.root
         // Now you can access the views using the binding
         player = _binding.playerWhite
-        // characters players
+        // characters players TODO MAKE ONLY PLAYER THAT NEEDS TO BE VISIBLE
         binding.playerWhite.visibility = View.GONE
         binding.playerRed.visibility = View.GONE
         binding.playerYellow.visibility = View.GONE
@@ -101,6 +92,10 @@ class GameView : ConstraintLayout {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
+            playerModel?.apply {
+                position = currentImageViewIndex
+            }
+
             val tile = resources.getIdentifier(
                 "tile${(currentImageViewIndex%20) + 1}",
                 "id",
@@ -115,6 +110,9 @@ class GameView : ConstraintLayout {
         mB?.setOnClickListener {
             // Increment the index
             currentImageViewIndex++
+
+
+
             // If index is greater than the array size, reset to 0
             val tile = resources.getIdentifier(
                 "tile${(currentImageViewIndex%20) + 1}",
@@ -173,5 +171,21 @@ class GameView : ConstraintLayout {
                     .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
+    }
+    // Constructors for creating the view programmatically
+    constructor(context: Context) : super(context) {
+        init(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init(context)
+    }
+
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(
+        context,
+        attrs,
+        defStyle
+    ) {
+        init(context)
     }
 }

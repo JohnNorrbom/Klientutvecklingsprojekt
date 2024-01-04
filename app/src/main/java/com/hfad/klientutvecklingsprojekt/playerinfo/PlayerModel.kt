@@ -8,6 +8,6 @@ data class PlayerModel(
     var playerID : String? = null,
     var nickname : String? = null,
     var color : String? = null,
-    var score : String? = null,
-    var positionScore : String? = null,
+    var score : Int? = null,
+    var position : Int? = null,
 )

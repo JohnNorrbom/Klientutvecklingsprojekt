@@ -114,7 +114,10 @@ class PlayerInfoFragment : Fragment() {
                 PlayerModel(
                     playerID = currentPlayerID,
                     nickname = playerName,
-                    color = playerColor
+                    color = playerColor,
+                    position = 0,
+                    score = 0
+
                 ), currentGameID
             )
 

@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
 
 class BoardFragment : Fragment() {
@@ -16,6 +18,7 @@ class BoardFragment : Fragment() {
     private lateinit var gameView: GameView // Replace with your custom game view
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
+    private var playerModel : PlayerModel? = null
 
 
 
@@ -23,6 +26,10 @@ class BoardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        PlayerData.playerModel.observe(this) {
+            playerModel = it
+        }
 
         gameView = GameView(requireContext()) // Replace with your custom game view
         mediaPlayer = MediaPlayer.create(requireContext(),
@@ -32,6 +39,7 @@ class BoardFragment : Fragment() {
         mediaPlayer?.start()
 
         gameView = GameView(requireContext()) // Replace with your custom game view
+        gameView.setPlayerModel(playerModel)
 
         return gameView
     }

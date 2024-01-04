@@ -21,7 +21,6 @@ object LobbyData {
 
     fun saveLobbyModel(model: LobbyModel){
         _lobbyModel.postValue(model)
-        myRef.child(id?: "").setValue(model)
     }
 
     fun fetchLobbyModel(){

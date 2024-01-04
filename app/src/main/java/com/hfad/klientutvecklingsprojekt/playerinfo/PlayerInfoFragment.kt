@@ -105,6 +105,11 @@ class PlayerInfoFragment : Fragment() {
                 takenPosition?.put(playerColor, CharacterStatus.TAKEN)
                 updateGameData(this)
             }
+            LobbyData.saveLobbyModel(
+                LobbyModel(
+                    gameID = currentGameID
+                )
+            )
             PlayerData.savePlayerModel(
                 PlayerModel(
                     playerID = currentPlayerID,
@@ -112,11 +117,7 @@ class PlayerInfoFragment : Fragment() {
                     color = playerColor
                 ), currentGameID
             )
-            LobbyData.saveLobbyModel(
-                LobbyModel(
-                    gameID = currentGameID
-                )
-            )
+
             checkSizeOfLobby()
             MeData.saveMeModel(
                 MeModel(

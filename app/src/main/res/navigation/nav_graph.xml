@@ -19,7 +19,7 @@
             app:destination="@id/boardFragment" />
         <action
             android:id="@+id/action_startScreenFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
+            app:destination="@id/soccerChooseFragment" />
         <action
             android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />
@@ -94,4 +94,13 @@
         android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizFragment"
         android:label="fragment_quiz"
         tools:layout="@layout/fragment_quiz" />
+    <fragment
+        android:id="@+id/soccerChooseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerChooseFragment"
+        android:label="fragment_soccer_choose"
+        tools:layout="@layout/fragment_soccer_choose" >
+        <action
+            android:id="@+id/action_soccerChooseFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
+    </fragment>
 </navigation>

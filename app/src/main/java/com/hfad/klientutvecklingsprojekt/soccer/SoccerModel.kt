@@ -3,15 +3,13 @@ package com.hfad.klientutvecklingsprojekt.soccer
 import com.google.firebase.database.IgnoreExtraProperties
 
 @IgnoreExtraProperties
-data class soccerModel(
-    var gameID : String = "",
-    var status : Progress? = null,
-    var p1Score: Int,
-    var p2Score: Int,
-    var p1Choice : String,
-    var p2Choice : String
+data class SoccerModel(
+    var gameID : String? = null,
+    var p1Score: Int? = null,
+    var p2Score: Int? = null,
+    var p1Choice : String? = null,
+    var p2Choice : String? = null,
+    var p1Color : String? = null,
+    var p2Color : String? = null,
+    var bothPlayerReady : Boolean? = null
 )
-enum class Progress{
-    INPROGRESS,
-    FINISHED
-}

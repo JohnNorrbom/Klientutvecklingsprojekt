@@ -50,6 +50,7 @@ class PlayerInfoFragment : Fragment() {
     ): View? {
         _binding = FragmentPlayerInfoBinding.inflate(inflater, container, false)
         val view = binding.root
+        GameData.fetchGameModel()
        binding.confirmBtn.setOnClickListener{
            confirmCharacter()
        }
@@ -59,7 +60,6 @@ class PlayerInfoFragment : Fragment() {
             setUI()
         }
 
-        myRef.addValueEventListener(gameListener)
         return view
     }
 
@@ -204,7 +204,7 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
-    val gameListener = object : ValueEventListener {
+    /*val gameListener = object : ValueEventListener {
         override fun onDataChange(dataSnapshot: DataSnapshot) {
             val newGameModel = dataSnapshot.child(gameModel?.gameID ?: "").getValue(GameModel::class.java)
             if (newGameModel != null && newGameModel != gameModel) {
@@ -225,7 +225,7 @@ class PlayerInfoFragment : Fragment() {
         override fun onCancelled(databaseError: DatabaseError) {
             Log.w(TAG, "loadPost:onCancelled", databaseError.toException())
         }
-    }
+    }*/
 
     fun checkSizeOfLobby() {
         gameModel?.apply {

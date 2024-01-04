@@ -13,8 +13,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -105,20 +103,6 @@ class GameStartFragment : Fragment() {
                     //  Should not check status, because that only check the current player not the
                     //  game/lobby.
                     if (status != Progress.FINISHED) {
-                        var count = 0
-                        for (i in 0 until color.size) {
-                            //  Cheks which positions are free in the lobby
-                            if (takenPosition?.get(color[i]) == CharacterStatus.TAKEN) {
-                                count++
-                            }
-                        }
-                        if (count == 5) {
-                            GameData.saveGameModel(
-                                GameModel(
-                                    status = Progress.FINISHED
-                                )
-                            )
-                        }
                         joinLobby()
                     } else {
                         binding.gameIdInput.error = (getText(R.string.game_is_full))

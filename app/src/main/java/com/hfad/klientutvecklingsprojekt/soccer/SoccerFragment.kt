@@ -2,39 +2,29 @@ package com.hfad.klientutvecklingsprojekt.soccer
 
 import android.graphics.drawable.AnimationDrawable
 import android.media.MediaPlayer
-import android.net.Uri
-import android.net.wifi.p2p.WifiP2pManager.ActionListener
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.Animation.AnimationListener
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
-import kotlinx.coroutines.delay
-import java.net.URI
-import java.time.Duration
-import kotlin.concurrent.thread
 
 class SoccerFragment : Fragment() {
 
     private lateinit var soccerViewModel: SoccerViewModel
     private var mediaPlayer: MediaPlayer? = null
-
+    private var soccerModel : SoccerModel? = null
     private var _binding: FragmentSoccerBinding? = null
     private val binding get() = _binding!!
+
+    private var goalieColor = "yellow"
+    private var shooterColor = "red"
+    var text: String = ""
 
 
 
@@ -43,11 +33,46 @@ class SoccerFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
+        SoccerData.fetchSoccerModel()
+        SoccerData.soccerModel.observe(this) {
+            soccerModel = it
+            Log.d("observe model", soccerModel.toString())
+            setValues()
+        }
         return view
+    }
+
+    //this retrieves the game data from last fragment
+    fun setValues(){
+        soccerModel?.apply {
+            shooterColor = p1Color.toString()
+            goalieColor = p2Color.toString()
+            binding.finalScorePoint.text = p1Color
+        }
+        Log.d("shooter","shooter: "+ shooterColor)
+        Log.d("goalie","goalie: "+ goalieColor)
+
+
+        soccerViewModel.setColors(shooterColor,goalieColor, 1)
+
+        var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
+        Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
+        binding.goalie.setImageResource(resourceId)
+        var resourceId2 = resources.getIdentifier("z" + shooterColor +"leftmiss", "drawable", "com.hfad.klientutvecklingsprojekt")
+        Log.d("shooterAnimation", "z" + shooterColor +"leftmiss")
+        binding.shooterMiss.setImageResource(resourceId2)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        Log.d("after observe model", soccerModel.toString())
+        //red yellow
+        Log.d("onViewCreated after observe model", shooterColor)
+        Log.d("onViewCreated after observe model", goalieColor)
+
+
         binding.finalScorePoint.visibility = View.INVISIBLE
         binding.finishedGameButton.visibility = View.INVISIBLE
         binding.finishedGameScreen.visibility = View.INVISIBLE
@@ -56,15 +81,7 @@ class SoccerFragment : Fragment() {
         mediaPlayer?.start()
 
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
-        var goalieColor = "yellow"
-        var shootercolor = "green"
 
-        soccerViewModel.setColors(shootercolor,goalieColor, 1)
-
-        var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
-        binding.goalie.setImageResource(resourceId)
-        var resourceId2 = resources.getIdentifier("z" + shootercolor +"leftmiss", "drawable", "com.hfad.klientutvecklingsprojekt")
-        binding.shooterMiss.setImageResource(resourceId2)
 
         binding.leftButton.setOnClickListener {
             soccerViewModel.leftButtonClick()
@@ -79,6 +96,18 @@ class SoccerFragment : Fragment() {
             doAnimation(soccerViewModel)
         }
 
+
+
+    }
+
+
+    fun checkOtherPlayerReady(): Boolean {
+        soccerModel?.apply {
+            shooterColor = p1Color.toString()
+            goalieColor = p2Color.toString()
+            binding.finalScorePoint.text = p1Color
+        }
+        return false
     }
 
 

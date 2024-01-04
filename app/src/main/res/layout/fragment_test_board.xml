@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hfad.klientutvecklingsprojekt.board.BoardFragment">
+    tools:context=".board.TestBoardFragment">
 
     <ImageView
         android:id="@+id/character"
@@ -276,14 +276,6 @@
         android:src="@drawable/astro_green"
         app:layout_constraintEnd_toEndOf="@+id/tile1"
         app:layout_constraintTop_toTopOf="@+id/tile1" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/moveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Move Player"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/dice_button"

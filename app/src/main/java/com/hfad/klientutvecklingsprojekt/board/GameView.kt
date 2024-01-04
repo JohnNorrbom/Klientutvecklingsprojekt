@@ -38,20 +38,19 @@ import kotlin.random.Random
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
-    private var meModel : MeModel ? =null
-    private var playerModel: PlayerModel ? = null
+    private var meModel: MeModel? = null
+    private var playerModel: PlayerModel? = null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
-    var currentGameID =""
-    var currentPlayerID =""
+    var currentGameID = ""
+    var currentPlayerID = ""
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Space Party")
-
+    private val myRef = database.getReference("Player Data")
 
 
     //player references
-    var playerRef = database.getReference("Player Data").child("7496")
+    var playerRef = database.getReference("Player Data").child("")
     var playersRef = playerRef.child("players")
 
     private val binding get() = _binding!!
@@ -74,15 +73,30 @@ class GameView : ConstraintLayout {
         this.navigateCallback = callback
     }
 
+
+    fun setPlayerModel(model: PlayerModel?) {
+        playerModel = model
+    }
+
+    fun setMeModel(model: MeModel?) {
+        meModel = model
+        var gameId: String = meModel?.gameID ?: ""
+
+        playerRef = database.getReference("Player Data").child(gameId)
+        println("GAMEID: " + gameId)
+        getPlayerToBoard()
+    }
+
+    fun paintPlayers() {
+
+
+        Log.d("color", "I AM HERE")
+    }
+
     private fun init(context: Context) {
-    // characters players
+
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
-
-        getPlayerToBoard()
-
-        //TODO MOST BE REMOVED
-        player = binding.playerBlue
 
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
@@ -92,12 +106,54 @@ class GameView : ConstraintLayout {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
-            println("gameID in gameView: "+currentGameID)
         }
-
-        //sets the right reference for the playersRef Removes the players and adds the visuals that it needs
         playerRef = database.getReference("Player Data").child(currentGameID)
         playersRef = playerRef.child("players")
+        //  POST gör så att man kör på mainthread
+
+        binding.playerBlue.visibility = View.GONE
+        binding.playerWhite.visibility = View.GONE
+        binding.playerRed.visibility = View.GONE
+        binding.playerYellow.visibility = View.GONE
+        binding.playerGreen.visibility = View.GONE
+
+//            paintPlayers()
+        var color = ""
+        Log.d("color", "${currentGameID}")
+        myRef.child(currentGameID).child("players").child(currentPlayerID).get()
+            .addOnSuccessListener {
+                val snapshot = it
+                Log.d("color", "${snapshot.child("color").value}")
+                color = snapshot.child("color").value.toString()
+
+                if (color == "blue") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerBlue
+
+                }
+                if (color == "red") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerRed
+                }
+                if (color == "green") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerGreen
+                }
+                if (color == "yellow") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerYellow
+                }
+                if (color == "white") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerWhite
+                }
+
+            }
 
 
         val dice = binding.diceButton
@@ -119,7 +175,7 @@ class GameView : ConstraintLayout {
             }
 
             val tile = resources.getIdentifier(
-                "tile${(currentImageViewIndex%20) + 1}",
+                "tile${(currentImageViewIndex % 20) + 1}",
                 "id",
                 context.packageName
             )
@@ -134,7 +190,7 @@ class GameView : ConstraintLayout {
             currentImageViewIndex++
             // If index is greater than the array size, reset to 0
             val tile = resources.getIdentifier(
-                "tile${(currentImageViewIndex%20) + 1}",
+                "tile${(currentImageViewIndex % 20) + 1}",
                 "id",
                 context.packageName
             )
@@ -142,78 +198,38 @@ class GameView : ConstraintLayout {
             println("current tileImage " + tileImage + " current tile" + tile)
             movePlayer(tileImage)
         }
-
-
     }
 
-    fun setText(){
+    fun setText() {
         //den här
-        currentGameID= meModel?.gameID?:""
-        currentPlayerID = meModel?.playerID?:""
-        Log.d("meModelView","playerID: ${currentPlayerID} GameID: ${currentGameID}")
+        currentGameID = meModel?.gameID ?: ""
+        currentPlayerID = meModel?.playerID ?: ""
+        Log.d("meModelView", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
 
-    fun getPlayerToBoard(){
-        playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var playerCount: Int = 0
-                var colors = arrayOf("green","red","white","yellow","blue")
-                for (i in 0..4) {
-                    var hasFoundIt: Boolean = false
-                    for (playerSnapshot in dataSnapshot.children) {
-                        val playerColor = playerSnapshot.child("color").value
-                        val playerName = playerSnapshot.child("nickname").value
-                        if (colors[i] == playerColor){
-                            hasFoundIt = true
-                        }
-                        playerCount++
-                        println(playerColor)
-                        println(playerName)
-                    }
-                    if (!hasFoundIt){
-                        if (i == 0){
-                            binding.playerGreen.visibility = View.INVISIBLE
-                        }
-                        if (i == 1){
-                            binding.playerRed.visibility = View.INVISIBLE
-                        }
-                        if (i == 2){
-                            binding.playerWhite.visibility = View.INVISIBLE
-                        }
-                        if (i == 3){
-                            binding.playerYellow.visibility = View.INVISIBLE
-                        }
-                        if (i == 4){
-                            binding.playerBlue.visibility = View.INVISIBLE
-                        }
-                    }
-                }
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                println("Failed to fetch player data: ${databaseError.message}")
-            }
-        })
-    }
-    /*
     fun getPlayerToBoard() {
         playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var playerCount: Int = 0
                 for (playerSnapshot in dataSnapshot.children) {
-                    val playerColor = playerSnapshot.child("color").value as String? // Ensure it's cast as String
-
-                    playerCount++
+                    val playerColor = playerSnapshot.child("color").value
+                    val playerName = playerSnapshot.child("nickname").value
                     println(playerColor)
-                    val playerView = when (playerColor) {
-                        "green" -> binding.playerGreen
-                        "red" -> binding.playerRed
-                        "white" -> binding.playerWhite
-                        "yellow" -> binding.playerYellow
-                        "blue" -> binding.playerBlue
-                        else -> null // Handle other colors or invalid cases
+                    println(playerName)
+                    if (playerColor == "green") {
+                        binding.playerGreen.visibility = View.VISIBLE
                     }
-
-                    playerView?.visibility = View.VISIBLE // Set visibility if the view exists
+                    if (playerColor == "red") {
+                        binding.playerRed.visibility = View.VISIBLE
+                    }
+                    if (playerColor == "white") {
+                        binding.playerWhite.visibility = View.VISIBLE
+                    }
+                    if (playerColor == "yellow") {
+                        binding.playerYellow.visibility = View.VISIBLE
+                    }
+                    if (playerColor == "blue") {
+                        binding.playerBlue.visibility = View.VISIBLE
+                    }
                 }
             }
 
@@ -222,8 +238,6 @@ class GameView : ConstraintLayout {
             }
         })
     }
-
-     */
 
     private fun movePlayer(targetedImageView: ImageView) {
         // Update constraints to move player to next tile
@@ -258,20 +272,21 @@ class GameView : ConstraintLayout {
                         status = false,
                     )
                 )
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
-                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
             } else {
                 println("ROULETTE WILLIAM")
                 view.findNavController()
-                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+//                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
     }
+
     // Constructors for creating the view programmatically
     constructor(context: Context) : super(context) {
         init(context)

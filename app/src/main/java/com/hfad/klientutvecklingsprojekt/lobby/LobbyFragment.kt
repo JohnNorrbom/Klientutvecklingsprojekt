@@ -73,6 +73,8 @@ class LobbyFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+        println("Me model in LobbyFragment"+meModel)
+        println("GameId in LobbyFragment: " + currentGameID)
         return view
     }
 
@@ -89,7 +91,7 @@ class LobbyFragment : Fragment() {
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
     }
     fun setUI() {
         Log.d("setUI","I setUI")

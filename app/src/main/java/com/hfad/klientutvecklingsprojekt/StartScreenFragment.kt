@@ -36,7 +36,7 @@ class StartScreenFragment : Fragment() {
         //  board button
         binding.startButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_boardFragment)
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_testBoardFragment)
         }
         //  soccer button
         binding.soccerMiniGameButton.setOnClickListener {

@@ -38,21 +38,20 @@ import kotlin.random.Random
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0
-    private var meModel : MeModel ? =null
-    private var playerModel: PlayerModel ? = null
+    private var meModel: MeModel? = null
+    private var playerModel: PlayerModel? = null
     lateinit var view: ConstraintLayout
     lateinit var _binding: FragmentBoardBinding
-    var currentGameID =""
-    var currentPlayerID =""
+    var currentGameID = ""
+    var currentPlayerID = ""
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Space Party")
-
+    private val myRef = database.getReference("Player Data")
 
 
     //player references
-    var playerRef = database.getReference("Player Data").child("7496")
-    val playersRef = playerRef.child("players")
+    var playerRef = database.getReference("Player Data").child("")
+    var playersRef = playerRef.child("players")
 
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
@@ -75,21 +74,27 @@ class GameView : ConstraintLayout {
     }
 
 
-    fun setPlayerModel(model: PlayerModel?){
-        playerModel  = model
+    fun setPlayerModel(model: PlayerModel?) {
+        playerModel = model
     }
 
-    fun setMeModel(model: MeModel?){
+    fun setMeModel(model: MeModel?) {
         meModel = model
-        var gameId: String = meModel?.gameID?:""
+        var gameId: String = meModel?.gameID ?: ""
 
         playerRef = database.getReference("Player Data").child(gameId)
         println("GAMEID: " + gameId)
         getPlayerToBoard()
     }
 
+    fun paintPlayers() {
+
+
+        Log.d("color", "I AM HERE")
+    }
+
     private fun init(context: Context) {
-// characters players
+
         _binding = FragmentBoardBinding.inflate(LayoutInflater.from(context), this, true)
         view = binding.root
 
@@ -102,18 +107,53 @@ class GameView : ConstraintLayout {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+        playerRef = database.getReference("Player Data").child(currentGameID)
+        playersRef = playerRef.child("players")
+        //  POST gör så att man kör på mainthread
 
+        binding.playerBlue.visibility = View.GONE
         binding.playerWhite.visibility = View.GONE
         binding.playerRed.visibility = View.GONE
         binding.playerYellow.visibility = View.GONE
         binding.playerGreen.visibility = View.GONE
-        binding.playerBlue.visibility = View.GONE
 
+//            paintPlayers()
+        var color = ""
+        Log.d("color", "${currentGameID}")
+        myRef.child(currentGameID).child("players").child(currentPlayerID).get()
+            .addOnSuccessListener {
+                val snapshot = it
+                Log.d("color", "${snapshot.child("color").value}")
+                color = snapshot.child("color").value.toString()
 
+                if (color == "blue") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerBlue
 
+                }
+                if (color == "red") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerRed
+                }
+                if (color == "green") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerGreen
+                }
+                if (color == "yellow") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerYellow
+                }
+                if (color == "white") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerWhite
+                }
 
-        // Now you can access the views using the binding
-        player = _binding.playerWhite
+            }
 
 
         val dice = binding.diceButton
@@ -135,7 +175,7 @@ class GameView : ConstraintLayout {
             }
 
             val tile = resources.getIdentifier(
-                "tile${(currentImageViewIndex%20) + 1}",
+                "tile${(currentImageViewIndex % 20) + 1}",
                 "id",
                 context.packageName
             )
@@ -150,7 +190,7 @@ class GameView : ConstraintLayout {
             currentImageViewIndex++
             // If index is greater than the array size, reset to 0
             val tile = resources.getIdentifier(
-                "tile${(currentImageViewIndex%20) + 1}",
+                "tile${(currentImageViewIndex % 20) + 1}",
                 "id",
                 context.packageName
             )
@@ -160,14 +200,14 @@ class GameView : ConstraintLayout {
         }
     }
 
-    fun setText(){
+    fun setText() {
         //den här
-        currentGameID= meModel?.gameID?:""
-        currentPlayerID = meModel?.playerID?:""
-        Log.d("meModelView","playerID: ${currentPlayerID} GameID: ${currentGameID}")
+        currentGameID = meModel?.gameID ?: ""
+        currentPlayerID = meModel?.playerID ?: ""
+        Log.d("meModelView", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
 
-    fun getPlayerToBoard(){
+    fun getPlayerToBoard() {
         playersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for (playerSnapshot in dataSnapshot.children) {
@@ -175,19 +215,19 @@ class GameView : ConstraintLayout {
                     val playerName = playerSnapshot.child("nickname").value
                     println(playerColor)
                     println(playerName)
-                    if(playerColor == "green"){
+                    if (playerColor == "green") {
                         binding.playerGreen.visibility = View.VISIBLE
                     }
-                    if(playerColor == "red"){
+                    if (playerColor == "red") {
                         binding.playerRed.visibility = View.VISIBLE
                     }
-                    if(playerColor == "white"){
+                    if (playerColor == "white") {
                         binding.playerWhite.visibility = View.VISIBLE
                     }
-                    if(playerColor == "yellow"){
+                    if (playerColor == "yellow") {
                         binding.playerYellow.visibility = View.VISIBLE
                     }
-                    if(playerColor == "blue"){
+                    if (playerColor == "blue") {
                         binding.playerBlue.visibility = View.VISIBLE
                     }
                 }
@@ -232,20 +272,21 @@ class GameView : ConstraintLayout {
                         status = false,
                     )
                 )
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
-                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
             } else {
                 println("ROULETTE WILLIAM")
                 view.findNavController()
-                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+//                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
     }
+
     // Constructors for creating the view programmatically
     constructor(context: Context) : super(context) {
         init(context)

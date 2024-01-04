@@ -20,10 +20,8 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     val gameModel : GameModel?=null
 
-
     /*
     stenSaxPaseModel?.apply {
-        // lägg till de variabler som ska in i firebase
     }
      */
 
@@ -66,21 +64,28 @@ class StenSaxPaseViewModel() : ViewModel() {
     var player1:String? = null
     var player2:String? = null
 
+    var gID = ""
+    var pID = ""
+    fun setIdTest(gId:String,pId:String) {
+        gID = gId
+        pID = pId
+
+        player1 = pID
+    }
+
     fun setPlayers() {
         if(playerMap!=null) {
             var randomNmbr = Random.nextInt(playerMap!!.size)
-            var randomNmbr2 = Random.nextInt(playerMap!!.size)
-            while(randomNmbr == randomNmbr2) {
+            do {
                 randomNmbr = Random.nextInt(playerMap!!.size)
-            }
-            var i = 0
-            for (player in playerMap!!) {
-                //println("_____________${player.key}")
-                if(randomNmbr == i) player1 = "${player.key}"
-                if(randomNmbr2 == i) player2 = "${player.key}"
-                i++
-            }
 
+                var i = 0
+                for (player in playerMap!!) {
+                    //println("_____________${player.key}")
+                    if(randomNmbr == i) player2 = "${player.key}"
+                    i++
+                }
+            } while (player1 == player2)
             println("player1: $player1 ---- player2: $player2")
         }
     }
@@ -92,14 +97,14 @@ class StenSaxPaseViewModel() : ViewModel() {
         // just for testing
         if(players.isEmpty() || players == null) {
             players.put(
-                "1111", mutableMapOf(
+                "$pID", mutableMapOf(
                     "nickname" to "Bengt",
                     "color" to "black",
                     "choice" to "null",
                     "score" to "0"
                 )
             )
-
+            /*
             players.put(
                 "2222", mutableMapOf(
                     "nickname" to "Sven",
@@ -117,6 +122,7 @@ class StenSaxPaseViewModel() : ViewModel() {
                     "score" to "0"
                 )
             )
+             */
         }
 
         // Save to Database
@@ -130,6 +136,7 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     private fun setGameID() {
         if(gameModel?.gameID != null) gameID = gameModel.gameID
+        else gameID = gID
         println("---------:${gameModel?.gameID}-----:$gameID")
     }
 
@@ -139,6 +146,14 @@ class StenSaxPaseViewModel() : ViewModel() {
 
         // load players from lobby, should always return something
         loadFromDatabase()
+    }
+
+    fun setChoiceInDatabase(choice:String) {
+        myRef.child(gameID).child("players").child(pID).child("choice").setValue(choice)
+    }
+
+    fun setChoice(choice:String, player:String) {
+        if(player == pID) setChoiceInDatabase(choice)
     }
 
     val gameStatus = database.getReference("Sten Sax Pase").child(gameID).child("status")

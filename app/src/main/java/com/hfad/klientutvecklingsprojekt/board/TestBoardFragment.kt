@@ -95,6 +95,9 @@ class TestBoardFragment : Fragment() {
         }
         playerRef = database.getReference("Player Data").child(currentGameID)
         playersRef = playerRef.child("players")
+
+        Log.d("color", "EFTER SETTEXT I ONCREATEVIEW playerID: ${currentPlayerID} GameID: ${currentGameID}")
+
         //  POST gör så att man kör på mainthread
 
         binding.playerBlue.visibility = View.GONE
@@ -106,18 +109,19 @@ class TestBoardFragment : Fragment() {
 
         player = binding.playerBlue
         binding.playerBlue.visibility = View.VISIBLE
-        paintPlayer()
+
         diceButton()
         // Inflate the layout for this fragment
         return view
     }
     private fun setText() {
-        //den här
         meModel?.apply{
             currentGameID = gameID ?: ""
             currentPlayerID = playerID ?: ""
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
+        paintPlayer()
+        Log.d("color", "UTANFÖR APPLY playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
     private fun paintPlayer() {
         var color = ""

@@ -1,19 +1,30 @@
 package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 
 class GavleRouletteFragment : Fragment(), View.OnClickListener{
     private var _binding: FragmentGavleRouletteBinding? = null
     private val binding get() = _binding!!
+    private var meModel : MeModel?=null
     private var rouletteModel: RouletteModel? = null
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    val myRef = database.getReference("Roulette")
+    val lobbyRef = database.getReference("Player Data")
+    var localPlayerID =""
+    var localGameID = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -22,6 +33,17 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     ): View? {
         _binding = FragmentGavleRouletteBinding.inflate(inflater, container, false)
         val view = binding.root
+        RouletteData.fetchGameModel()
+
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@GavleRouletteFragment.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
 
         binding.startGameBtn.setOnClickListener {
             startGame()
@@ -40,6 +62,12 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+    fun setText(){
+        //den här
+        localGameID= meModel?.gameID?:""
+        localPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
     }
 
     fun setUi() {
@@ -99,7 +127,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             }
             binding.test1.text = "current attempts" + attempts.toString()
             binding.test2.text = "total laps " + laps.toString()
-            updateGameData(this)
+            updateGameData(this,localGameID)
         }
     }
 
@@ -147,7 +175,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                 val resId = resources.getIdentifier("chamber_5_bullet", "drawable", requireContext().packageName)
                 binding.magasinSlot.setImageResource(resId)
             }
-            updateGameData(this)
+            updateGameData(this,localGameID)
         }
     }
 
@@ -166,7 +194,8 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                     currentPlayer = initialParticipants[Random.nextInt(initialParticipants.size)].first,
                     nbrOfPlayers = initialParticipants.size,
                     aliveCount = initialParticipants.size
-                )
+                ),localGameID
+
             )
         }
     }
@@ -193,8 +222,8 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
     }
 */
 
-    fun updateGameData(model: RouletteModel) {
-        RouletteData.saveGameModel(model)
+    fun updateGameData(model: RouletteModel,id : String) {
+        RouletteData.saveGameModel(model,id)
     }
     fun changePlayer(){
         rouletteModel?.apply {
@@ -215,7 +244,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                     }
                     break
                 }
-                updateGameData(this)
+                updateGameData(this,localGameID)
             }
         }
     }
@@ -239,7 +268,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                         }
                 }
             }
-            updateGameData(this)
+            updateGameData(this,localGameID)
         }
     }
     fun checkForWinner(){
@@ -252,7 +281,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                 }
                 gameStatus = GameStatus.FINISHED
             }
-            updateGameData(this)
+            updateGameData(this,localGameID)
         }
     }
 
@@ -268,7 +297,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             pullTheTrigger()
             checkForRemainingPlayers()
             checkForWinner()
-            updateGameData(this)
+            updateGameData(this,localGameID)
 
         }
     }

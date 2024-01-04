@@ -21,6 +21,9 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
@@ -34,10 +37,9 @@ class LobbyFragment : Fragment() {
     private var lobbyModel : LobbyModel? = null
     private var meModel : MeModel?= null//den här
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Lobby Data")
-    val myRefPlayer = database.getReference("Player Data")
-    var currentGameID =""
-    var currentPlayerID =""
+    val myRef = database.getReference("Player Data")
+    var localGameID =""
+    var localPlayerID =""
 
     //host - den som kommer först in
     var playerIsHost: Boolean = true
@@ -63,18 +65,22 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
+        binding.rouletteButton.setOnClickListener{
+            startRoulette()
+        }
         //den här
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@LobbyFragment.meModel = it
                 setText()
+                setUI()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
         println("Me model in LobbyFragment"+meModel)
-        println("GameId in LobbyFragment: " + currentGameID)
+        println("GameId in LobbyFragment: " + localGameID)
         return view
     }
 
@@ -84,18 +90,35 @@ class LobbyFragment : Fragment() {
     }
     fun setText(){
         //den här
-        currentGameID= meModel?.gameID?:""
-        currentPlayerID = meModel?.playerID?:""
-        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
+        localGameID= meModel?.gameID?:""
+        localPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
     }
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
     }
+    fun startRoulette(){
+        var players : MutableMap<String, PlayerStatus> = mutableMapOf()
+        myRef.child(localGameID).get().addOnSuccessListener {
+            val snapshot = it.child("players")
+            for (player in snapshot.children){
+                players.set((player.value).toString()).to(PlayerStatus.ALIVE)
+            }
+        }
+        RouletteData.saveGameModel(
+            RouletteModel(
+                gameId = localGameID,
+
+            ),localGameID
+        )
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+    }
     fun setUI() {
         Log.d("setUI","I setUI")
-        myRef.child(currentGameID).get().addOnSuccessListener {
+        myRef.child(localGameID).get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1
             for (player in dataSnapshot.children) {
@@ -126,12 +149,6 @@ class LobbyFragment : Fragment() {
                 i++
             }
         }
-    }
-    fun updatePlayerData(model: PlayerModel,gameID : String) {
-        PlayerData.savePlayerModel(model,gameID)
-    }
-    fun updateLobbyData(model: LobbyModel) {
-        LobbyData.saveLobbyModel(model)
     }
 
     /*

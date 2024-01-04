@@ -22,6 +22,10 @@ import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
+//  TODO add more ImageViews for each player and set it as GONE
+//  TODO connect each ImageView with it's corresponding player/color
+//  TODO keep track of local player in order to keep track of turns
+
 class GameView : ConstraintLayout {
     private lateinit var player: ImageView
     private var currentImageViewIndex: Int = 0

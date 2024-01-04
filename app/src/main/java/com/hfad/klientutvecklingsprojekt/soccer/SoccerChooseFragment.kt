@@ -28,10 +28,10 @@ class SoccerChooseFragment : Fragment() {
     //Here you should get your color from meDataModel
     private var yourColor: String  = "white"
 
-    //Here you should get the other colors from board/gameModel
+    //Here you should get the other colors from boardModel
     private var otherColors = arrayListOf("blue", "red", "yellow", "green")
 
-    //here you should get the id from board/gameModel
+    //here you should get the id from boardModel
     private var gameId: String = Random.nextInt(1000..9999).toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {

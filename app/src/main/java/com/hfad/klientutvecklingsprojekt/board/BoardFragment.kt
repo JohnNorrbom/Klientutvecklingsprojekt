@@ -17,6 +17,8 @@ class BoardFragment : Fragment() {
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

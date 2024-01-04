@@ -40,7 +40,7 @@
         android:name="com.hfad.klientutvecklingsprojekt.board.BoardFragment"
         android:label="BoardFragment" >
         <action
-            android:id="@+id/action_boardFragment_to_soccerFragment"
+            android:id="@+id/action_boardFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
             android:id="@+id/action_boardFragment_to_stensaxpaseFragment"

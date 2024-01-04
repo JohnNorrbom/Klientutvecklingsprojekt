@@ -41,34 +41,9 @@ object SoccerData {
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }
-
     }
-    /*
-    fun setP1Score(score: Int, gameId: String){
-        myRef.child(gameId).child("p1Score").setValue(score)
+    fun updateSoccerData(model: SoccerModel){
+        SoccerData.saveSoccerModel(model)
     }
-    fun setP2Score(score: Int, gameId: String){
-        myRef.child(gameId).child("p2Score").setValue(score)
-    }
-    fun getP1Score(gameId: String) : Int {
-        return myRef.child(gameId).child("p1Score").get() as Int
-    }
-    fun getP2Score(gameId: String) : Int {
-        return myRef.child(gameId).child("p2Score").get() as Int
-    }
-    fun setP1Color(color: String, gameId: String){
-        myRef.child(gameId).child("p1Color").setValue(color)
-    }
-    fun setP2Color(color: String, gameId: String){
-        myRef.child(gameId).child("p2Color").setValue(color)
-    }
-    fun getP1Color(gameId: String) : String{
-        return myRef.child(gameId).child("p1Color").get() as String
-    }
-    fun getP2Color(gameId: String) : String{
-        return myRef.child(gameId).child("p2Color").get() as String
-    }
-
-     */
 
 }

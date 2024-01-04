@@ -18,6 +18,7 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
@@ -35,6 +36,7 @@ class GameView : ConstraintLayout {
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Space Party")
+
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
 
@@ -91,6 +93,7 @@ class GameView : ConstraintLayout {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
+
             val tile = resources.getIdentifier(
                 "tile${(currentImageViewIndex%20) + 1}",
                 "id",
@@ -153,7 +156,7 @@ class GameView : ConstraintLayout {
                 view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerFragment)
+                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)

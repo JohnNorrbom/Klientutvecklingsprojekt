@@ -25,6 +25,7 @@ import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+import com.hfad.klientutvecklingsprojekt.soccer.SoccerData
 
 
 class LobbyFragment : Fragment() {
@@ -34,16 +35,30 @@ class LobbyFragment : Fragment() {
     private var meModel : MeModel?= null//den här
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Lobby Data")
-    var currentGameID = ""
+    val myRefPlayer = database.getReference("Player Data")
+    var currentGameID =""
     var currentPlayerID =""
+
+    //host - den som kommer först in
+    var playerIsHost: Boolean = true
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
+
         LobbyData.fetchLobbyModel()
         PlayerData.fetchPlayerModel()
+
+        //host (first in) will only see startButton
+        binding.startButton.visibility = View.GONE
+        setHost()
+        if (playerIsHost){
+            binding.startButton.visibility = View.VISIBLE
+        }
+
         //  Button for starting game, loading BoardFragment. Everyone can click it right now.
         binding.startButton.setOnClickListener {
             startGame()
@@ -115,6 +130,19 @@ class LobbyFragment : Fragment() {
     }
     fun updateLobbyData(model: LobbyModel) {
         LobbyData.saveLobbyModel(model)
+    }
+
+    /*
+    sets the players that are in the lobby visible
+     */
+    fun setVisiblePlayers(){
+
+    }
+
+    fun setHost(){
+
+
+
     }
 
     //hämtar alla spelare från databasen och lägger till dem i lobby och spara deras spelarID för

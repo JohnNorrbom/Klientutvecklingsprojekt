@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
@@ -19,6 +21,7 @@ class BoardFragment : Fragment() {
     private lateinit var gameLoopThread: Thread
     private var isRunning = false
     private var playerModel : PlayerModel? = null
+    private var meModel : MeModel? = null
 
 
 
@@ -31,6 +34,11 @@ class BoardFragment : Fragment() {
             playerModel = it
         }
 
+        MeData.meModel.observe(this){
+            meModel = it
+        }
+        println(meModel)
+
         gameView = GameView(requireContext()) // Replace with your custom game view
         mediaPlayer = MediaPlayer.create(requireContext(),
             com.hfad.klientutvecklingsprojekt.R.raw.android_song2_140bpm
@@ -40,6 +48,7 @@ class BoardFragment : Fragment() {
 
         gameView = GameView(requireContext()) // Replace with your custom game view
         gameView.setPlayerModel(playerModel)
+        gameView.setMeModel(meModel)
 
         return gameView
     }

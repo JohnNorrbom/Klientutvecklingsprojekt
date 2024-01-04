@@ -50,8 +50,8 @@ class GameView : ConstraintLayout {
 
 
     //player references
-    var playerRef = database.getReference("Player Data").child("7496")
-    val playersRef = playerRef.child("players")
+    var playerRef = database.getReference("Player Data").child("")
+    var playersRef = playerRef.child("players")
 
     private val binding get() = _binding!!
     private var navigateCallback: (() -> Unit)? = null
@@ -89,20 +89,7 @@ class GameView : ConstraintLayout {
 
     fun paintPlayers() {
 
-        var color = ""
-        Log.d("color", "${currentGameID}")
-        myRef.child(currentGameID).child("players").child(currentPlayerID).get()
-            .addOnSuccessListener {
-                val snapshot = it
-                Log.d("color", "${snapshot.child("color").value}")
-                color = snapshot.child("color").value.toString()
 
-                if (color == "blue") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
-                }
-
-            }
         Log.d("color", "I AM HERE")
     }
 
@@ -120,19 +107,55 @@ class GameView : ConstraintLayout {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-        post {
-            binding.playerBlue.visibility = View.GONE
-            binding.playerWhite.visibility = View.GONE
-            binding.playerRed.visibility = View.GONE
-            binding.playerYellow.visibility = View.GONE
-            binding.playerGreen.visibility = View.GONE
+        playerRef = database.getReference("Player Data").child(currentGameID)
+        playersRef = playerRef.child("players")
+        //  POST gör så att man kör på mainthread
 
-            paintPlayers()
+        binding.playerBlue.visibility = View.GONE
+        binding.playerWhite.visibility = View.GONE
+        binding.playerRed.visibility = View.GONE
+        binding.playerYellow.visibility = View.GONE
+        binding.playerGreen.visibility = View.GONE
 
-            binding.playerGreen.visibility = View.VISIBLE
-        }
+//            paintPlayers()
+        var color = ""
+        Log.d("color", "${currentGameID}")
+        myRef.child(currentGameID).child("players").child(currentPlayerID).get()
+            .addOnSuccessListener {
+                val snapshot = it
+                Log.d("color", "${snapshot.child("color").value}")
+                color = snapshot.child("color").value.toString()
 
-        player = binding.playerGreen
+                if (color == "blue") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerBlue
+
+                }
+                if (color == "red") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerRed
+                }
+                if (color == "green") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerGreen
+                }
+                if (color == "yellow") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerYellow
+                }
+                if (color == "white") {
+                    Log.d("color", "färgen är ${color}")
+                    binding.playerBlue.visibility = View.VISIBLE
+                    player = binding.playerWhite
+                }
+
+            }
+
+
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
@@ -249,17 +272,17 @@ class GameView : ConstraintLayout {
                         status = false,
                     )
                 )
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
-                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
             } else {
                 println("ROULETTE WILLIAM")
                 view.findNavController()
-                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+//                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
     }

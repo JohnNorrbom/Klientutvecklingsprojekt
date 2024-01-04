@@ -19,7 +19,7 @@ object PlayerData {
         var gameModel : GameModel? = null
         var gameID = gameModel?.gameID ?:""
         private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-        private val myRef = database.getReference("Game Lobby")
+        private val myRef = database.getReference("Lobby Data")
         fun savePlayerModel(model: PlayerModel, gameID : String){
             _playerModel.postValue(model)
             // För att spara under ett specifikt ID

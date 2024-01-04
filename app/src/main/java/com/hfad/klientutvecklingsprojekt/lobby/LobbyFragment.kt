@@ -19,7 +19,9 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
+import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
@@ -31,8 +33,9 @@ class LobbyFragment : Fragment() {
     private var lobbyModel : LobbyModel? = null
     private var meModel : MeModel?= null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Game Lobby")
+    val myRef = database.getReference("Lobby Data")
     var currentGameID = ""
+    var currentPlayerID =""
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,11 +48,18 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
+
+        meModel?.apply {
+            currentGameID= meModel?.gameID?:""
+            currentPlayerID = meModel?.playerID?:""
+        }
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Log.d("meModel","${meModel}")
+
+        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
         setUI()
         super.onViewCreated(view, savedInstanceState)
     }
@@ -59,7 +69,7 @@ class LobbyFragment : Fragment() {
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_boardFragment)
     }
     fun setUI() {
-        Log.d("setUI","Jag är här")
+        Log.d("setUI","I setUI")
         myRef.child(currentGameID).get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1

@@ -44,8 +44,8 @@ class PlayerInfoFragment : Fragment() {
     private var currentGameID = ""
     private var currentPlayerID = ""
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Space Party")
-    private val lobbyRef = database.getReference("Game Lobby")
+    private val myRef = database.getReference("Game Data")
+    private val lobbyRef = database.getReference("Lobby Data")
 
     override fun onCreateView(
         inflater: LayoutInflater,

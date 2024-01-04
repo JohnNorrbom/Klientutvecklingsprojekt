@@ -26,6 +26,8 @@ class SoccerFragment : Fragment() {
     private var shooterColor = "red"
     var text: String = ""
 
+    //variable that see if you are p1 or p2
+    private var youArePlayerOne: Boolean = false
 
 
     override fun onCreateView(
@@ -108,6 +110,11 @@ class SoccerFragment : Fragment() {
             binding.finalScorePoint.text = p1Color
         }
         return false
+    }
+
+
+    fun sendChoiceOnline(choice: String){
+
     }
 
 

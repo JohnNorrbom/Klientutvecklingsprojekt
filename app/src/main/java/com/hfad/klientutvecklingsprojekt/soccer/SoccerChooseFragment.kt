@@ -26,10 +26,13 @@ class SoccerChooseFragment : Fragment() {
     private val binding get() = _binding!!
 
     //Here you should get your color from meDataModel
-    private val yourColor: String  = "white"
+    private var yourColor: String  = "white"
 
     //Here you should get the other colors from board/gameModel
-    private val otherColors = arrayListOf("blue", "red", "yellow", "green")
+    private var otherColors = arrayListOf("blue", "red", "yellow", "green")
+
+    //here you should get the id from board/gameModel
+    private var gameId: String = Random.nextInt(1000..9999).toString()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,32 +69,32 @@ class SoccerChooseFragment : Fragment() {
 
         binding.astroBlue.setOnClickListener {
             if(yourColor != "blue"){
-                val gameId = createSoccerGame("blue")
+                createSoccerGame("blue", gameId)
                 view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
             }
 
         }
         binding.astroRed.setOnClickListener {
             if(yourColor != "red"){
-            val gameId = createSoccerGame("red")
+            createSoccerGame("red" , gameId)
             view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
             }
         }
         binding.astroYellow.setOnClickListener {
             if(yourColor != "yellow"){
-            val gameId = createSoccerGame("yellow")
+            createSoccerGame("yellow" , gameId)
             view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
             }
         }
         binding.astroGreen.setOnClickListener {
             if(yourColor != "green"){
-            val gameId = createSoccerGame("green")
+            createSoccerGame("green" , gameId)
             view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
             }
         }
         binding.astroWhite.setOnClickListener {
             if (yourColor != "white"){
-            val gameId = createSoccerGame("white")
+            createSoccerGame("white" , gameId)
             view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
         }
     }
@@ -101,12 +104,10 @@ class SoccerChooseFragment : Fragment() {
     }
 
 //TODO MÅSTE ÄNDRAS
-    fun createSoccerGame(p2Color: String): String{
-        var gameId: String = Random.nextInt(1000..9999).toString()
+    fun createSoccerGame(p2Color: String, gameId: String){
         SoccerData.saveSoccerModel(
             SoccerModel(gameId,0,0,"","", yourColor,p2Color,false)
         )
-    return gameId
     }
 
 

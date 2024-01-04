@@ -88,6 +88,9 @@
         <action
             android:id="@+id/action_lobbyFragment_to_boardFragment"
             app:destination="@id/boardFragment" />
+        <action
+            android:id="@+id/action_lobbyFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStartFragment"

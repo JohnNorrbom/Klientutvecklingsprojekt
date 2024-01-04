@@ -129,4 +129,12 @@
         android:layout_marginTop="400dp"
         android:text="@string/start_game"/>
 
+    <Button
+        android:id="@+id/roulette_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="400dp"
+        android:text="Roulette"/>
+
 </LinearLayout>

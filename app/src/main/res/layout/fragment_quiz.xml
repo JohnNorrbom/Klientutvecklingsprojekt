@@ -8,7 +8,7 @@
         android:id="@+id/questionTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Din fråga här"
+        android:text="Question"
         android:layout_marginTop="58dp"
         android:layout_centerHorizontal="true"
         android:textSize="24sp"
@@ -33,14 +33,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alternativ 1" />
+                android:text="Alternative 1" />
 
             <Button
                 android:id="@+id/option2Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alternativ 2" />
+                android:text="Alternative 2" />
         </LinearLayout>
 
         <LinearLayout
@@ -53,14 +53,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alternativ 3" />
+                android:text="Alternative 3" />
 
             <Button
                 android:id="@+id/option4Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Alternativ 4" />
+                android:text="Alternative 4" />
         </LinearLayout>
     </LinearLayout>
 
@@ -68,7 +68,7 @@
         android:id="@+id/scoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Poäng: 0"
+        android:text="Points: 0"
         android:layout_below="@id/optionButtonsLayout"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
@@ -78,7 +78,7 @@
         android:id="@+id/timerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tid kvar: 10 s"
+        android:text="Time left: 10 s"
         android:textSize="18sp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

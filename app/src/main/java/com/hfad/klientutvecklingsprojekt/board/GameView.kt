@@ -19,11 +19,11 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentBoardBinding
 import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
 
-//  TODO add more ImageViews for each player and set it as GONE         //John
 //  TODO connect each ImageView with it's corresponding player/color
 //  TODO keep track of local player in order to keep track of turns
 

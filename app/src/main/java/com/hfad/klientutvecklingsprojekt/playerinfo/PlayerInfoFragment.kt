@@ -275,4 +275,8 @@ class PlayerInfoFragment : Fragment() {
         super.onDestroy()
         _binding = null
     }
+    override fun onResume() {
+        super.onResume()
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
 }

@@ -52,8 +52,6 @@ class LobbyFragment : Fragment() {
         MeData.meModel.observe(this){
             meModel = it
         }
-
-
         return view
     }
 

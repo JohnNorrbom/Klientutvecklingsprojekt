@@ -15,8 +15,5 @@ object LobbyData {
 
     fun saveLobbyModel(model: LobbyModel){
         _lobbyModel.postValue(model)
-        if(model.gameID!= "-1"){
-            myRef.child(model?.gameID ?:"" ).setValue(model)
-        }
     }
 }

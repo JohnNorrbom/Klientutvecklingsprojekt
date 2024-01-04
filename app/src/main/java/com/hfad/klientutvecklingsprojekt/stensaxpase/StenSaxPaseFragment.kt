@@ -51,11 +51,8 @@ class StenSaxPaseFragment : Fragment() {
         // establish viewModel
         viewModel = ViewModelProvider(this).get(StenSaxPaseViewModel::class.java)
 
-        // set gameID for viewModel to use
-        viewModel.setGameID()
-
-        // load in players
-        viewModel.initPlayers()
+        // initialize game
+        viewModel.initGame()
 
         // add view code here
         val sten = binding.sten

@@ -49,19 +49,23 @@ class LobbyFragment : Fragment() {
             startGame()
         }
 
-        meModel?.apply {
-            currentGameID= meModel?.gameID?:""
-            currentPlayerID = meModel?.playerID?:""
+        MeData.meModel.observe(this){
+            meModel = it
         }
+
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
+        setText()
         setUI()
         super.onViewCreated(view, savedInstanceState)
+    }
+    fun setText(){
+        currentGameID= meModel?.gameID?:""
+        currentPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
     }
 
     fun startGame(){

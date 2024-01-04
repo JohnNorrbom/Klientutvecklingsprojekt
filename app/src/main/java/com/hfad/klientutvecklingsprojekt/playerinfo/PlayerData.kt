@@ -29,6 +29,7 @@ object PlayerData {
             // Skapa en referens till den specifika spelarens nod
             val playerRef = myRef.child(gameID).child("players").child(nickname)
             playerRef.setValue(model)
+
         }
 
         fun fetchPlayerModel(){

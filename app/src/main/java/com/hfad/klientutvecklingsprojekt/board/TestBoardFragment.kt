@@ -208,17 +208,8 @@ class TestBoardFragment : Fragment() {
             val randomVal = Random.nextInt(4)
 
             if (randomVal == 0) {
-//                println("STEN SAX PÅSE")
-//                var id = meModel?.gameID
-//                Log.d("Game ID", "${id}")
-//                Log.d("Player ID", "${meModel?.playerID}")
-//                StenSaxPaseData.saveGameModel(
-//                    StenSaxPaseModel(
-//                        gameID = id,
-//                        status = false,
-//                    )
-//                )
-//                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
+                println("STEN SAX PÅSE")
+                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
             } else if (randomVal == 1) {
                 println("SOCCER GAME FERDINAND")
                 view?.findNavController()

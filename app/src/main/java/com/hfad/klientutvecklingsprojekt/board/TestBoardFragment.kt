@@ -30,7 +30,9 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseData
 import com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseModel
 import kotlin.random.Random
-// TODO GIVE PLAYING PLAYER CORRECT COLOR
+// TODO GIVE PLAYING PLAYER CORRECT COLOR //COMPLETED
+// TODO STORE POSITIONS FOR EACH PLAYER/A PLAYER
+// TODO ADD MULTIPLE PLAYERS
 // TODO GIVE EVERYONE CORRECT COLOR
 // TODO MAKE PLAYERS TAKE TURNS
 class TestBoardFragment : Fragment() {
@@ -114,6 +116,7 @@ class TestBoardFragment : Fragment() {
         Log.d("color", "UTANFÖR APPLY playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
     private fun paintPlayer() {
+
         var color = ""
         Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         myRef.child(currentGameID).child("players").child(currentPlayerID).get()

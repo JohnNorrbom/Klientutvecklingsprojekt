@@ -284,7 +284,9 @@ class TestBoardFragment : Fragment() {
     private val miniGameListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             println("Went in to miniGameListener")
+            Log.d("minigame", "miniGameListener" + localRandomVal)
             if(localRandomVal != -1) {
+                Log.d("minigame", "miniGameListener" + localRandomVal)
                 setMiniGame(localRandomVal)
             }
         }

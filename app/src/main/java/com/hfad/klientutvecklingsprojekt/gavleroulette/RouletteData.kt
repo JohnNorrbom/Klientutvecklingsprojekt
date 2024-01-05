@@ -15,7 +15,7 @@ object RouletteData {
     var rouletteModel : MutableLiveData<RouletteModel?> = _rouletteModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Roulette")
-
+    var gameID : String =""
 
 
     fun saveGameModel(model: RouletteModel,id : String){

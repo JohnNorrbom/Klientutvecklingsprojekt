@@ -21,6 +21,7 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.gamestart.Progress
 import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
@@ -42,6 +43,7 @@ class LobbyFragment : Fragment() {
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Player Data")
     val lobbyRef = database.getReference("Lobby Data")
+    val rouRef = database.getReference("Roulete")
     var localGameID =""
     var localPlayerID =""
 
@@ -106,6 +108,8 @@ class LobbyFragment : Fragment() {
         //den här
         localGameID= meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
+        binding.lobbyId.text = "Game ID: "+localGameID
+        binding.lobbyId.visibility = View.VISIBLE
         Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
     }
 
@@ -113,9 +117,18 @@ class LobbyFragment : Fragment() {
         // The observer is triggered when lobbyModel changes
         lobbyRef.child(localGameID).get().addOnSuccessListener {
             if(it.child("btnPressed").value == true){
-                // btnPressed is true, navigate to the next fragment
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+                rouRef.child(localGameID).get().addOnSuccessListener {
+                    val model = it?.getValue(RouletteModel::class.java)
+                    //  Create array of colors to compare them with the colors in the lobby to see
+                    //  which of them are are taken
+                    if (model!=null){
+                        RouletteData.saveGameModel(model,localGameID)
+                        Log.d("Om success","model: ${model}")
+                        // btnPressed is true, navigate to the next fragment
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+                    }
+                }
             }
         }
     }

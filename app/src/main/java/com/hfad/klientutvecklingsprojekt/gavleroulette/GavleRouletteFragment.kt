@@ -78,6 +78,10 @@ class GavleRouletteFragment : Fragment(){
         localGameID= meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
         Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
+
+        lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+            localPlayerID = it.child(meModel?.playerID ?: "").child("nickname").value.toString()
+        }
     }
 
     fun setUi() {
@@ -97,12 +101,18 @@ class GavleRouletteFragment : Fragment(){
                             binding.test.text = luckyNumber?.get(0)
                             setPlayerInfo()
                         }
-
-                        currentPlayer + "s turn"
+                        when(localPlayerID){
+                            currentPlayer -> "Your turn"
+                            else -> currentPlayer + " turn"
+                        }
                     }
 
                     GameStatus.FINISHED -> {
-                        winner + " Won"
+                        when(localPlayerID){
+                            winner -> "You won"
+                            else -> winner + " won"
+                        }
+
                     }
 
                     else -> {return}
@@ -111,12 +121,21 @@ class GavleRouletteFragment : Fragment(){
     }
     fun onTriggerPulled(){
         rouletteModel?.apply {
-            addBullet()
-            pullTheTrigger()
-            checksForKill()
-            changePlayer()
-            checkForWinner()
-            updateGameData(this,localGameID)
+            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+                Log.d("localPlayerID","${localPlayerID}")
+                Log.d("localPlayerID","${currentPlayer}")
+                if(localPlayerID != currentPlayer){
+                    Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
+                    return@addOnSuccessListener
+                }else{
+                    addBullet()
+                    pullTheTrigger()
+                    checksForKill()
+                    changePlayer()
+                    checkForWinner()
+                    updateGameData(this,localGameID)
+                }
+            }
         }
     }
 

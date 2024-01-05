@@ -18,9 +18,6 @@
             android:id="@+id/action_startScreenFragment_to_soccerFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
-            android:id="@+id/action_startScreenFragment_to_stensaxpaseFragment"
-            app:destination="@id/stensaxpaseFragment" />
-        <action
             android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
         <action
@@ -29,6 +26,9 @@
         <action
             android:id="@+id/action_startScreenFragment_to_testBoardFragment"
             app:destination="@id/testBoardFragment" />
+        <action
+            android:id="@+id/action_startScreenFragment_to_stenSaxPaseChooseFragment"
+            app:destination="@id/stenSaxPaseChooseFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
@@ -108,10 +108,19 @@
             android:id="@+id/action_testBoardFragment_to_soccerFragment"
             app:destination="@id/soccerFragment" />
         <action
-            android:id="@+id/action_testBoardFragment_to_stensaxpaseFragment"
-            app:destination="@id/stensaxpaseFragment" />
-        <action
             android:id="@+id/action_testBoardFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_stenSaxPaseChooseFragment"
+            app:destination="@id/stenSaxPaseChooseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/stenSaxPaseChooseFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseChooseFragment"
+        android:label="fragment_sten_sax_pase_choose"
+        tools:layout="@layout/fragment_sten_sax_pase_choose" >
+        <action
+            android:id="@+id/action_stenSaxPaseChooseFragment_to_stensaxpaseFragment"
+            app:destination="@id/stensaxpaseFragment" />
     </fragment>
 </navigation>

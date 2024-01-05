@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -23,7 +21,7 @@ class StenSaxPaseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: StenSaxPaseViewModel
+    //private lateinit var viewModel: StenSaxPaseViewModel
     private var meModel : MeModel? = null
 
     var currentGameID : String = ""
@@ -50,7 +48,7 @@ class StenSaxPaseFragment : Fragment() {
                 setID(currentGameID, currentPlayerID)
             } ?: run {
                 // Handle the case when meModel is null
-                Log.e("LobbyFragment", "meModel is null")
+                Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
 
@@ -58,11 +56,13 @@ class StenSaxPaseFragment : Fragment() {
         //viewModel.initGame()
         initGame()
 
+        /*
         // For testing when mini-game is launched from start screen button
         if(currentGameID == "") {
             currentGameID = "9182"
             currentPlayerID = "8144"
         }
+         */
 
         // add view code here
         val sten = binding.sten
@@ -73,35 +73,25 @@ class StenSaxPaseFragment : Fragment() {
             sax.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
             sten.isClickable = false
-            println("sten klick")
-            //viewModel.setChoice("sten", currentPlayerID)
             setChoice("sten", currentPlayerID)
-            //setActionText("$currentPlayerID valde: Sten")
         }
         sax.setOnClickListener {
             sten.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
             sax.isClickable = false
-            println("sax klick")
-            //viewModel.setChoice("sax", currentPlayerID)
             setChoice("sax", currentPlayerID)
-            //setActionText("$currentPlayerID valde: Sax")
         }
         pase.setOnClickListener {
             sten.visibility = View.INVISIBLE
             sax.visibility = View.INVISIBLE
             pase.isClickable = false
-            println("pase klick")
-            //viewModel.setChoice("pase", currentPlayerID)
             setChoice("pase", currentPlayerID)
-            //setActionText("$currentPlayerID valde: Påse")
         }
 
         return view
     }
 
     fun setText() {
-        //den här
         currentGameID = meModel?.gameID ?: ""
         currentPlayerID = meModel?.playerID ?: ""
         Log.d("StenSaxPaseFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
@@ -136,16 +126,9 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun initGame() {
-        // write code here in sequential order of which they should execute :-P
-        if(gameID.isEmpty()) {
-            gameID = "9182"
-            playerID = "8144"
-        }
-
         println("Currently in game: $gameID , using playerID: $playerID")
-
+        // Load players from lobby
         loadPlayersFromGameID()
-
     }
 
     fun loadPlayersFromGameID() {
@@ -201,21 +184,7 @@ class StenSaxPaseFragment : Fragment() {
 
     // End of setPlayers
 
-    val gameStatus = database.getReference("Sten Sax Pase").child(gameID).child("status")
-
     fun gameLoop() {
-        gameStatus.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot){
-                val status = dataSnapshot.getValue()
-                println("--gameStatus: $status")
-                if(status == false) gameStatus.setValue(true)
-                // handle gameStatus changes
-            }
-            override fun onCancelled(error: DatabaseError) {
-                // Failed to read value
-                Log.w("db_error", "Failed to read value.", error.toException())
-            }
-        })
         // add eventlisteners to both players, specifically on attribute 'choice'
         val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player1!!)
         val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player2!!)

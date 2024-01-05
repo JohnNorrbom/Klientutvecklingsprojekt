@@ -234,4 +234,18 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+    fun assignNextCurrentPlayer(){
+        var arrList = arrayListOf<String>()
+        myRef.child(currentGameID).child("players").get()
+            .addOnSuccessListener { dataSnapshot ->
+                dataSnapshot.children.forEach { playerSnapshot ->
+
+                    var playerId = dataSnapshot.child("playerId").toString()
+                    arrList.add(playerId)
+                }
+            }
+        var index = arrList.indexOf(currentPlayerID)
+        //assign boardModel currentId with arrList.get(index+1) sizes
+
+    }
 }

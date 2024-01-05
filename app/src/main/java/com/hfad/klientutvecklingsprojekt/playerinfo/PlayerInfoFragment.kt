@@ -17,7 +17,10 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.database.values
 import com.hfad.klientutvecklingsprojekt.R
+import com.hfad.klientutvecklingsprojekt.board.BoardData
+import com.hfad.klientutvecklingsprojekt.board.BoardModel
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentPlayerInfoBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
@@ -49,6 +52,7 @@ class PlayerInfoFragment : Fragment() {
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Game Data")
     private val lobbyRef = database.getReference("Lobby Data")
+    private val boardRef = database.getReference("Board Data")
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -122,6 +126,7 @@ class PlayerInfoFragment : Fragment() {
                 ), currentGameID
             )
 
+
             checkSizeOfLobby()
             MeData.saveMeModel(
                 MeModel(
@@ -129,6 +134,20 @@ class PlayerInfoFragment : Fragment() {
                     playerID = currentPlayerID
                 )
             )
+
+
+            var playerCountRef = boardRef.child(currentGameID).child("playerCount")
+            playerCountRef.get().addOnSuccessListener {
+                var playerCount = it.value.toString().toInt()
+                if (playerCount == 0){
+                    boardRef.child(currentGameID).child("currentPlayerId").setValue(currentPlayerID)
+                }
+                playerCount++
+                boardRef.child(currentGameID).child("playerCount").setValue(playerCount)
+            }
+
+
+
             }
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
@@ -274,6 +293,7 @@ class PlayerInfoFragment : Fragment() {
     fun updateGameData(model: GameModel){
         GameData.saveGameModel(model)
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

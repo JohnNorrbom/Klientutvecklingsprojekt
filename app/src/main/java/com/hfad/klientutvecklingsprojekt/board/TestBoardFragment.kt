@@ -112,7 +112,6 @@ class TestBoardFragment : Fragment() {
 
 
         playerRef.addValueEventListener(positionListener)
-        playerRef.addValueEventListener(miniGameListener)
 
         // Inflate the layout for this fragment
         return view
@@ -278,25 +277,14 @@ class TestBoardFragment : Fragment() {
         }
         this.localRandomVal = -1
     }
-    private val miniGameListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            println("Went in to miniGameListener")
-            Log.d("minigame", "miniGameListener" + localRandomVal)
-            if(localRandomVal != -1) {
-                Log.d("minigame", "miniGameListener" + localRandomVal)
-                setMiniGame(localRandomVal)
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-    }
-
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             println("Went in to positionListener")
             paintPlayers()
+            if(localRandomVal != -1) {
+                Log.d("minigame", "miniGameListener" + localRandomVal)
+                setMiniGame(localRandomVal)
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {

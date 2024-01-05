@@ -128,9 +128,9 @@ class GavleRouletteFragment : Fragment(){
                 return@addOnSuccessListener
             }else{
                 addBullet()
+                changePlayer()
                 pullTheTrigger()
                 checksForKill()
-                changePlayer()
                 checkForWinner()
             }
         }
@@ -313,8 +313,12 @@ class GavleRouletteFragment : Fragment(){
     fun checkForWinner(){
         rouletteModel?.apply {
             if (aliveCount == 1) {
-                changePlayer()
-                winner = currentPlayer
+                for (i in 0 until nbrOfPlayers!!){
+                    if (players?.get(players?.keys?.elementAt(i)) == PlayerStatus.ALIVE){
+                        winner = players?.keys?.elementAt(i)
+                        break
+                    }
+                }
                 gameStatus = GameStatus.FINISHED
                 updateGameData(this,localGameID)
             }

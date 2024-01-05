@@ -156,7 +156,6 @@ class LobbyFragment : Fragment() {
             Log.d("currentPlayer","${myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))}")
 
             if (myPlayers.size>1){
-                RouletteData.gameID = localGameID
                 RouletteData.saveGameModel(
                     RouletteModel(
                         gameId = localGameID,

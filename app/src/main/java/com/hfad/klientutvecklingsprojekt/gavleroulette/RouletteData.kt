@@ -25,13 +25,13 @@ object RouletteData {
 
     fun fetchGameModel(){
         rouletteModel.value?.apply {
-            myRef.addValueEventListener(rouletteListener)
+            myRef.child(gameId?:"").addValueEventListener(rouletteListener)
         }
     }
 
     val rouletteListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val model = snapshot.child(gameID).getValue(RouletteModel::class.java)
+            val model = snapshot.getValue(RouletteModel::class.java)
             _rouletteModel.postValue(model)
         }
 

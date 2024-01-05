@@ -6,15 +6,12 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
-import android.renderscript.Sampler.Value
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +25,6 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 // TODO GIVE PLAYING PLAYER CORRECT COLOR
 // TODO GIVE EVERYONE CORRECT COLOR
@@ -47,7 +43,7 @@ class TestBoardFragment : Fragment() {
     private var playersRef = playerRef.child("players")
 
     //  meModel
-    private var currentGameID = ""
+    private var localGameID = ""
     private var localPlayerID = ""
     private var meModel: MeModel? = null
 
@@ -58,9 +54,13 @@ class TestBoardFragment : Fragment() {
     // PLAYER
     private var playerModel: PlayerModel? = null
     private var currentImageViewIndex: Int = 0
+    private var localScore: Int = 0
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+
+    //  minigame
+    private var localRandomVal = -1
 
     //  DICE SOUND
     private val maxStreams = 5 // Number of simultaneous sounds
@@ -98,9 +98,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
-
-
         BoardData.boardModel.observe(this) { boardModel ->
             boardModel?.let {
                 this@TestBoardFragment.boardModel = it
@@ -125,9 +122,9 @@ class TestBoardFragment : Fragment() {
 
     private fun setText() {
         meModel?.apply{
-            currentGameID = gameID ?: ""
+            localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
-            playerRef = database.getReference("Player Data").child(currentGameID)
+            playerRef = database.getReference("Player Data").child(localGameID)
             playersRef = playerRef.child("players")
             binding.playerBlue.visibility = View.GONE
             binding.playerWhite.visibility = View.GONE
@@ -141,7 +138,7 @@ class TestBoardFragment : Fragment() {
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
      */
     private fun paintPlayers() {
-        myRef.child(currentGameID).child("players").get()
+        myRef.child(localGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val color = playerSnapshot.child("color").value.toString()
@@ -161,7 +158,6 @@ class TestBoardFragment : Fragment() {
                     imageView?.let { view ->
                         //make player imageView visible
                         view.visibility = View.VISIBLE
-
 
                         //take player imageView same pos as corresponding tile
                         val tileId = position % 20 + 1
@@ -208,7 +204,7 @@ class TestBoardFragment : Fragment() {
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
-//            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
+            //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
@@ -219,36 +215,86 @@ class TestBoardFragment : Fragment() {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
+            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 16 ){
+                localScore += 1
+            }
+            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 17 ){
+                localScore += 2
+            }
+            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 18 ){
+                localScore += 3
+            }
+            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 19 ){
+                localScore += -5
+            }
+            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 15){
+                //minigame
+                //  Pick random game
+                localRandomVal = Random.nextInt(4)
+                //laddauppminigamesiffra,
+                //gör en listener som kallar på setMinigame
+                // currentPlayer startar minigame
+                boardModel?.apply {
+                    boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
+                }
+            }
             playerModel?.apply {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
+                playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
             paintPlayers()
             assignNextCurrentPlayer()
             binding.diceButton.visibility = View.GONE
         }
     }
-
+    override fun onPause() {
+        super.onPause()
+        Log.d("testing", "onPause" + currentImageViewIndex)
+    }
     override fun onResume() {
         super.onResume()
+        // currentImageViewIndex = playerModel localPlayerID position
+
+        Log.d("testing", "onResume" + currentImageViewIndex)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
+    private fun setMiniGame(randomVal: Int) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (randomVal == 0) {
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
+        } else if (randomVal == 1) {
+            println("SOCCER GAME FERDINAND")
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+        } else if (randomVal == 2) {
+            println("QUIZ GAME PONTUS")
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+        } else {
+            println("ROULETTE WILLIAM")
+            view.findNavController()
+                .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+        }
+        this.localRandomVal = -1
+    }
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             println("Went in to positionListener")
             paintPlayers()
+            if(localRandomVal != -1) {
+                Log.d("minigame", "miniGameListener" + localRandomVal)
+                setMiniGame(localRandomVal)
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }
-
     }
 
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
+            boardRef.child(localGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
                 val currentPlayerId = dataSnapshot.value
                 println("comparing localPlayerId $localPlayerID to currentPlayerId $currentPlayerId")
                 if (currentPlayerId == localPlayerID){
@@ -258,13 +304,11 @@ class TestBoardFragment : Fragment() {
                     binding.diceButton.visibility  = View.INVISIBLE
                 }
             }
-
         }
 
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }
-
     }
 
     override fun onDestroy() {
@@ -276,7 +320,7 @@ class TestBoardFragment : Fragment() {
     }
     fun assignNextCurrentPlayer() {
         var playerIDarr = arrayListOf<String>()
-        myRef.child(currentGameID).child("players").get()
+        myRef.child(localGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val playerID = playerSnapshot.child("playerID").value.toString()
@@ -289,7 +333,7 @@ class TestBoardFragment : Fragment() {
 
                     if (index != -1) {
                         index = if (index < playerIDarr.size - 1) index + 1 else 0
-                        boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
+                        boardRef.child(localGameID).child("currentPlayerId").setValue(playerIDarr[index])
                     } else {
                         println("Error: currentPlayerID not found in arrList")
                     }

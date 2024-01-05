@@ -17,8 +17,8 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
-    var playerID: String = "noPlayerID"
-    var gameID: String = "noGameID"
+    var playerID: String = ""
+    var gameID: String = ""
 
     fun setID(currentGameID:String, currentPlayerID:String) {
         gameID = currentGameID
@@ -27,11 +27,13 @@ class StenSaxPaseViewModel() : ViewModel() {
 
     fun initGame() {
         // write code here in sequential order of which they should execute :-P
-        println("---$gameID---$playerID")
         if(gameID.isEmpty()) {
-           gameID = "9594"
-           playerID = "5385"
+           gameID = "8718"
+           playerID = "1199"
         }
+
+        println("Currently in game: $gameID , using playerID: $playerID")
+
         loadPlayersFromGameID()
 
     }
@@ -50,12 +52,152 @@ class StenSaxPaseViewModel() : ViewModel() {
                     "score" to "0"
                 ))
             }
+            println("---$players")
             savePlayersToDatabase(players!!)
+            setPlayers(players!!)
+            gameLoop()
         }
     }
 
     fun savePlayersToDatabase(players : MutableMap<String,MutableMap<String,String>>) {
-        stenSaxPaseRef.child(gameID).setValue(players)
+        stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
+        stenSaxPaseRef.child(gameID).setValue(stenSaxPaseModel)
+    }
+
+    // Maybe remove this whole setPlayers thing and instead use solution where a player chooses who to compete with
+
+    var player1:String? = null
+    var player2:String? = null
+
+    fun setPlayers(playerMap: MutableMap<String,MutableMap<String,String>>) {
+
+        player1 = playerID
+
+        if(playerMap!=null) {
+            var randomNmbr: Int
+            do {
+                randomNmbr = Random.nextInt(playerMap!!.size)
+
+                var i = 0
+                for (player in playerMap!!) {
+                    if(randomNmbr == i) player2 = "${player.key}"
+                    i++
+                }
+            } while (player1 == player2)
+            println("player1_id: $player1 -vs- player2_id: $player2")
+        }
+    }
+
+    // End of setPlayers
+
+    val gameStatus = database.getReference("Sten Sax Pase").child(gameID).child("status")
+
+    fun gameLoop() {
+        gameStatus.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot){
+                val status = dataSnapshot.getValue()
+                println("--gameStatus: $status")
+                if(status == false) gameStatus.setValue(true)
+                // handle gameStatus changes
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("db_error", "Failed to read value.", error.toException())
+            }
+        })
+        // add eventlisteners to both players, specifically on attribute 'choice'
+        val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player1!!)
+        val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player2!!)
+        player1connection.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot){
+                val choice = dataSnapshot.getValue()
+                // handle player1 choice changes
+                println("player1 choice: $choice")
+                getChoiceFromDatabase()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("db_error", "Failed to read value.", error.toException())
+            }
+        })
+        player2connection.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot){
+                val choice = dataSnapshot.getValue()
+                // handle player2 choice changes
+                println("player2 choice: $choice")
+                getChoiceFromDatabase()
+            }
+            override fun onCancelled(error: DatabaseError) {
+                // Failed to read value
+                Log.w("db_error", "Failed to read value.", error.toException())
+            }
+        })
+    }
+
+    fun setChoice(choice:String, player:String) {
+        //playerMap.forEach { entry -> if(entry.value.containsValue("choice\"") ) }
+        if(player == playerID) setChoiceInDatabase(choice)
+    }
+
+    fun setChoiceInDatabase(choice:String) {
+        stenSaxPaseRef.child(gameID).child("players").child(playerID).child("choice").setValue(choice)
+    }
+
+    fun getChoiceFromDatabase() {
+        val player1choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice")
+        val player2choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice")
+        var player1choice:Any?
+        var player2choice:Any?
+        player1choiceRef.get().addOnSuccessListener {
+            player1choice = it.value
+            player2choiceRef.get().addOnSuccessListener {
+                player2choice = it.value
+                checkOutcome(player1choice, player2choice)
+            }
+        }
+    }
+
+    fun checkOutcome(player1choice:Any?,player2choice:Any?) {
+        var outcome = "none"
+        println("$player1choice mot $player2choice")
+        if(player1choice != "null" && player2choice != "null") {
+            if(player1choice == player2choice) outcome = "even"
+            else if(player1choice == "sten" && player2choice == "sax") outcome = player1!!
+            else if(player1choice == "sax" && player2choice == "pase") outcome = player1!!
+            else if(player1choice == "pase" && player2choice == "sten") outcome = player1!!
+            else outcome = player2!!
+        }
+        println("-outcome: $outcome")
+        if(outcome == player1) setScoreInDatabase(player1!!)
+        else if(outcome == player2) setScoreInDatabase(player2!!)
+    }
+
+    fun setScoreInDatabase(player:String) {
+        var scoreRef = stenSaxPaseRef.child(gameID).child("players").child(player).child("score")
+        scoreRef.get().addOnSuccessListener {
+            var score = it.value.toString().toInt()
+            println("-score: $score , for player: $player")
+            score++
+            println("-updated score: $score , for player: $player")
+            stenSaxPaseRef.child(gameID).child("players").child(player).child("score").setValue(score)
+            resetGame()
+            checkForWin(player, score)
+        }
+
+    }
+
+    fun resetGame() {
+        stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice").setValue("null")
+        stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice").setValue("null")
+    }
+
+    fun checkForWin(player:String,score:Int) {
+        if(score == 2) {
+            println("player: $player wins")
+            // apply logic for what should happen once a player wins
+            stenSaxPaseRef.child(gameID).setValue(null)
+        }
+        else println("no win yet for player: $player")
     }
 
     /*

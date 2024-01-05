@@ -218,7 +218,7 @@ class TestBoardFragment : Fragment() {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
-
+            if()
             playerModel?.apply {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
@@ -255,7 +255,7 @@ class TestBoardFragment : Fragment() {
                     println("went in to boardListener with localPlayerID = $localPlayerID and it = $currentPlayerId")
                     binding.diceButton.visibility = View.VISIBLE
                 }else{
-                    binding.diceButton.visibility  = View.VISIBLE
+                    binding.diceButton.visibility  = View.GONE
                 }
             }
 

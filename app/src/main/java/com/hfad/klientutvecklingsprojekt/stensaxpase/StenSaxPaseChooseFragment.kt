@@ -33,9 +33,6 @@ class StenSaxPaseChooseFragment : Fragment() {
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val playerDataRef = database.getReference("Player Data")
 
-    //Here you should get the other colors from boardModel
-    private var otherColors = arrayListOf("blue", "white", "red", "yellow", "green")
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -49,7 +46,7 @@ class StenSaxPaseChooseFragment : Fragment() {
         binding.astroGreen.visibility = View.GONE
         binding.astroRed.visibility = View.GONE
         binding.astroYellow.visibility = View.GONE
-        println("hejsan")
+
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
                 this@StenSaxPaseChooseFragment.meModel = it
@@ -61,13 +58,17 @@ class StenSaxPaseChooseFragment : Fragment() {
                 Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
-
+        /*
+        // Remove this once testing done
         if(gameID == "") {
             gameID = "4367"
             playerID = "2314"
+            println("$gameID--$playerID")
+            loadPlayersFromGameID()
         }
-        println("$gameID--$playerID")
-        loadPlayersFromGameID()
+        // End of test section
+
+         */
 
         binding.astroBlue.setOnClickListener {
             createStenSaxPaseGame(playerID!!,opponentID!!)
@@ -95,7 +96,6 @@ class StenSaxPaseChooseFragment : Fragment() {
     }
 
     fun loadPlayersFromGameID() {
-        println("hello")
         playerDataRef.child(gameID).get().addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
             // Prepare Map which players will go into
@@ -104,9 +104,7 @@ class StenSaxPaseChooseFragment : Fragment() {
             for(player in it.child("players").children) {
                 players.put("${player.child("playerID").value}", mutableMapOf(
                     "nickname" to "${player.child("nickname").value}",
-                    "color" to "${player.child("color").value}",
-                    "choice" to "null",
-                    "score" to "0"
+                    "color" to "${player.child("color").value}"
                 ))
             }
             println("---$players")
@@ -115,26 +113,25 @@ class StenSaxPaseChooseFragment : Fragment() {
     }
 
     fun setUI(players:MutableMap<String,MutableMap<String,String>>) {
-        for (player: Any? in players){
-            println(player)
-            /*
-            if(player.getValue("color") == "blue"){
-                binding.astroBlue.visibility = View.VISIBLE
+        players.forEach { entry ->
+            if(entry.key != playerID) {
+                var color = entry.value.get("color")
+                if (color == "blue") {
+                    binding.astroBlue.visibility = View.VISIBLE
+                }
+                if (color == "white") {
+                    binding.astroWhite.visibility = View.VISIBLE
+                }
+                if (color == "green") {
+                    binding.astroGreen.visibility = View.VISIBLE
+                }
+                if (color == "red") {
+                    binding.astroRed.visibility = View.VISIBLE
+                }
+                if (color == "yellow") {
+                    binding.astroYellow.visibility = View.VISIBLE
+                }
             }
-            if(color == "white"){
-                binding.astroWhite.visibility = View.VISIBLE
-            }
-            if(color == "green"){
-                binding.astroGreen.visibility = View.VISIBLE
-            }
-            if(color == "red"){
-                binding.astroRed.visibility = View.VISIBLE
-            }
-            if(color == "yellow"){
-                binding.astroYellow.visibility = View.VISIBLE
-            }
-
-             */
         }
     }
 
@@ -152,5 +149,4 @@ class StenSaxPaseChooseFragment : Fragment() {
     fun createStenSaxPaseGame(playerID:String,opponentID:String) {
 
     }
-
 }

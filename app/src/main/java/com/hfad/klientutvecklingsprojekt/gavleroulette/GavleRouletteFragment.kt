@@ -43,7 +43,7 @@ class GavleRouletteFragment : Fragment(){
         RouletteData.rouletteModel.observe(viewLifecycleOwner) {rouletteModel ->
             Log.d("GavleRouletteFragment", "Observing rouletteModel: $rouletteModel")
             rouletteModel?.let {
-                if (it.gameId.equals(null)){
+                if (it.gameId == null){
                     Log.e("GavleRouletteFragment", "rouletteModel is null")
                 }else{
                     this@GavleRouletteFragment.rouletteModel = it
@@ -61,7 +61,6 @@ class GavleRouletteFragment : Fragment(){
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
         return view
     }
 
@@ -82,18 +81,16 @@ class GavleRouletteFragment : Fragment(){
         localPlayerID = meModel?.playerID?:""
         Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
     }
-
     fun setUi() {
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-
-
+                val snapshot = it
+                var text = ""
             binding.gameStatusText.text =
                 when (gameStatus) {
-
                     GameStatus.INPROGRESS -> {
-                        var text = ""
-                        if (laps == 0) {
+                        if (laps == 0 && attempts == 0) {
+                            setPlayerInfo()
                             val resId = resources.getIdentifier(
                                 "chamber",
                                 "drawable",
@@ -101,22 +98,18 @@ class GavleRouletteFragment : Fragment(){
                             )
                             binding.magasinSlot.setImageResource(resId)
                             binding.test.text = luckyNumber?.get(0)
-                            setPlayerInfo()
                         }
                         when (localPlayerID) {
                             currentPlayer -> text = "Your turn"
-                            else -> text = it.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
-
+                            else -> text = snapshot.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
                         }
                         text
                     }
 
                     GameStatus.FINISHED -> {
-                        var text = ""
                         when (localPlayerID) {
                             winner -> text = "You won"
-                            else -> text =
-                                it.child(winner ?: "").child("nickname").value.toString() + " won"
+                            else -> text = snapshot.child(winner ?: "").child("nickname").value.toString() + " won"
                         }
                         text
                     }
@@ -127,27 +120,23 @@ class GavleRouletteFragment : Fragment(){
         }
     }
     fun onTriggerPulled(){
-        rouletteModel?.apply {
-            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-                Log.d("localPlayerID","${localPlayerID}")
-                Log.d("localPlayerID","${rouletteModel?.currentPlayer}")
-                if(localPlayerID != rouletteModel?.currentPlayer){
-                    Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
-                    return@addOnSuccessListener
-                }else{
-                    addBullet()
-                    pullTheTrigger()
-                    checksForKill()
-                    changePlayer()
-                    checkForWinner()
-                    updateGameData(this,localGameID)
-                }
+        myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
+            Log.d("localPlayerID","${localPlayerID}")
+            Log.d("localPlayerID","${it.value}")
+            if(localPlayerID != it.value){
+                Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
+            }else{
+                addBullet()
+                pullTheTrigger()
+                checksForKill()
+                changePlayer()
+                checkForWinner()
             }
         }
     }
 
     //sets the correct info for each player
-    @SuppressLint("SuspiciousIndentation")
     fun setPlayerInfo(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
@@ -275,18 +264,27 @@ class GavleRouletteFragment : Fragment(){
     //Changes to the next player
     fun changePlayer() {
         rouletteModel?.apply {
-            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener { snapshot ->
-                val currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
+            myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener { snapshot ->
+                Log.d("snapshot","${snapshot.value}")
+                val currentPlayerIndex = players?.keys?.indexOf(snapshot.value) ?: -1
+                Log.d("player keys","${players?.keys}")
+                Log.d("currentPlayerIndex","${players?.keys?.indexOf(snapshot.value)}")
+                Log.d("currentPlayerIndex","${currentPlayerIndex}")
 
                 if (currentPlayerIndex != -1) {
                     var newIndex = (currentPlayerIndex + 1) % players?.size!!
+                    Log.d("newIndex","${newIndex}")
 
                     // Find the next alive player
                     while (players?.get(players?.keys?.elementAt(newIndex) ?: "") == PlayerStatus.DEAD) {
                         newIndex = (newIndex + 1) % players?.size!!
                     }
 
+                    Log.d("newIndex","${newIndex}")
+                    Log.d("currentPlayer","${currentPlayer}")
                     currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
+                    Log.d("newcurrentPlayer","${currentPlayer}")
+                    Log.d("newcurrentPlayer","${this}")
                     updateGameData(this, localGameID)
                 }
             }

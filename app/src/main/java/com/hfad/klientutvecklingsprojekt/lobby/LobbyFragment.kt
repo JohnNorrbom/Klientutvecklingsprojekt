@@ -113,7 +113,7 @@ class LobbyFragment : Fragment() {
 
                 if (dataSnapshot.exists()) {
                     val lobbyData = dataSnapshot.getValue()
-                    if(lobbyData == true){
+                    if(lobbyData == "true"){
                     view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
                     }
                 }

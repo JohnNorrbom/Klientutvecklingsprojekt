@@ -110,45 +110,41 @@ class TestBoardFragment : Fragment() {
             binding.playerGreen.visibility = View.GONE
             Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
         }
-        paintPlayer()
+        paintPlayers()
         Log.d("color", "UTANFÖR APPLY playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
-    private fun paintPlayer() {
-        var color = ""
-        Log.d("color", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
-        myRef.child(currentGameID).child("players").child(currentPlayerID).get()
-            .addOnSuccessListener {
-                val snapshot = it
-                Log.d("color", "${snapshot.child("color").value}")
-                color = snapshot.child("color").value.toString()
+    private fun paintPlayers() {
+        Log.d("paintPlayers", "GameID: $currentGameID")
+        myRef.child(currentGameID).child("players").get()
+            .addOnSuccessListener { dataSnapshot ->
+                dataSnapshot.children.forEach { playerSnapshot ->
+                    val color = playerSnapshot.child("color").value.toString()
 
-                if (color == "blue") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerBlue.visibility = View.VISIBLE
-                    player = binding.playerBlue
-                }
-                if (color == "red") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerRed.visibility = View.VISIBLE
-                    player = binding.playerRed
-                }
-                if (color == "green") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerGreen.visibility = View.VISIBLE
-                    player = binding.playerGreen
-                }
-                if (color == "yellow") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerYellow.visibility = View.VISIBLE
-                    player = binding.playerYellow
-                }
-                if (color == "white") {
-                    Log.d("color", "färgen är ${color}")
-                    binding.playerWhite.visibility = View.VISIBLE
-                    player = binding.playerWhite
+                    Log.d("paintPlayers", "Player color: $color")
+                    when (color) {
+                        "blue" -> {
+                            binding.playerBlue.visibility = View.VISIBLE
+                        }
+                        "red" -> {
+                            binding.playerRed.visibility = View.VISIBLE
+                        }
+                        "green" -> {
+                            binding.playerGreen.visibility = View.VISIBLE
+                        }
+                        "yellow" -> {
+                            binding.playerYellow.visibility = View.VISIBLE
+                        }
+                        "white" -> {
+                            binding.playerWhite.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
+            .addOnFailureListener { exception ->
+                Log.e("paintPlayers", "Error fetching players", exception)
+            }
     }
+
 
     private fun movePlayer(targetedImageView: ImageView) {
         // Update constraints to move player to next tile

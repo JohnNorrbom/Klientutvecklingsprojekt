@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.gavleroulette
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -39,7 +40,7 @@ class GavleRouletteFragment : Fragment(){
         RouletteData.fetchGameModel()
 
 
-        RouletteData.rouletteModel.observe(this) {rouletteModel ->
+        RouletteData.rouletteModel.observe(viewLifecycleOwner) {rouletteModel ->
             Log.d("GavleRouletteFragment", "Observing rouletteModel: $rouletteModel")
             rouletteModel?.let {
                 if (it.gameId.equals(null)){
@@ -146,6 +147,7 @@ class GavleRouletteFragment : Fragment(){
     }
 
     //sets the correct info for each player
+    @SuppressLint("SuspiciousIndentation")
     fun setPlayerInfo(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
@@ -271,22 +273,22 @@ class GavleRouletteFragment : Fragment(){
         RouletteData.saveGameModel(model,id)
     }
     //Changes to the next player
-    fun changePlayer(){
+    fun changePlayer() {
         rouletteModel?.apply {
-            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-                do {
-                    // finds the index in the map for the current player and change to the next player
-                    var newIndex = players?.keys?.indexOf(currentPlayer)?.plus(1) ?: 0
-                    //if the index equals to the size of players then it changes to the player at the first index
-                    if (newIndex == players?.size) {
-                        newIndex = 0
+            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener { snapshot ->
+                val currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
+
+                if (currentPlayerIndex != -1) {
+                    var newIndex = (currentPlayerIndex + 1) % players?.size!!
+
+                    // Find the next alive player
+                    while (players?.get(players?.keys?.elementAt(newIndex) ?: "") == PlayerStatus.DEAD) {
+                        newIndex = (newIndex + 1) % players?.size!!
                     }
-                    Log.d("current player","${currentPlayer}")
-                    currentPlayer = players?.keys?.elementAt(newIndex)?:""
-                    Log.d("current player","${currentPlayer}")
-                    // if player is dead than it changes to the next player until it finds a player thats alive
-                } while (players?.get(currentPlayer ?: "") == PlayerStatus.DEAD)
-                updateGameData(this, localGameID)
+
+                    currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
+                    updateGameData(this, localGameID)
+                }
             }
         }
     }
@@ -313,10 +315,11 @@ class GavleRouletteFragment : Fragment(){
     fun checkForWinner(){
         rouletteModel?.apply {
             if (aliveCount == 1) {
+                changePlayer()
                 winner = currentPlayer
                 gameStatus = GameStatus.FINISHED
+                updateGameData(this,localGameID)
             }
-            updateGameData(this,localGameID)
         }
     }
 

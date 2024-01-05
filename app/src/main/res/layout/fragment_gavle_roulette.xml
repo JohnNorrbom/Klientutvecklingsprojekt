@@ -30,6 +30,7 @@
                 android:layout_height="100dp"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:id="@+id/player_1"
+                android:visibility="gone"
                 android:src="@drawable/astro_white"
                 android:scaleType="fitCenter"/>
             <ImageView
@@ -37,6 +38,7 @@
                 android:layout_height="100dp"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:id="@+id/player_2"
+                android:visibility="gone"
                 android:src="@drawable/astro_blue"
                 android:scaleType="fitCenter"/>
             <ImageView
@@ -44,6 +46,23 @@
                 android:layout_height="100dp"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:id="@+id/player_3"
+                android:visibility="gone"
+                android:src="@drawable/astro_red"
+                android:scaleType="fitCenter"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:id="@+id/player_4"
+                android:visibility="gone"
+                android:src="@drawable/astro_red"
+                android:scaleType="fitCenter"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:id="@+id/player_5"
+                android:visibility="gone"
                 android:src="@drawable/astro_red"
                 android:scaleType="fitCenter"/>
         </LinearLayout>
@@ -53,33 +72,58 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/player_one_text"
+                android:id="@+id/player_1_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
                 android:textSize="10sp"
                 android:textColor="#F44336"
+                android:visibility="gone"
                 tools:text="0"/>
 
             <TextView
-                android:id="@+id/player_two_text"
+                android:id="@+id/player_2_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
                 android:textSize="10sp"
                 android:textColor="#F44336"
+                android:visibility="gone"
                 tools:text="0"/>
 
             <TextView
-                android:id="@+id/player_three_text"
+                android:id="@+id/player_3_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
                 android:textSize="10sp"
                 android:textColor="#F44336"
+                android:visibility="gone"
+                tools:text="0"/>
+
+            <TextView
+                android:id="@+id/player_4_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#F44336"
+                android:visibility="gone"
+                tools:text="0"/>
+
+            <TextView
+                android:id="@+id/player_5_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#F44336"
+                android:visibility="gone"
                 tools:text="0"/>
         </LinearLayout>
     </GridLayout>
@@ -101,21 +145,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:text="Try your luck"
         android:tag="roulet_action" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/start_game_btn"
-        android:layout_margin="20dp"
-        android:text="Start game"/>
 
     <ImageView
         android:id="@+id/magasin_slot"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_marginTop="150dp"
         android:scaleType="fitCenter"
         android:src="@drawable/chamber"
         android:layout_gravity="center"/>

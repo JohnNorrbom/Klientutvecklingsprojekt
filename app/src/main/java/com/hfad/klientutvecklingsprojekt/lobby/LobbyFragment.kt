@@ -21,23 +21,29 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import com.hfad.klientutvecklingsprojekt.soccer.SoccerData
+import kotlin.random.Random
 
 
 class LobbyFragment : Fragment() {
     private var _binding: FragmentLobbyBinding? = null
     private val binding get()  = _binding!!
     private var lobbyModel : LobbyModel? = null
+    private var playerModel : PlayerModel? = null
     private var meModel : MeModel?= null//den här
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    val myRef = database.getReference("Lobby Data")
-    val myRefPlayer = database.getReference("Player Data")
-    var currentGameID =""
-    var currentPlayerID =""
+    val myRef = database.getReference("Player Data")
+    val lobbyRef = database.getReference("Lobby Data")
+    var localGameID =""
+    var localPlayerID =""
 
     //host - den som kommer först in
     var playerIsHost: Boolean = true
@@ -63,49 +69,111 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
+        binding.rouletteButton.setOnClickListener{
+            startRoulette()
+        }
+
+        LobbyData.lobbyModel.observe(this) { lobbyModel ->
+            lobbyModel?.let {
+                this@LobbyFragment.lobbyModel = it
+                changeScreen()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+
+        PlayerData.playerModel.observe(this){
+            setUI()
+        }
         //den här
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@LobbyFragment.meModel = it
                 setText()
+                setUI()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
         println("Me model in LobbyFragment"+meModel)
-        println("GameId in LobbyFragment: " + currentGameID)
+        println("GameId in LobbyFragment: " + localGameID)
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        setUI()
-        super.onViewCreated(view, savedInstanceState)
-    }
     fun setText(){
         //den här
-        currentGameID= meModel?.gameID?:""
-        currentPlayerID = meModel?.playerID?:""
-        Log.d("meModel","player ${currentPlayerID} Game ${currentGameID}")
+        localGameID= meModel?.gameID?:""
+        localPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
+    }
+
+    fun changeScreen(){
+        // The observer is triggered when lobbyModel changes
+        lobbyRef.child(localGameID).get().addOnSuccessListener {
+            if(it.child("btnPressed").value == true){
+                // btnPressed is true, navigate to the next fragment
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+            }
+        }
     }
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
     }
+    fun startRoulette(){
+        var myPlayers : MutableMap<String, PlayerStatus> = mutableMapOf()
+        myRef.child(localGameID).child("players").get().addOnSuccessListener {
+            val snapshot = it
+            for (player in snapshot.children){
+                Log.d("player","${player}")
+                myPlayers?.put(player.key.toString(),PlayerStatus.ALIVE)
+                Log.d("players","${myPlayers}")
+            }
+
+            if (myPlayers.size>1){
+                RouletteData.saveGameModel(
+                    RouletteModel(
+                        gameId = localGameID,
+                        players = myPlayers,
+                        gameStatus = GameStatus.INPROGRESS,
+                        attempts = 0,
+                        laps = 0,
+                        nbrOfPlayers = myPlayers.size,
+                        aliveCount = myPlayers.size,
+                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString(),"","","",""),
+                        currentPlayer = snapshot.child(myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))).child("nickname").value.toString()
+                    ),localGameID
+                )
+                LobbyData.saveLobbyModel(
+                    LobbyModel(
+                        gameID = localGameID,
+                        btnPressed = true
+                    ),localGameID
+                )
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+                // set the btnPressed to true if anny player presses it then every player goes to the same game
+            }
+        }
+    }
     fun setUI() {
         Log.d("setUI","I setUI")
-        myRef.child(currentGameID).get().addOnSuccessListener {
+        myRef.child(localGameID).child("players").get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1
             for (player in dataSnapshot.children) {
+                var index = i.toString()
                 var resId = resources.getIdentifier(
                     "astro_${player.child("color").value}",
                     "drawable",
                     requireContext().packageName)
 
                 val playerId = resources.getIdentifier(
-                    "player_${i}",
+                    "player_${index}",
                     "id",
                     requireContext().packageName
                 )
@@ -115,7 +183,7 @@ class LobbyFragment : Fragment() {
                 playerImageView.visibility = View.VISIBLE
 
                 val playerTextId = resources.getIdentifier(
-                    "player_${i}_text",
+                    "player_${index}_text",
                     "id",
                     requireContext().packageName
                 )
@@ -127,13 +195,9 @@ class LobbyFragment : Fragment() {
             }
         }
     }
-    fun updatePlayerData(model: PlayerModel,gameID : String) {
-        PlayerData.savePlayerModel(model,gameID)
+    fun updateLobby(model: LobbyModel, id : String){
+        LobbyData.saveLobbyModel(model, id)
     }
-    fun updateLobbyData(model: LobbyModel) {
-        LobbyData.saveLobbyModel(model)
-    }
-
     /*
     sets the players that are in the lobby visible
      */

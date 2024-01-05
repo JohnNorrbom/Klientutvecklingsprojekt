@@ -107,8 +107,9 @@ class PlayerInfoFragment : Fragment() {
             }
             LobbyData.saveLobbyModel(
                 LobbyModel(
-                    gameID = currentGameID
-                )
+                    gameID = currentGameID,
+                    btnPressed = false
+                ),currentGameID
             )
             PlayerData.savePlayerModel(
                 PlayerModel(

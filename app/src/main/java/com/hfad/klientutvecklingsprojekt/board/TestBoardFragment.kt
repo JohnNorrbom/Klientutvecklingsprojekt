@@ -269,25 +269,31 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
-    fun assignNextCurrentPlayer(){
-        var arrList = arrayListOf<String>()
+    fun assignNextCurrentPlayer() {
+        var playerIDarr = arrayListOf<String>()
         myRef.child(currentGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
-                    var playerId = dataSnapshot.child("playerId").toString()
-                    arrList.add(playerId)
+                    val playerID = playerSnapshot.child("playerID").value.toString()
+                    println("SOMEONES PLAYER ID $playerID")
+                    playerIDarr.add(playerID)
+                    println("Current Player ID: $currentPlayerID")
+
+                    var index = playerIDarr.indexOf(currentPlayerID)
+                    println("Index before adjustment: $index")
+
+                    if (index != -1) {
+                        index = if (index < playerIDarr.size - 1) index + 1 else 0
+                        boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
+                    } else {
+                        println("Error: currentPlayerID not found in arrList")
+                    }
                 }
             }
-        var index = arrList.indexOf(currentPlayerID)
-        //assign boardModel currentId with arrList.get(index+1) sizes
+            .addOnFailureListener { exception ->
+                Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
+            }
 
-        if (arrList.size-1 < index+1){
-            index == 0
-        }
-
-        var currentIdRef = boardRef.child(currentGameID).child("currentPlayerId")
-        currentIdRef.get().addOnSuccessListener {
-            boardRef.child(currentGameID).child("currentPlayerId").setValue(arrList.get(index+1))
-        }
+            }
     }
-}
+

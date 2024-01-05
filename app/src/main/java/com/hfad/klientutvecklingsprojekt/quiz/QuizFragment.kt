@@ -131,7 +131,6 @@ class QuizFragment : Fragment() {
             binding.questionTextView.text = scoreText
             //LADDA UPP POÄNG PÅ DATABASEN!
             myRef.child("GameID").child("userID").child("Score").setValue(score)
-
             val scoreRef = myRef.child("GameID").child("userID").child("Score")
 
 // Hämta poängen från databasen
@@ -146,7 +145,10 @@ class QuizFragment : Fragment() {
                 binding.scoreTextView.text = "Failed to load scoreboard."
             }
 
+
         }
+
+
     }
     private fun resetButtonColors() {
         binding.option1Button.apply {

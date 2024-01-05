@@ -43,7 +43,7 @@ class LobbyFragment : Fragment() {
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Player Data")
     val lobbyRef = database.getReference("Lobby Data")
-    val rouRef = database.getReference("Roulete")
+    val rouRef = database.getReference("Roulette")
     var localGameID =""
     var localPlayerID =""
 
@@ -73,6 +73,9 @@ class LobbyFragment : Fragment() {
         }
         binding.rouletteButton.setOnClickListener{
             startRoulette()
+        }
+        binding.joinButton.setOnClickListener{
+            changeScreen()
         }
 
         LobbyData.lobbyModel.observe(this) { lobbyModel ->
@@ -118,7 +121,10 @@ class LobbyFragment : Fragment() {
         lobbyRef.child(localGameID).get().addOnSuccessListener {
             if(it.child("btnPressed").value == true){
                 rouRef.child(localGameID).get().addOnSuccessListener {
-                    val model = it?.getValue(RouletteModel::class.java)
+                    val snapshot = it
+                    Log.d("localGameID","${snapshot}")
+                    val model = snapshot.getValue(RouletteModel::class.java)
+                    Log.d("localGameID","${model}")
                     //  Create array of colors to compare them with the colors in the lobby to see
                     //  which of them are are taken
                     if (model!=null){
@@ -147,7 +153,10 @@ class LobbyFragment : Fragment() {
                 Log.d("players","${myPlayers}")
             }
 
+            Log.d("currentPlayer","${myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))}")
+
             if (myPlayers.size>1){
+                RouletteData.gameID = localGameID
                 RouletteData.saveGameModel(
                     RouletteModel(
                         gameId = localGameID,
@@ -158,7 +167,7 @@ class LobbyFragment : Fragment() {
                         nbrOfPlayers = myPlayers.size,
                         aliveCount = myPlayers.size,
                         luckyNumber = mutableListOf((Random.nextInt(6)+1).toString(),"","","",""),
-                        currentPlayer = snapshot.child(myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))).child("nickname").value.toString()
+                        currentPlayer = myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))
                     ),localGameID
                 )
                 LobbyData.saveLobbyModel(

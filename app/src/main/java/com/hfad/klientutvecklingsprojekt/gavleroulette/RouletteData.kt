@@ -18,7 +18,6 @@ object RouletteData {
     var gameID : String =""
 
 
-
     fun saveGameModel(model: RouletteModel,id : String){
         _rouletteModel.postValue(model)
         myRef.child(id).setValue(model)

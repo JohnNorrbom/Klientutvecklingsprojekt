@@ -5,7 +5,7 @@ import kotlin.random.Random
 @IgnoreExtraProperties
 data class RouletteModel (
     var gameId : String? = null,
-    var offlineParticipants :  MutableMap<String,PlayerStatus> ? = null,
+    var players :  MutableMap<String,PlayerStatus> ? = null,
     var winner : String ? = null,
     var gameStatus : GameStatus ? = null,
     var currentPlayer : String ? = null,
@@ -19,7 +19,6 @@ data class RouletteModel (
     )
 
 enum class GameStatus{
-    CREATED,
     INPROGRESS,
     FINISHED
 }

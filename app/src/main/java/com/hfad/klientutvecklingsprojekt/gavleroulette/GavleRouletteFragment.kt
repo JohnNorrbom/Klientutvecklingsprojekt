@@ -13,11 +13,12 @@ import android.widget.Toast
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
+import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 
-class GavleRouletteFragment : Fragment(), View.OnClickListener{
+class GavleRouletteFragment : Fragment(){
     private var _binding: FragmentGavleRouletteBinding? = null
     private val binding get() = _binding!!
     private var meModel : MeModel?=null
@@ -47,15 +48,18 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             }
         }
 
-        binding.startGameBtn.setOnClickListener {
-            startGame()
-
+        binding.rouletAction.setOnClickListener{
+            onTriggerPulled()
         }
-        binding.rouletAction.setOnClickListener(this)
 
-        RouletteData.rouletteModel.observe(this) {
-            rouletteModel = it
-            setUi()
+        RouletteData.rouletteModel.observe(this) {rouletteModel ->
+            rouletteModel?.let {
+                this@GavleRouletteFragment.rouletteModel = it
+                setUi()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
         }
 
         return view
@@ -74,15 +78,9 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
 
     fun setUi() {
         rouletteModel?.apply {
-            binding.startGameBtn.visibility = View.VISIBLE
 
             binding.gameStatusText.text =
                 when (gameStatus) {
-                    GameStatus.CREATED -> {
-                        binding.startGameBtn.visibility = View.INVISIBLE
-                        "Game ID :" + gameId
-                    }
-
 
                     GameStatus.INPROGRESS -> {
                         if (laps == 0) {
@@ -96,8 +94,7 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                             setPlayerInfo()
                         }
 
-                        binding.startGameBtn.visibility = View.INVISIBLE
-                        currentPlayer + " turn"
+                        currentPlayer + "s turn"
                     }
 
                     GameStatus.FINISHED -> {
@@ -108,46 +105,70 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
                 }
         }
     }
-
-    fun setPlayerInfo(){
-       lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-           val snapshot = it
-           var i = 1
-           for(player in snapshot.children){
-
-               val resId = resources.getIdentifier(
-                   "astro_${player.child("color").value}",
-                   "drawable",
-                   requireContext().packageName
-               )
-               //get id for Imageview
-               val astroId = resources.getIdentifier(
-                   "player_${i}}",
-                   "id",
-                   requireContext().packageName
-               )
-               // change imageView
-               val characterImageView =
-                   binding.root.findViewById<ImageView>(astroId)
-               characterImageView.setImageResource(resId)
-
-               // get id for radio button and makes it visible
-               val textId = resources.getIdentifier(
-                   "player_${i}_text",
-                   "id",
-                   requireContext().packageName
-               )
-               val text = binding.root.findViewById<TextView>(textId)
-               text .visibility = View.VISIBLE
-               i++
-           }
-       }
+    fun onTriggerPulled(){
+        rouletteModel?.apply {
+            addBullet()
+            pullTheTrigger()
+            checksForKill()
+            changePlayer()
+            checkForWinner()
+            updateGameData(this,localGameID)
+        }
     }
 
+    //sets the correct info for each player
+    fun setPlayerInfo(){
+        rouletteModel?.apply {
+            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+                val snapshot = it
+                for(player in snapshot.children){
+                   var index = (players?.keys?.indexOf(player.key.toString())?.plus(1)).toString()
+                    Log.d("player i setPlayerInfo","${player.child("color").value}")
+                    Log.d("player index setPlayerInfo","${index}")
+                    val resId = resources.getIdentifier(
+                        "astro_${player.child("color").value.toString()}",
+                        "drawable",
+                        requireContext().packageName
+                    )
+                    //get id for Imageview
+                    val astroId = resources.getIdentifier(
+                        "player_${index}",
+                        "id",
+                        requireContext().packageName
+                    )
+
+                    // change imageView
+                    val characterImageView =
+                        binding.root.findViewById<ImageView>(astroId)
+                    Log.d("resId", "${resId}")
+                    Log.d("astroId", "${astroId}")
+                    Log.d("characterImageView", "${characterImageView}")
+                    characterImageView.setImageResource(resId)
+                    characterImageView.visibility = View.VISIBLE
+
+                    // get id for radio button and makes it visible
+                    val textId = resources.getIdentifier(
+                        "player_${index}_text",
+                        "id",
+                        requireContext().packageName
+                    )
+                    val text = binding.root.findViewById<TextView>(textId)
+                    text.text = player.child("nickname").value.toString()
+                    text.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    //adds a value to currentBullet and pluses on how many attempts and laps thier has been
     fun pullTheTrigger() {
         rouletteModel?.apply {
             currentBullet = Random.nextInt(6) + 1
+            Log.d("currentBullet","${currentBullet}")
+            Log.d("attempts","${attempts}")
             attempts = attempts?.plus(1)
+            Log.d("attempts","${attempts}")
+            Log.d("nbrOfPlayers","${this.nbrOfPlayers}")
             if (attempts == nbrOfPlayers) {
                 attempts = 0
                 laps = laps?.plus(1)
@@ -211,87 +232,62 @@ class GavleRouletteFragment : Fragment(), View.OnClickListener{
             updateGameData(
                 RouletteModel(
                     gameStatus = GameStatus.INPROGRESS,
-                    nbrOfPlayers = offlineParticipants?.size,
-                    aliveCount = offlineParticipants?.size
                 ),localGameID
 
             )
         }
     }
-    /*fun startGame() {
-        gameModel?.apply {
-            updateGameData(
-                GameModel(
-                    gameId = gameId,
-                    gameStatus = GameStatus.INPROGRESS,
-                )
-            )
-        }
-    }
 
-    fun initPlayers(){
-        gameModel?.apply {
-            offlineParticipants = mutableListOf(Pair(participants[0].first,PlayerStatus.ALIVE))
-            currentPlayer = offlineParticipants[Random.nextInt(offlineParticipants.size)].first
-            nbrOfPlayers = offlineParticipants.size
-            aliveCount = offlineParticipants.size
-
-            updateGameData(this)
-        }
-    }
-*/
-
+//saves the model
     fun updateGameData(model: RouletteModel,id : String) {
         RouletteData.saveGameModel(model,id)
     }
+    //Changes to the next player
     fun changePlayer(){
         rouletteModel?.apply {
-                updateGameData(this,localGameID)
+            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+                do {
+                    // finds the index in the map for the current player and change to the next player
+                    var newIndex = players?.keys?.indexOf(currentPlayer)?.plus(1) ?: 0
+                    //if the index equals to the size of players then it changes to the player at the first index
+                    if (newIndex == players?.size) {
+                        newIndex = 0
+                    }
+                    currentPlayer = it.child(players?.keys?.elementAt(newIndex)?:"").child("nickname").value.toString()
+                    // if player is dead than it changes to the next player until it finds a player thats alive
+                } while (players?.get(currentPlayer ?: "") == PlayerStatus.DEAD)
+                updateGameData(this, localGameID)
             }
-    }
-    fun checkForRemainingPlayers() {
-        rouletteModel?.apply {
-            if (luckyNumber?.contains(currentBullet.toString()) == true) {
-                        val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
-                        if(offlineParticipants?.keys?.contains(currentPlayer) == true) {
-                            offlineParticipants?.put(currentPlayer?:"",PlayerStatus.DEAD)
-                            val playerImageViewId = resources.getIdentifier(
-                                "player_${offlineParticipants?.get(currentPlayer)?.ordinal}",
-                                "id",
-                                requireContext().packageName
-                            )
-                            val playerImageView =
-                                binding.root.findViewById<ImageView>(playerImageViewId)
-                            playerImageView.setImageResource(resId)
-                            aliveCount = aliveCount?.minus(1)
-                        }
-            }
-            updateGameData(this,localGameID)
         }
     }
+    //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
+    fun checksForKill() {
+        rouletteModel?.apply {
+            if (luckyNumber?.contains(currentBullet.toString()) == true) {
+                val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
+                players?.put(currentPlayer?:"",PlayerStatus.DEAD)
+                val playerImageViewId = resources.getIdentifier(
+                    "player_${players?.keys?.indexOf(currentPlayer)?.plus(1)}",
+                    "id",
+                    requireContext().packageName
+                )
+                val playerImageView =
+                    binding.root.findViewById<ImageView>(playerImageViewId)
+                playerImageView.setImageResource(resId)
+                aliveCount = aliveCount?.minus(1)
+                updateGameData(this,localGameID)
+            }
+        }
+    }
+    //if only one player is alive then it means that we have a winner
     fun checkForWinner(){
         rouletteModel?.apply {
             if (aliveCount == 1) {
+                winner = currentPlayer
                 gameStatus = GameStatus.FINISHED
             }
             updateGameData(this,localGameID)
         }
     }
 
-    override fun onClick(v: View?) {
-        rouletteModel?.apply {
-            if (gameStatus != GameStatus.INPROGRESS) {
-                Toast.makeText(requireContext().applicationContext, "Game not started", Toast.LENGTH_SHORT).show()
-                return
-            }
-            //game is in progress
-            addBullet()
-            changePlayer()
-            pullTheTrigger()
-            checkForRemainingPlayers()
-            checkForWinner()
-            updateGameData(this,localGameID)
-
-        }
-    }
 }

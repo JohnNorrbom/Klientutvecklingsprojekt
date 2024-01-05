@@ -20,6 +20,12 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentTestBoardBinding
+import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
+import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
@@ -281,6 +287,34 @@ class TestBoardFragment : Fragment() {
         } else {
             println("ROULETTE WILLIAM")
             if (isAdded && view != null) {
+                var myPlayers : MutableMap<String, PlayerStatus> = mutableMapOf()
+                myRef.child(localGameID).child("players").get().addOnSuccessListener {
+                    val snapshot = it
+                    for (player in snapshot.children){
+                        Log.d("player","${player}")
+                        myPlayers?.put(player.key.toString(), PlayerStatus.ALIVE)
+                        Log.d("players","${myPlayers}")
+                    }
+
+                    Log.d("currentPlayer","${myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))}")
+
+                    if (myPlayers.size>1){
+                        RouletteData.saveGameModel(
+                            RouletteModel(
+                                gameId = localGameID,
+                                players = myPlayers,
+                                gameStatus = GameStatus.INPROGRESS,
+                                attempts = 0,
+                                laps = 0,
+                                nbrOfPlayers = myPlayers.size,
+                                aliveCount = myPlayers.size,
+                                luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
+                                currentPlayer = myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))
+                            ),localGameID
+                        )
+                    }
+                }
+
                 view.findNavController().navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
             }
         }

@@ -48,6 +48,8 @@ class GavleRouletteFragment : Fragment(){
                 }else{
                     this@GavleRouletteFragment.rouletteModel = it
                     setUi()
+                    addBullet()
+
                 }
             }
         }
@@ -81,6 +83,7 @@ class GavleRouletteFragment : Fragment(){
         localPlayerID = meModel?.playerID?:""
         Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
     }
+
     fun setUi() {
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
@@ -144,36 +147,56 @@ class GavleRouletteFragment : Fragment(){
                    players?.onEachIndexed { index, entry ->
                        Log.d("player i setPlayerInfo","${snapshot.child(players?.keys?.elementAt(index) ?:"").child("color").value}")
                        Log.d("player index setPlayerInfo","${index+1}")
-                       val resId = resources.getIdentifier(
-                           "astro_${snapshot.child(players?.keys?.elementAt(index) ?:"").child("color").value.toString()}",
-                           "drawable",
-                           requireContext().packageName
-                       )
-                       //get id for Imageview
-                       val astroId = resources.getIdentifier(
-                           "player_${index+1}",
-                           "id",
-                           requireContext().packageName
-                       )
+                       val player = snapshot.child(players?.keys?.elementAt(index) ?:"").toString()
+                       if (players?.get(player) == PlayerStatus.ALIVE){
+                           val resId = resources.getIdentifier(
+                               "astro_${snapshot.child(players?.get(player).toString()).child("color").value.toString()}",
+                               "drawable",
+                               requireContext().packageName
+                           )
+                           //get id for Imageview
+                           val astroId = resources.getIdentifier(
+                               "player_${index+1}",
+                               "id",
+                               requireContext().packageName
+                           )
 
-                       // change imageView
-                       val characterImageView =
-                           binding.root.findViewById<ImageView>(astroId)
-                       Log.d("resId", "${resId}")
-                       Log.d("astroId", "${astroId}")
-                       Log.d("characterImageView", "${characterImageView}")
-                       characterImageView.setImageResource(resId)
-                       characterImageView.visibility = View.VISIBLE
+                           // change imageView
+                           val characterImageView =
+                               binding.root.findViewById<ImageView>(astroId)
+                           Log.d("resId", "${resId}")
+                           Log.d("astroId", "${astroId}")
+                           Log.d("characterImageView", "${characterImageView}")
+                           characterImageView.setImageResource(resId)
+                           characterImageView.visibility = View.VISIBLE
 
-                       // get id for radio button and makes it visible
-                       val textId = resources.getIdentifier(
-                           "player_${index+1}_text",
-                           "id",
-                           requireContext().packageName
-                       )
-                       val text = binding.root.findViewById<TextView>(textId)
-                       text.text = snapshot.child(players?.keys?.elementAt(index) ?:"").child("nickname").value.toString()
-                       text.visibility = View.VISIBLE
+                           // get id for radio button and makes it visible
+                           val textId = resources.getIdentifier(
+                               "player_${index+1}_text",
+                               "id",
+                               requireContext().packageName
+                           )
+                           val text = binding.root.findViewById<TextView>(textId)
+                           text.text = snapshot.child(players?.keys?.elementAt(index) ?:"").child("nickname").value.toString()
+                           text.visibility = View.VISIBLE
+                       }else{
+                           val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
+
+                           //get id for Imageview
+                           val playerId = resources.getIdentifier(
+                               "player_${index+1}",
+                               "id",
+                               requireContext().packageName
+                           )
+
+                           // change imageView
+                           val characterImageView =
+                               binding.root.findViewById<ImageView>(playerId)
+                           Log.d("resId", "${resId}")
+                           Log.d("astroId", "${playerId}")
+                           Log.d("characterImageView", "${characterImageView}")
+                           characterImageView.setImageResource(resId)
+                       }
                    }
             }
         }
@@ -294,16 +317,7 @@ class GavleRouletteFragment : Fragment(){
     fun checksForKill() {
         rouletteModel?.apply {
             if (luckyNumber?.contains(currentBullet.toString()) == true) {
-                val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
                 players?.put(currentPlayer?:"",PlayerStatus.DEAD)
-                val playerImageViewId = resources.getIdentifier(
-                    "player_${players?.keys?.indexOf(currentPlayer)?.plus(1)}",
-                    "id",
-                    requireContext().packageName
-                )
-                val playerImageView =
-                    binding.root.findViewById<ImageView>(playerImageViewId)
-                playerImageView.setImageResource(resId)
                 aliveCount = aliveCount?.minus(1)
                 updateGameData(this,localGameID)
             }

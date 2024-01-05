@@ -32,9 +32,10 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
-// TODO GIVE PLAYING PLAYER CORRECT COLOR
-// TODO GIVE EVERYONE CORRECT COLOR
-// TODO MAKE PLAYERS TAKE TURNS
+
+
+//TODO fixa minigame variabel till board så att minigame startar för alla (förutom de med choose)
+//TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null
@@ -110,7 +111,6 @@ class TestBoardFragment : Fragment() {
         PlayerData.playerModel.observe(this) { playerModel ->
             playerModel?.let {
                 this@TestBoardFragment.playerModel = it
-                setValues()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
@@ -140,9 +140,6 @@ class TestBoardFragment : Fragment() {
         }
     }
 
-    private fun setValues(){
-
-    }
 
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens

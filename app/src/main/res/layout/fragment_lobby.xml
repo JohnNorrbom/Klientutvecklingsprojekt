@@ -126,7 +126,7 @@
         android:layout_height="wrap_content"
         android:textColor="#F44336"
         android:textSize="80dp"
-        android:gravity="center"
+        android:layout_gravity="center"
         android:visibility="gone"/>
 
     <Button

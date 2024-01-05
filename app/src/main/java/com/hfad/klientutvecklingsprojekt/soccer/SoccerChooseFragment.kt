@@ -2,6 +2,7 @@ package com.hfad.klientutvecklingsprojekt.soccer
 
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,8 @@ import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.Progress
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -25,7 +28,10 @@ class SoccerChooseFragment : Fragment() {
     private var _binding: FragmentSoccerChooseBinding? = null
     private val binding get() = _binding!!
 
-    //Here you should get your color from meDataModel
+    //meModel
+    private var meModel : MeModel?= null//den här
+
+    //Here you should get your color from meDataModel or boardModel
     private var yourColor: String  = "white"
 
     //Here you should get the other colors from boardModel
@@ -44,11 +50,24 @@ class SoccerChooseFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerChooseBinding.inflate(inflater,container,false)
 
+//den här
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@SoccerChooseFragment.meModel = it
+                setValues()
+                getYourColor()
+                otherColors()
+            } ?: run {
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+
         binding.astroBlue.visibility = View.GONE
         binding.astroWhite.visibility = View.GONE
         binding.astroGreen.visibility = View.GONE
         binding.astroRed.visibility = View.GONE
         binding.astroYellow.visibility = View.GONE
+
         for (color: String in otherColors){
             if(color == "blue"){
                 binding.astroBlue.visibility = View.VISIBLE
@@ -108,6 +127,22 @@ class SoccerChooseFragment : Fragment() {
         SoccerData.saveSoccerModel(
             SoccerModel(gameId,0,0,"","", yourColor,p2Color,false)
         )
+    }
+
+
+    fun setValues(){
+        meModel?.apply {
+            gameId = gameID?:""
+        }
+        println("gameid: "+gameId)
+
+    }
+    fun getYourColor(){
+
+    }
+
+    fun otherColors(){
+
     }
 
 

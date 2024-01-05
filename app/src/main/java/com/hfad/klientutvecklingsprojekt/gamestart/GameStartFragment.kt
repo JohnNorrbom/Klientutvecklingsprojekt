@@ -12,6 +12,8 @@ import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
+import com.hfad.klientutvecklingsprojekt.board.BoardData
+import com.hfad.klientutvecklingsprojekt.board.BoardModel
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
 import kotlin.random.Random
 import kotlin.random.nextInt
@@ -62,9 +64,10 @@ class GameStartFragment : Fragment() {
         joinLobby()
     }
     fun createOnlineGame(){
+        var gameId = (Random.nextInt(1000..9999)).toString()
         GameData.saveGameModel(
             GameModel(
-                gameID = (Random.nextInt(1000..9999)).toString(),
+                gameID = gameId,
                 status = Progress.INPROGRESS,
                 takenPosition = mutableMapOf(
                     "white" to CharacterStatus.FREE,
@@ -73,6 +76,13 @@ class GameStartFragment : Fragment() {
                     "green" to CharacterStatus.FREE,
                     "yellow" to CharacterStatus.FREE
                 )
+            )
+        )
+        BoardData.saveBoardModel(
+            BoardModel(
+                gameID = gameId,
+                currentPlayerId = "",
+                playerCount = 0
             )
         )
         joinLobby()

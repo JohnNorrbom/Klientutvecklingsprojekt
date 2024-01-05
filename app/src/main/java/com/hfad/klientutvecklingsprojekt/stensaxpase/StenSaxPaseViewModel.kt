@@ -20,14 +20,20 @@ class StenSaxPaseViewModel() : ViewModel() {
     var playerID: String = "noPlayerID"
     var gameID: String = "noGameID"
 
-    fun initGame() {
-        // write code here in sequential order of which they should execute :-P
-
-    }
-
     fun setID(currentGameID:String, currentPlayerID:String) {
         gameID = currentGameID
         playerID = currentPlayerID
+    }
+
+    fun initGame() {
+        // write code here in sequential order of which they should execute :-P
+        println("---$gameID---$playerID")
+        if(gameID.isEmpty()) {
+           gameID = "9594"
+           playerID = "5385"
+        }
+        loadPlayersFromGameID()
+
     }
 
     fun loadPlayersFromGameID() {
@@ -44,7 +50,12 @@ class StenSaxPaseViewModel() : ViewModel() {
                     "score" to "0"
                 ))
             }
+            savePlayersToDatabase(players!!)
         }
+    }
+
+    fun savePlayersToDatabase(players : MutableMap<String,MutableMap<String,String>>) {
+        stenSaxPaseRef.child(gameID).setValue(players)
     }
 
     /*

@@ -145,9 +145,6 @@ class PlayerInfoFragment : Fragment() {
                 playerCount++
                 boardRef.child(currentGameID).child("playerCount").setValue(playerCount)
             }
-
-
-
             }
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)

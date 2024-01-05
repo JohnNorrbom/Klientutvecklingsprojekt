@@ -51,6 +51,10 @@ class TestBoardFragment : Fragment() {
     private var currentPlayerID = ""
     private var meModel: MeModel? = null
 
+    //boardModel
+    private var boardModel: BoardModel? = null
+    private val boardRef = database.getReference("Board Data")
+
     // PLAYER
     private var playerModel: PlayerModel? = null
     private var currentImageViewIndex: Int = 0
@@ -64,18 +68,6 @@ class TestBoardFragment : Fragment() {
         SoundPool.Builder().setMaxStreams(maxStreams).build()
     } else {
         SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
-    }
-
-    private val positionListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            println("Went in to positionListener")
-            paintPlayers()
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-
     }
 
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
@@ -106,6 +98,19 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+
+
+
+        BoardData.boardModel.observe(this) { boardModel ->
+            boardModel?.let {
+                this@TestBoardFragment.boardModel = it
+            } ?: run {
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+
+        boardRef.addValueEventListener(boardListener)
+
         diceButton()
 
 
@@ -219,12 +224,42 @@ class TestBoardFragment : Fragment() {
                 playersRef.child(currentPlayerID).child("position").setValue(position)
             }
             paintPlayers()
+            assignNextCurrentPlayer()
+            binding.diceButton.visibility = View.GONE
         }
     }
 
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    private val positionListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            println("Went in to positionListener")
+            paintPlayers()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
+    }
+
+    private val boardListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener {
+                if (it.toString() == currentPlayerID){
+                    binding.diceButton.visibility = View.VISIBLE
+                }
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
     }
 
     override fun onDestroy() {
@@ -239,7 +274,6 @@ class TestBoardFragment : Fragment() {
         myRef.child(currentGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
-
                     var playerId = dataSnapshot.child("playerId").toString()
                     arrList.add(playerId)
                 }
@@ -247,5 +281,13 @@ class TestBoardFragment : Fragment() {
         var index = arrList.indexOf(currentPlayerID)
         //assign boardModel currentId with arrList.get(index+1) sizes
 
+        if (arrList.size-1 < index+1){
+            index == 0
+        }
+
+        var currentIdRef = boardRef.child(currentGameID).child("currentPlayerId")
+        currentIdRef.get().addOnSuccessListener {
+            boardRef.child(currentGameID).child("currentPlayerId").setValue(arrList.get(index+1))
+        }
     }
 }

@@ -173,6 +173,7 @@ class LobbyFragment : Fragment() {
     }
     fun setUI() {
         Log.d("setUI","I setUI")
+        binding.lobbyId.text = localGameID
         myRef.child(localGameID).child("players").get().addOnSuccessListener {
             val dataSnapshot = it
             var i = 1

@@ -39,7 +39,11 @@
         android:id="@+id/gavleRouletteFragment"
         android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"
         android:label="fragment_gavle_roulette"
-        tools:layout="@layout/fragment_gavle_roulette" />
+        tools:layout="@layout/fragment_gavle_roulette" >
+        <action
+            android:id="@+id/action_gavleRouletteFragment_to_lobbyFragment"
+            app:destination="@id/lobbyFragment" />
+    </fragment>
     <fragment
         android:id="@+id/stensaxpaseFragment"
         android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseFragment"

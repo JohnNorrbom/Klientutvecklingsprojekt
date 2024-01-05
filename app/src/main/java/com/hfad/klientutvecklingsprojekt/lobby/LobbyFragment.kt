@@ -165,7 +165,7 @@ class LobbyFragment : Fragment() {
                         laps = 0,
                         nbrOfPlayers = myPlayers.size,
                         aliveCount = myPlayers.size,
-                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString(),"","","",""),
+                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
                         currentPlayer = myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))
                     ),localGameID
                 )

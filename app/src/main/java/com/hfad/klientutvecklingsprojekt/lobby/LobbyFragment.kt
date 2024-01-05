@@ -99,6 +99,7 @@ class LobbyFragment : Fragment() {
                 this@LobbyFragment.meModel = it
                 setText()
                 setUI()
+
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
@@ -107,23 +108,6 @@ class LobbyFragment : Fragment() {
         println("Me model in LobbyFragment"+meModel)
         println("GameId in LobbyFragment: " + localGameID)
 
-        var lobbyBtnRef = lobbyRef.child(localGameID)
-        lobbyBtnRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                if (dataSnapshot.exists()) {
-                    val lobbyData = dataSnapshot.getValue()
-                    if(lobbyData == "true"){
-                    view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Failed to read value
-                Log.w("YourTag", "Failed to read lobby data.", databaseError.toException())
-            }
-        })
         return view
     }
 
@@ -134,6 +118,26 @@ class LobbyFragment : Fragment() {
         binding.lobbyId.text = "Game ID: "+localGameID
         binding.lobbyId.visibility = View.VISIBLE
         Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
+        val lobbyRefbtn = lobbyRef.child(localGameID).child("btnPressed")
+        lobbyRefbtn.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                println("HÄMTAT FRÅN DATABAS!!!")
+                println(dataSnapshot.getValue())
+                if (dataSnapshot.exists()) {
+                    val lobbyData = dataSnapshot.getValue()
+                    println("VÄRDET PÅ LOBBYDATA " + lobbyData)
+                    println(lobbyData == "true")
+                    if(lobbyData == "true"){
+                        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
+                    }
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Failed to read value
+                Log.w("YourTag", "Failed to read lobby data.", databaseError.toException())
+            }
+        })
     }
 
     fun changeScreen(){

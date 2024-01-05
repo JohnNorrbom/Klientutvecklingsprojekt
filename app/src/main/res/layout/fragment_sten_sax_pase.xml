@@ -26,6 +26,7 @@
         android:id="@+id/flow_playeractions"
         android:layout_width="match_parent"
         android:layout_height="19dp"
+        android:textColor="@color/white"
         app:constraint_referenced_ids="sten,sax,pase"
         app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,12 +42,16 @@
         android:id="@+id/pase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#000000"
+        android:backgroundTint="#FFFFFF"
         android:text="Påse" />
 
     <Button
         android:id="@+id/sten"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#000000"
+        android:backgroundTint="#FFFFFF"
         android:text="Sten"
         tools:layout_editor_absoluteX="188dp"
         tools:layout_editor_absoluteY="170dp" />
@@ -55,6 +60,8 @@
         android:id="@+id/sax"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#000000"
+        android:backgroundTint="#FFFFFF"
         android:text="Sax" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -71,7 +78,24 @@
         android:layout_marginTop="30dp"
         android:layout_marginBottom="63dp"
         android:text="Gör ett val"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/sten"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/vsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="176dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="177dp"
+        android:text=""
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/actionText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/actionView" />

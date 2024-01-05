@@ -76,7 +76,7 @@ class StenSaxPaseFragment : Fragment() {
             println("sten klick")
             //viewModel.setChoice("sten", currentPlayerID)
             setChoice("sten", currentPlayerID)
-            setActionText("$currentPlayerID valde: Sten")
+            //setActionText("$currentPlayerID valde: Sten")
         }
         sax.setOnClickListener {
             sten.visibility = View.INVISIBLE
@@ -85,7 +85,7 @@ class StenSaxPaseFragment : Fragment() {
             println("sax klick")
             //viewModel.setChoice("sax", currentPlayerID)
             setChoice("sax", currentPlayerID)
-            setActionText("$currentPlayerID valde: Sax")
+            //setActionText("$currentPlayerID valde: Sax")
         }
         pase.setOnClickListener {
             sten.visibility = View.INVISIBLE
@@ -94,7 +94,7 @@ class StenSaxPaseFragment : Fragment() {
             println("pase klick")
             //viewModel.setChoice("pase", currentPlayerID)
             setChoice("pase", currentPlayerID)
-            setActionText("$currentPlayerID valde: Påse")
+            //setActionText("$currentPlayerID valde: Påse")
         }
 
         return view
@@ -109,6 +109,10 @@ class StenSaxPaseFragment : Fragment() {
 
     private fun setActionText(text: String) {
         binding.actionText.text = text
+    }
+
+    private fun setVsText(text:String) {
+        binding.vsText.text = text
     }
 
     override fun onDestroyView() {
@@ -191,6 +195,7 @@ class StenSaxPaseFragment : Fragment() {
                 }
             } while (player1 == player2)
             println("player1_id: $player1 -vs- player2_id: $player2")
+            setVsText("$player1 -vs- $player2")
         }
     }
 

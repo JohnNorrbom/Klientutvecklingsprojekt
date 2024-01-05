@@ -254,6 +254,8 @@ class TestBoardFragment : Fragment() {
                 if (currentPlayerId == localPlayerID){
                     println("went in to boardListener with localPlayerID = $localPlayerID and it = $currentPlayerId")
                     binding.diceButton.visibility = View.VISIBLE
+                }else{
+                    binding.diceButton.visibility  = View.VISIBLE
                 }
             }
 

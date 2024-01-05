@@ -46,7 +46,7 @@ class StartScreenFragment : Fragment() {
         //  stensaxpase button
         binding.stensaxpaseMiniGameButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_stensaxpaseFragment)
+            view.findNavController().navigate(R.id.action_startScreenFragment_to_stenSaxPaseChooseFragment)
         }
 
         binding.playerCreateButton.setOnClickListener {

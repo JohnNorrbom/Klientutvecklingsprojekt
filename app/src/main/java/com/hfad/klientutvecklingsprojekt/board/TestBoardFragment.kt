@@ -118,7 +118,6 @@ class TestBoardFragment : Fragment() {
 
 
         playerRef.addValueEventListener(positionListener)
-        playerRef.addValueEventListener(miniGameListener)
 
         // Inflate the layout for this fragment
         return view
@@ -285,7 +284,7 @@ class TestBoardFragment : Fragment() {
     private fun setMiniGame(randomVal: Int) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (randomVal == 0) {
-            view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
         } else if (randomVal == 1) {
             println("SOCCER GAME FERDINAND")
             view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
@@ -299,25 +298,14 @@ class TestBoardFragment : Fragment() {
         }
         this.localRandomVal = -1
     }
-    private val miniGameListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            println("Went in to miniGameListener")
-            Log.d("minigame", "miniGameListener" + localRandomVal)
-            if(localRandomVal != -1) {
-                Log.d("minigame", "miniGameListener" + localRandomVal)
-                setMiniGame(localRandomVal)
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-    }
-
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             println("Went in to positionListener")
             paintPlayers()
+            if(localRandomVal != -1) {
+                Log.d("minigame", "miniGameListener" + localRandomVal)
+                setMiniGame(localRandomVal)
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {

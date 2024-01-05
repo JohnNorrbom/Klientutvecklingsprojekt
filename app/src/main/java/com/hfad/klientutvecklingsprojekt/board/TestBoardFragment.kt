@@ -296,7 +296,6 @@ class TestBoardFragment : Fragment() {
             view.findNavController()
                 .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
         }
-        this.localRandomVal = -1
     }
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {

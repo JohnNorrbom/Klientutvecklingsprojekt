@@ -273,22 +273,19 @@ class TestBoardFragment : Fragment() {
     private fun setMiniGame(randomVal: Int) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (randomVal == 0) {
-            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
         } else if (randomVal == 1) {
             println("SOCCER GAME FERDINAND")
-            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
         } else if (randomVal == 2) {
             println("QUIZ GAME PONTUS")
-            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
         } else {
             println("ROULETTE WILLIAM")
-            this.localRandomVal = -1
             view.findNavController()
                 .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
         }
+        this.localRandomVal = -1
     }
     private val miniGameListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {

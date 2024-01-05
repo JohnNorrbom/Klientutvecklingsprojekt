@@ -6,12 +6,16 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.renderscript.Sampler.Value
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -24,6 +28,7 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+import kotlinx.coroutines.launch
 import kotlin.random.Random
 // TODO GIVE PLAYING PLAYER CORRECT COLOR
 // TODO GIVE EVERYONE CORRECT COLOR
@@ -53,7 +58,6 @@ class TestBoardFragment : Fragment() {
     // PLAYER
     private var playerModel: PlayerModel? = null
     private var currentImageViewIndex: Int = 0
-    private var currentPlayerID = ""
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
@@ -244,8 +248,11 @@ class TestBoardFragment : Fragment() {
 
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener {
-                if (it.toString() == localPlayerID){
+            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
+                val currentPlayerId = dataSnapshot.value
+                println("comparing localPlayerId $localPlayerID to currentPlayerId $currentPlayerId")
+                if (currentPlayerId == localPlayerID){
+                    println("went in to boardListener with localPlayerID = $localPlayerID and it = $currentPlayerId")
                     binding.diceButton.visibility = View.VISIBLE
                 }
             }
@@ -277,6 +284,7 @@ class TestBoardFragment : Fragment() {
 
                     var index = playerIDarr.indexOf(localPlayerID)
                     println("Index before adjustment: $index")
+
                     if (index != -1) {
                         index = if (index < playerIDarr.size - 1) index + 1 else 0
                         boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
@@ -289,5 +297,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }
 
+            }
     }
-}
+

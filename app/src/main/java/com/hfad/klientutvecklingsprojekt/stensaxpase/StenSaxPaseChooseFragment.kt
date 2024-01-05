@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
@@ -28,7 +29,7 @@ class StenSaxPaseChooseFragment : Fragment() {
 
     var gameID:String = ""
     var playerID:String = ""
-    var opponentID:String = ""
+    private var opponentID:String = ""
 
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val playerDataRef = database.getReference("Player Data")
@@ -58,48 +59,50 @@ class StenSaxPaseChooseFragment : Fragment() {
                 Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
-        /*
+
         // Remove this once testing done
         if(gameID == "") {
-            gameID = "4367"
-            playerID = "2314"
+            gameID = "5369"
+            playerID = "1986"
             println("$gameID--$playerID")
             loadPlayersFromGameID()
         }
         // End of test section
 
-         */
-
         binding.astroBlue.setOnClickListener {
-            createStenSaxPaseGame(playerID!!,opponentID!!)
-            view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
+            setOpponentID("blue")
+            createStenSaxPaseGame(playerID!!,opponentID!!,view)
+            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
 
         }
         binding.astroRed.setOnClickListener {
-            createStenSaxPaseGame(playerID!!,opponentID!!)
-            view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
+            setOpponentID("red")
+            createStenSaxPaseGame(playerID!!,opponentID!!,view)
+            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroYellow.setOnClickListener {
-            createStenSaxPaseGame(playerID!!,opponentID!!)
-            view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
+            setOpponentID("yellow")
+            createStenSaxPaseGame(playerID!!,opponentID!!,view)
+            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroGreen.setOnClickListener {
-            createStenSaxPaseGame(playerID!!,opponentID!!)
-            view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
+            setOpponentID("green")
+            createStenSaxPaseGame(playerID!!,opponentID!!,view)
+            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroWhite.setOnClickListener {
-            createStenSaxPaseGame(playerID!!,opponentID!!)
-            view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
+            setOpponentID("white")
+            createStenSaxPaseGame(playerID!!,opponentID!!,view)
+            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
 
         return view
     }
-
+    // Prepare Map which players will go into
+    val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
     fun loadPlayersFromGameID() {
         playerDataRef.child(gameID).get().addOnSuccessListener {
             Log.i("firebase", "Got value ${it.value}")
-            // Prepare Map which players will go into
-            val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
             // Loop through all players and add to local 'players' Map
             for(player in it.child("players").children) {
                 players.put("${player.child("playerID").value}", mutableMapOf(
@@ -109,6 +112,16 @@ class StenSaxPaseChooseFragment : Fragment() {
             }
             println("---$players")
             setUI(players!!)
+        }
+    }
+
+    private fun setOpponentID(color:String) {
+        players.forEach { entry ->
+            if(entry.key != playerID) {
+                if (entry.value.get("color") == color) {
+                    opponentID = entry.key
+                }
+            }
         }
     }
 
@@ -146,7 +159,9 @@ class StenSaxPaseChooseFragment : Fragment() {
         this.playerID = playerID
     }
 
-    fun createStenSaxPaseGame(playerID:String,opponentID:String) {
-
+    fun createStenSaxPaseGame(playerID:String,opponentID:String,view:ConstraintLayout) {
+        println("__$playerID and __$opponentID")
+        val action = StenSaxPaseChooseFragmentDirections.actionStenSaxPaseChooseFragmentToStensaxpaseFragment(playerID,opponentID)
+        view?.findNavController()?.navigate(action)
     }
 }

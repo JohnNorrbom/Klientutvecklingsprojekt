@@ -52,17 +52,20 @@ class StenSaxPaseFragment : Fragment() {
             }
         }
 
+        // For testing when mini-game is launched from start screen button
+        if(currentGameID == "") {
+            currentGameID = "5369"
+            currentPlayerID = "1986"
+            setID(currentGameID, currentPlayerID)
+        }
+
         // initialize game
         //viewModel.initGame()
         initGame()
 
-        /*
-        // For testing when mini-game is launched from start screen button
-        if(currentGameID == "") {
-            currentGameID = "9182"
-            currentPlayerID = "8144"
-        }
-         */
+
+
+
 
         // add view code here
         val sten = binding.sten
@@ -117,12 +120,15 @@ class StenSaxPaseFragment : Fragment() {
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
-    var playerID: String = ""
+    var playerID: String? = ""
     var gameID: String = ""
+    var opponentID: String? = ""
 
     fun setID(currentGameID:String, currentPlayerID:String) {
         gameID = currentGameID
-        playerID = currentPlayerID
+        playerID = StenSaxPaseFragmentArgs.fromBundle(requireArguments()).playerID
+        opponentID = StenSaxPaseFragmentArgs.fromBundle(requireArguments()).opponentID
+        println("opp id: $opponentID")
     }
 
     fun initGame() {
@@ -147,7 +153,7 @@ class StenSaxPaseFragment : Fragment() {
             }
             println("---$players")
             savePlayersToDatabase(players!!)
-            setPlayers(players!!)
+            setPlayers()
             gameLoop()
         }
     }
@@ -162,24 +168,13 @@ class StenSaxPaseFragment : Fragment() {
     var player1:String? = null
     var player2:String? = null
 
-    fun setPlayers(playerMap: MutableMap<String,MutableMap<String,String>>) {
+    fun setPlayers() {
 
         player1 = playerID
+        player2 = opponentID
 
-        if(playerMap!=null) {
-            var randomNmbr: Int
-            do {
-                randomNmbr = Random.nextInt(playerMap!!.size)
-
-                var i = 0
-                for (player in playerMap!!) {
-                    if(randomNmbr == i) player2 = "${player.key}"
-                    i++
-                }
-            } while (player1 == player2)
-            println("player1_id: $player1 -vs- player2_id: $player2")
-            setVsText("$player1 -vs- $player2")
-        }
+        println("player1_id: $player1 -vs- player2_id: $player2")
+        setVsText("$player1 -vs- $player2")
     }
 
     // End of setPlayers
@@ -217,11 +212,12 @@ class StenSaxPaseFragment : Fragment() {
     fun setChoice(choice:String, player:String) {
         //playerMap.forEach { entry -> if(entry.value.containsValue("choice\"") ) }
         println("$player chose: $choice")
-        if(player == playerID) setChoiceInDatabase(choice)
+        if(player == playerID) setChoiceInDatabase(choice, playerID!!)
+        else if(player == opponentID) setChoiceInDatabase(choice, opponentID!!)
     }
 
-    fun setChoiceInDatabase(choice:String) {
-        stenSaxPaseRef.child(gameID).child("players").child(playerID).child("choice").setValue(choice)
+    fun setChoiceInDatabase(choice:String, player:String) {
+        stenSaxPaseRef.child(gameID).child("players").child(player).child("choice").setValue(choice)
     }
 
     fun getChoiceFromDatabase() {

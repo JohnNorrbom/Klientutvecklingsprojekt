@@ -120,6 +120,14 @@
                 android:visibility="gone"/>
         </LinearLayout>
     </GridLayout>
+    <TextView
+        android:id="@+id/lobby_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F44336"
+        android:textSize="80dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/start_button"

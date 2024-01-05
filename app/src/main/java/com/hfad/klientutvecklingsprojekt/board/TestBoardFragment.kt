@@ -169,8 +169,7 @@ class TestBoardFragment : Fragment() {
             //  Change to portrait view
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             //  Pick random game
-            //val randomVal = Random.nextInt(4)
-            val randomVal = 0
+            val randomVal = Random.nextInt(4)
 
             if (randomVal == 0) {
                 println("STEN SAX PÅSE")

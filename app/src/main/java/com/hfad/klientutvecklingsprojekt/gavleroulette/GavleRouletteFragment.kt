@@ -120,7 +120,7 @@ class GavleRouletteFragment : Fragment(){
     fun onTriggerPulled(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-                if(it.child(localPlayerID).child("nickname").value.toString() != currentPlayer){
+                if(localPlayerID != currentPlayer){
                     Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }else{

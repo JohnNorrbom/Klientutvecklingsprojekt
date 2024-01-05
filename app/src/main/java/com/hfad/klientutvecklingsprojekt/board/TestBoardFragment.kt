@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.renderscript.Sampler.Value
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -65,6 +66,18 @@ class TestBoardFragment : Fragment() {
         SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
     }
 
+    private val positionListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            println("Went in to positionListener")
+            paintPlayers()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
+    }
+
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +85,8 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
+
+
         PlayerData.playerModel.observe(this) {
             playerModel = it
         }
@@ -92,9 +107,17 @@ class TestBoardFragment : Fragment() {
             }
         }
         diceButton()
+
+
+        playerRef.addValueEventListener(positionListener)
+
         // Inflate the layout for this fragment
         return view
     }
+
+
+
+
     private fun setText() {
         meModel?.apply{
             currentGameID = gameID ?: ""
@@ -118,8 +141,7 @@ class TestBoardFragment : Fragment() {
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val color = playerSnapshot.child("color").value.toString()
                     val position = Integer.valueOf(playerSnapshot.child("position").value.toString())
-
-                    println(position)
+                    println("$color moved to $position")
 
                     Log.d("paintPlayers", "Player color: $color")
                     val imageView = when (color) {
@@ -163,15 +185,11 @@ class TestBoardFragment : Fragment() {
                             "tile20" -> binding.tile20
                             else -> null
                         }
-
                         if (tile != null){
                             val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
                             layoutParams.topToTop = tile.id
                             layoutParams.endToEnd = tile.id
                             view.layoutParams = layoutParams
-                            println(layoutParams)
-
-
                         }
                     }
                 }
@@ -180,53 +198,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("paintPlayers", "Error fetching players", exception)
             }
     }
-
-
-    private fun movePlayer(newPosition: Int){
-
-    }
-/*
-    private fun movePlayer(targetedImageView: ImageView) {
-        // Update constraints to move player to next tile
-        val layoutParams = player?.layoutParams as ConstraintLayout.LayoutParams
-        layoutParams.topToTop = targetedImageView.id
-        layoutParams.endToEnd = targetedImageView.id
-        player!!.layoutParams = layoutParams
-        //  Check what type of tile player is standing on
-        if (targetedImageView.tag == _binding?.tile2?.tag) {
-            println("Plus 1")
-        } else if (targetedImageView.tag == _binding?.tile3?.tag) {
-            println("Plus 2")
-        } else if (targetedImageView.tag == _binding?.tile4?.tag) {
-            println("Plus 3")
-        } else if (targetedImageView.tag == _binding?.tile5?.tag) {
-            println("Minus 5")
-        } else if (targetedImageView.tag == _binding?.tile6?.tag) {
-            //  Change to portrait view
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            //  Pick random game
-            val randomVal = Random.nextInt(4)
-
-            if (randomVal == 0) {
-                println("STEN SAX PÅSE")
-                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
-            } else if (randomVal == 1) {
-                println("SOCCER GAME FERDINAND")
-                view?.findNavController()
-                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-            } else if (randomVal == 2) {
-                println("QUIZ GAME PONTUS")
-                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-            } else {
-                println("ROULETTE WILLIAM")
-                view?.findNavController()
-                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
-            }
-        }
-    }
-    */
-
-
     fun diceButton() {
         //  DICE BUTTON
         val dice = binding.diceButton
@@ -247,6 +218,7 @@ class TestBoardFragment : Fragment() {
                 position = currentImageViewIndex
                 playersRef.child(currentPlayerID).child("position").setValue(position)
             }
+            paintPlayers()
         }
     }
 
@@ -262,5 +234,18 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+    fun assignNextCurrentPlayer(){
+        var arrList = arrayListOf<String>()
+        myRef.child(currentGameID).child("players").get()
+            .addOnSuccessListener { dataSnapshot ->
+                dataSnapshot.children.forEach { playerSnapshot ->
 
+                    var playerId = dataSnapshot.child("playerId").toString()
+                    arrList.add(playerId)
+                }
+            }
+        var index = arrList.indexOf(currentPlayerID)
+        //assign boardModel currentId with arrList.get(index+1) sizes
+
+    }
 }

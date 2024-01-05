@@ -48,12 +48,13 @@ class StenSaxPaseFragment : Fragment() {
 
         // initialize game
         viewModel.initGame()
-
+        /*
         // For testing when mini-game is launched from start screen button
         if(currentGameID == "") {
             currentGameID = "8718"
             currentPlayerID = "1199"
         }
+         */
 
         // add view code here
         val sten = binding.sten

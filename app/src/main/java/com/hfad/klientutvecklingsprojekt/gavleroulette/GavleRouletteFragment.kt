@@ -38,6 +38,17 @@ class GavleRouletteFragment : Fragment(){
         val view = binding.root
         RouletteData.fetchGameModel()
 
+
+        RouletteData.rouletteModel.observe(this) {rouletteModel ->
+            Log.d("GavleRouletteFragment", "Observing rouletteModel: $rouletteModel")
+            rouletteModel?.let {
+                this@GavleRouletteFragment.rouletteModel = it
+                setUi()
+            } ?: run {
+                Log.e("GavleRouletteFragment", "rouletteModel is null")
+            }
+        }
+
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@GavleRouletteFragment.meModel = it
@@ -48,21 +59,14 @@ class GavleRouletteFragment : Fragment(){
             }
         }
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.rouletAction.setOnClickListener{
             onTriggerPulled()
         }
-
-        RouletteData.rouletteModel.observe(this) {rouletteModel ->
-            rouletteModel?.let {
-                this@GavleRouletteFragment.rouletteModel = it
-                setUi()
-            } ?: run {
-                // Handle the case when meModel is null
-                Log.e("LobbyFragment", "meModel is null")
-            }
-        }
-
-        return view
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroy() {

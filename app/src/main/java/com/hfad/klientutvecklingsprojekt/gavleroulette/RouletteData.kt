@@ -11,8 +11,8 @@ import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 
 object RouletteData {
-    private var _rouletteModel : MutableLiveData<RouletteModel> = MutableLiveData()
-    var rouletteModel : LiveData<RouletteModel> = _rouletteModel
+    private var _rouletteModel : MutableLiveData<RouletteModel?> = MutableLiveData()
+    var rouletteModel : MutableLiveData<RouletteModel?> = _rouletteModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Roulette")
 
@@ -23,14 +23,14 @@ object RouletteData {
     }
 
     fun fetchGameModel(){
-        GameData.gameModel.value?.apply {
-            GameData.myRef.addValueEventListener(rouletteListener)
+        rouletteModel.value?.apply {
+            myRef.addValueEventListener(rouletteListener)
         }
     }
 
     val rouletteListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val id = GameData.gameModel.value?.gameID
+            val id = rouletteModel.value?.gameId
             val model = snapshot.child(id ?: "").getValue(RouletteModel::class.java)
             _rouletteModel.postValue(model)
         }

@@ -6,16 +6,12 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
-import android.renderscript.Sampler.Value
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -28,7 +24,6 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 // TODO GIVE PLAYING PLAYER CORRECT COLOR
 // TODO GIVE EVERYONE CORRECT COLOR
@@ -48,7 +43,7 @@ class TestBoardFragment : Fragment() {
 
     //  meModel
     private var currentGameID = ""
-    private var currentPlayerID = ""
+    private var localPlayerID = ""
     private var meModel: MeModel? = null
 
     //boardModel
@@ -58,6 +53,7 @@ class TestBoardFragment : Fragment() {
     // PLAYER
     private var playerModel: PlayerModel? = null
     private var currentImageViewIndex: Int = 0
+    private var currentPlayerID = ""
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
@@ -126,7 +122,7 @@ class TestBoardFragment : Fragment() {
     private fun setText() {
         meModel?.apply{
             currentGameID = gameID ?: ""
-            currentPlayerID = playerID ?: ""
+            localPlayerID = playerID ?: ""
             playerRef = database.getReference("Player Data").child(currentGameID)
             playersRef = playerRef.child("players")
             binding.playerBlue.visibility = View.GONE
@@ -208,26 +204,24 @@ class TestBoardFragment : Fragment() {
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
-            Log.d("testing", currentPlayerID + (meModel?.playerID ?: 0))
-            if(currentPlayerID == meModel?.playerID ?: 0) {
 //            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-                var randomInt = Random.nextInt(6) + 1
-                var destination = "dice" + randomInt
-                val resourceId = resources.getIdentifier(
-                    destination,
-                    "drawable",
-                    "com.hfad.klientutvecklingsprojekt"
-                )
-                binding.diceButton?.setImageResource(resourceId)
-                currentImageViewIndex += randomInt
+            var randomInt = Random.nextInt(6) + 1
+            var destination = "dice" + randomInt
+            val resourceId = resources.getIdentifier(
+                destination,
+                "drawable",
+                "com.hfad.klientutvecklingsprojekt"
+            )
+            binding.diceButton?.setImageResource(resourceId)
+            currentImageViewIndex += randomInt
 
-                playerModel?.apply {
-                    position = currentImageViewIndex
-                    playersRef.child(currentPlayerID).child("position").setValue(position)
-                }
-                paintPlayers()
-                assignNextCurrentPlayer()
+            playerModel?.apply {
+                position = currentImageViewIndex
+                playersRef.child(localPlayerID).child("position").setValue(position)
             }
+            paintPlayers()
+            assignNextCurrentPlayer()
+            binding.diceButton.visibility = View.GONE
         }
     }
 
@@ -251,7 +245,7 @@ class TestBoardFragment : Fragment() {
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener {
-                if (it.toString() == currentPlayerID){
+                if (it.toString() == localPlayerID){
                     binding.diceButton.visibility = View.VISIBLE
                 }
             }
@@ -279,11 +273,10 @@ class TestBoardFragment : Fragment() {
                     val playerID = playerSnapshot.child("playerID").value.toString()
                     println("SOMEONES PLAYER ID $playerID")
                     playerIDarr.add(playerID)
-                    println("Current Player ID: $currentPlayerID")
+                    println("Current Player ID: $localPlayerID")
 
-                    var index = playerIDarr.indexOf(currentPlayerID)
+                    var index = playerIDarr.indexOf(localPlayerID)
                     println("Index before adjustment: $index")
-
                     if (index != -1) {
                         index = if (index < playerIDarr.size - 1) index + 1 else 0
                         boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
@@ -296,6 +289,5 @@ class TestBoardFragment : Fragment() {
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }
 
-            }
     }
-
+}

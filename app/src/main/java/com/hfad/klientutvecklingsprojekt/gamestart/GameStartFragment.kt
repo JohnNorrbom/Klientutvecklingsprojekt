@@ -81,7 +81,7 @@ class GameStartFragment : Fragment() {
         BoardData.saveBoardModel(
             BoardModel(
                 gameID = gameId,
-                currentPlayerId = "",
+                currentPlayerID = "",
                 playerCount = 0
             )
         )

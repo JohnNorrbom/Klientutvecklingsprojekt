@@ -1,5 +1,3 @@
 package com.hfad.klientutvecklingsprojekt.board
 
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-
-data class BoardModel (val gameID: String?, val currentPlayerId: String, val playerCount: Int)
+data class BoardModel (val gameID: String?, val currentPlayerID: String?, val playerCount: Int?)

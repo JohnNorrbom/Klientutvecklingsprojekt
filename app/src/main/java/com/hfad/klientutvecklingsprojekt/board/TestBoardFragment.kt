@@ -271,6 +271,8 @@ class TestBoardFragment : Fragment() {
     }
     fun assignNextCurrentPlayer(){
         var arrList = arrayListOf<String>()
+
+        //get all playerIds from the game
         myRef.child(currentGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
@@ -278,11 +280,12 @@ class TestBoardFragment : Fragment() {
                     arrList.add(playerId)
                 }
             }
+        //
         var index = arrList.indexOf(currentPlayerID)
         //assign boardModel currentId with arrList.get(index+1) sizes
 
         if (arrList.size-1 < index+1){
-            index == 0
+            index = 0
         }
 
         var currentIdRef = boardRef.child(currentGameID).child("currentPlayerId")

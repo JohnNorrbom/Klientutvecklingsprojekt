@@ -262,17 +262,17 @@ class GameView : ConstraintLayout {
             val randomVal = Random.nextInt(4)
 
             if (randomVal == 0) {
-                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
-            } else if (randomVal == 1) {
-                println("SOCCER GAME FERDINAND")
-                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
-            } else if (randomVal == 2) {
-                println("QUIZ GAME PONTUS")
-                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
-            } else {
-                println("ROULETTE WILLIAM")
-                view.findNavController()
-                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
+//                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
+//            } else if (randomVal == 1) {
+//                println("SOCCER GAME FERDINAND")
+//                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
+//            } else if (randomVal == 2) {
+//                println("QUIZ GAME PONTUS")
+//                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
+//            } else {
+//                println("ROULETTE WILLIAM")
+//                view.findNavController()
+//                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }
     }

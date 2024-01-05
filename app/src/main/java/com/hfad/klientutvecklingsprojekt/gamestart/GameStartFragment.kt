@@ -82,7 +82,8 @@ class GameStartFragment : Fragment() {
             BoardModel(
                 gameID = gameId,
                 currentPlayerID = "",
-                playerCount = 0
+                playerCount = 0,
+                randomVal = -1
             )
         )
         joinLobby()

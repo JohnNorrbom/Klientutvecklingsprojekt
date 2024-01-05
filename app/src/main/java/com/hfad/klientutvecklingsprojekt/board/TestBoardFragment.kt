@@ -275,18 +275,12 @@ class TestBoardFragment : Fragment() {
             view.findNavController()
                 .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
         }
-        this.localRandomVal = -1
     }
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             println("Went in to positionListener")
             paintPlayers()
-            if(localRandomVal != -1) {
-                Log.d("minigame", "miniGameListener" + localRandomVal)
-                setMiniGame(localRandomVal)
-            }
         }
-
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }
@@ -302,6 +296,10 @@ class TestBoardFragment : Fragment() {
                     binding.diceButton.visibility = View.VISIBLE
                 }else{
                     binding.diceButton.visibility  = View.INVISIBLE
+                }
+                if(localRandomVal != -1) {
+                    Log.d("minigame", "miniGameListener" + localRandomVal)
+                    setMiniGame(localRandomVal)
                 }
             }
         }

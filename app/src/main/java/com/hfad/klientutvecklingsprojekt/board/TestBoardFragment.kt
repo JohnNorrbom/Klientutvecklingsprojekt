@@ -77,16 +77,8 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
-
-
         PlayerData.playerModel.observe(this) {
-            playerModel?.let {
-                this@TestBoardFragment.playerModel = it
-                setValues()
-            } ?: run {
-                // Handle the case when meModel is null
-                Log.e("LobbyFragment", "meModel is null")
-            }
+            playerModel = it
         }
         mediaPlayer = MediaPlayer.create(
             requireContext(),
@@ -113,18 +105,12 @@ class TestBoardFragment : Fragment() {
         }
 
         boardRef.addValueEventListener(boardListener)
-
         diceButton()
-
-
         playerRef.addValueEventListener(positionListener)
 
         // Inflate the layout for this fragment
         return view
     }
-
-
-
 
     private fun setText() {
         meModel?.apply{
@@ -139,16 +125,6 @@ class TestBoardFragment : Fragment() {
             binding.playerGreen.visibility = View.GONE
         }
         paintPlayers()
-    }
-
-    private fun setValues(){
-        /*
-        playerModel?.apply {
-            localScore = score!!
-            currentImageViewIndex = position!!
-        }
-
-         */
     }
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
@@ -216,11 +192,6 @@ class TestBoardFragment : Fragment() {
             }
     }
     fun diceButton() {
-
-
-        //println("LOCALE SCORE "+localScore)
-
-
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
@@ -324,7 +295,9 @@ class TestBoardFragment : Fragment() {
                 }
             }
         }
+
         override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
         }
     }
 
@@ -360,6 +333,5 @@ class TestBoardFragment : Fragment() {
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }
 
-            }
     }
-
+}

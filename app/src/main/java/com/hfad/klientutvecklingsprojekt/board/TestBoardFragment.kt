@@ -198,6 +198,15 @@ class TestBoardFragment : Fragment() {
             }
     }
     fun diceButton() {
+
+        //updates the localScore to the online score
+        //playersRef.child(localPlayerID).child("score").get().addOnSuccessListener { dataSnapshot ->
+          //  localScore = dataSnapshot.value.toString().toInt()
+        //}
+
+        //println("LOCALE SCORE "+localScore)
+
+
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
@@ -294,11 +303,8 @@ class TestBoardFragment : Fragment() {
             }
 
         }
-
         override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
         }
-
     }
 
     override fun onDestroy() {

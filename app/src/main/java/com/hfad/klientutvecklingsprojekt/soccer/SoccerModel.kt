@@ -11,5 +11,7 @@ data class SoccerModel(
     var p2Choice : String? = null,
     var p1Color : String? = null,
     var p2Color : String? = null,
-    var bothPlayerReady : Boolean? = null
+    var bothPlayerReady : Boolean? = null,
+    var p1Id: String? = null,
+    var p2Id: String? = null
 )

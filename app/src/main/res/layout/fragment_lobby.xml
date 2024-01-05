@@ -150,4 +150,18 @@
         android:layout_gravity="center"
         android:text="Join Roulette"/>
 
+    <Button
+        android:id="@+id/host_Soccer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Host Soccer" />
+
+    <Button
+        android:id="@+id/join_Soccer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Join Soccer"/>
+
 </LinearLayout>

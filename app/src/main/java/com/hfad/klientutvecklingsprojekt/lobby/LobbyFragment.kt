@@ -78,6 +78,14 @@ class LobbyFragment : Fragment() {
             changeScreen()
         }
 
+        binding.hostSoccer.setOnClickListener {
+            startSoccer()
+        }
+
+        binding.joinSoccer.setOnClickListener {
+            joinSoccer()
+        }
+
         LobbyData.lobbyModel.observe(this) { lobbyModel ->
             lobbyModel?.let {
                 this@LobbyFragment.lobbyModel = it
@@ -137,6 +145,16 @@ class LobbyFragment : Fragment() {
                 }
             }
         }
+    }
+
+
+    fun startSoccer(){
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_soccerChooseFragment)
+    }
+
+    fun joinSoccer(){
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_soccerFragment)
+
     }
 
     fun startGame(){

@@ -75,10 +75,12 @@ class GavleRouletteFragment : Fragment(){
     }
     fun setText(){
         //den här
+        localGameID= meModel?.gameID?:""
+        localPlayerID = meModel?.playerID?:""
+        Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
+
         lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-            localGameID= meModel?.gameID?:""
-            localPlayerID = it.child(meModel?.playerID?:"").child("nickname").value.toString()
-            Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
+            localPlayerID = it.child(meModel?.playerID ?: "").child("nickname").value.toString()
         }
     }
 
@@ -120,6 +122,8 @@ class GavleRouletteFragment : Fragment(){
     fun onTriggerPulled(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+                Log.d("localPlayerID","${localPlayerID}")
+                Log.d("localPlayerID","${currentPlayer}")
                 if(localPlayerID != currentPlayer){
                     Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener

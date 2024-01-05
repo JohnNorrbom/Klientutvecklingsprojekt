@@ -80,7 +80,13 @@ class TestBoardFragment : Fragment() {
 
 
         PlayerData.playerModel.observe(this) {
-            playerModel = it
+            playerModel?.let {
+                this@TestBoardFragment.playerModel = it
+                setValues()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("LobbyFragment", "meModel is null")
+            }
         }
         mediaPlayer = MediaPlayer.create(
             requireContext(),
@@ -133,11 +139,17 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
         }
+        paintPlayers()
+    }
+
+    private fun setValues(){
+        /*
         playerModel?.apply {
             localScore = score!!
             currentImageViewIndex = position!!
         }
-        paintPlayers()
+
+         */
     }
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens

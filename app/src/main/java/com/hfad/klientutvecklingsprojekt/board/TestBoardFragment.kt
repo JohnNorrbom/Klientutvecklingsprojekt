@@ -48,8 +48,12 @@ class TestBoardFragment : Fragment() {
 
     //  meModel
     private var currentGameID = ""
-    private var currentPlayerID = ""
+    private var localPlayerID = ""
     private var meModel: MeModel? = null
+
+    //boardModel
+    private var boardModel: BoardModel? = null
+    private val boardRef = database.getReference("Board Data")
 
     // PLAYER
     private var playerModel: PlayerModel? = null
@@ -64,18 +68,6 @@ class TestBoardFragment : Fragment() {
         SoundPool.Builder().setMaxStreams(maxStreams).build()
     } else {
         SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
-    }
-
-    private val positionListener = object : ValueEventListener {
-        override fun onDataChange(snapshot: DataSnapshot) {
-            println("Went in to positionListener")
-            paintPlayers()
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-
     }
 
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
@@ -106,6 +98,19 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+
+
+
+        BoardData.boardModel.observe(this) { boardModel ->
+            boardModel?.let {
+                this@TestBoardFragment.boardModel = it
+            } ?: run {
+                Log.e("LobbyFragment", "meModel is null")
+            }
+        }
+
+        boardRef.addValueEventListener(boardListener)
+
         diceButton()
 
 
@@ -121,7 +126,7 @@ class TestBoardFragment : Fragment() {
     private fun setText() {
         meModel?.apply{
             currentGameID = gameID ?: ""
-            currentPlayerID = playerID ?: ""
+            localPlayerID = playerID ?: ""
             playerRef = database.getReference("Player Data").child(currentGameID)
             playersRef = playerRef.child("players")
             binding.playerBlue.visibility = View.GONE
@@ -216,15 +221,50 @@ class TestBoardFragment : Fragment() {
 
             playerModel?.apply {
                 position = currentImageViewIndex
-                playersRef.child(currentPlayerID).child("position").setValue(position)
+                playersRef.child(localPlayerID).child("position").setValue(position)
             }
             paintPlayers()
+            assignNextCurrentPlayer()
+            binding.diceButton.visibility = View.GONE
         }
     }
 
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    private val positionListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            println("Went in to positionListener")
+            paintPlayers()
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
+    }
+
+    private val boardListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
+                val currentPlayerId = dataSnapshot.value
+                println("comparing localPlayerId $localPlayerID to currentPlayerId $currentPlayerId")
+                if (currentPlayerId == localPlayerID){
+                    println("went in to boardListener with localPlayerID = $localPlayerID and it = $currentPlayerId")
+                    binding.diceButton.visibility = View.VISIBLE
+                }else{
+                    binding.diceButton.visibility  = View.INVISIBLE
+                }
+            }
+
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
     }
 
     override fun onDestroy() {
@@ -234,4 +274,31 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
-}
+    fun assignNextCurrentPlayer() {
+        var playerIDarr = arrayListOf<String>()
+        myRef.child(currentGameID).child("players").get()
+            .addOnSuccessListener { dataSnapshot ->
+                dataSnapshot.children.forEach { playerSnapshot ->
+                    val playerID = playerSnapshot.child("playerID").value.toString()
+                    println("SOMEONES PLAYER ID $playerID")
+                    playerIDarr.add(playerID)
+                    println("Current Player ID: $localPlayerID")
+
+                    var index = playerIDarr.indexOf(localPlayerID)
+                    println("Index before adjustment: $index")
+
+                    if (index != -1) {
+                        index = if (index < playerIDarr.size - 1) index + 1 else 0
+                        boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
+                    } else {
+                        println("Error: currentPlayerID not found in arrList")
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
+            }
+
+            }
+    }
+

@@ -19,19 +19,20 @@ object LobbyData {
     val myRef = database.getReference("Lobby Data")
     val id = lobbyModel?.value?.gameID
 
-    fun saveLobbyModel(model: LobbyModel){
+    fun saveLobbyModel(model: LobbyModel,id : String){
         _lobbyModel.postValue(model)
+        myRef.child(id).setValue(model)
     }
 
     fun fetchLobbyModel(){
-        GameData.gameModel.value?.apply {
-            GameData.myRef.addValueEventListener(lobbyListener)
+        lobbyModel.value?.apply {
+            myRef.addValueEventListener(lobbyListener)
         }
     }
 
     val lobbyListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val id = GameData.gameModel.value?.gameID
+            val id =  lobbyModel.value?.gameID
             val model = snapshot.child(id ?: "").getValue(LobbyModel::class.java)
             _lobbyModel.postValue(model)
         }

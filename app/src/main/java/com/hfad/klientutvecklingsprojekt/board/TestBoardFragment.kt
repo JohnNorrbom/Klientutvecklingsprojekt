@@ -43,7 +43,7 @@ class TestBoardFragment : Fragment() {
     private var playersRef = playerRef.child("players")
 
     //  meModel
-    private var currentGameID = ""
+    private var localGameID = ""
     private var localPlayerID = ""
     private var meModel: MeModel? = null
 
@@ -58,6 +58,9 @@ class TestBoardFragment : Fragment() {
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+
+    //  minigame
+    private var localRandomVal = -1
 
     //  DICE SOUND
     private val maxStreams = 5 // Number of simultaneous sounds
@@ -109,6 +112,7 @@ class TestBoardFragment : Fragment() {
 
 
         playerRef.addValueEventListener(positionListener)
+        playerRef.addValueEventListener(miniGameListener)
 
         // Inflate the layout for this fragment
         return view
@@ -119,9 +123,9 @@ class TestBoardFragment : Fragment() {
 
     private fun setText() {
         meModel?.apply{
-            currentGameID = gameID ?: ""
+            localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
-            playerRef = database.getReference("Player Data").child(currentGameID)
+            playerRef = database.getReference("Player Data").child(localGameID)
             playersRef = playerRef.child("players")
             binding.playerBlue.visibility = View.GONE
             binding.playerWhite.visibility = View.GONE
@@ -135,7 +139,7 @@ class TestBoardFragment : Fragment() {
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
      */
     private fun paintPlayers() {
-        myRef.child(currentGameID).child("players").get()
+        myRef.child(localGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val color = playerSnapshot.child("color").value.toString()
@@ -155,7 +159,6 @@ class TestBoardFragment : Fragment() {
                     imageView?.let { view ->
                         //make player imageView visible
                         view.visibility = View.VISIBLE
-
 
                         //take player imageView same pos as corresponding tile
                         val tileId = position % 20 + 1
@@ -237,11 +240,13 @@ class TestBoardFragment : Fragment() {
             if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 15){
                 //minigame
                 //  Pick random game
-                val randomVal = Random.nextInt(4)
+                localRandomVal = Random.nextInt(4)
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
-
+                boardModel?.apply {
+                    boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
+                }
             }
             playerModel?.apply {
                 position = currentImageViewIndex
@@ -253,27 +258,48 @@ class TestBoardFragment : Fragment() {
             binding.diceButton.visibility = View.GONE
         }
     }
-
+    override fun onPause() {
+        super.onPause()
+        Log.d("testing", "onPause" + currentImageViewIndex)
+    }
     override fun onResume() {
         super.onResume()
+        // currentImageViewIndex = playerModel localPlayerID position
 
+        Log.d("testing", "onResume" + currentImageViewIndex)
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
-    private fun setMinigame(randomVal: Int) {
+    private fun setMiniGame(randomVal: Int) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (randomVal == 0) {
+            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
         } else if (randomVal == 1) {
             println("SOCCER GAME FERDINAND")
+            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
         } else if (randomVal == 2) {
             println("QUIZ GAME PONTUS")
+            this.localRandomVal = -1
             view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
         } else {
             println("ROULETTE WILLIAM")
+            this.localRandomVal = -1
             view.findNavController()
                 .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+        }
+    }
+    private val miniGameListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            println("Went in to miniGameListener")
+            if(localRandomVal != -1) {
+                setMiniGame(localRandomVal)
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
         }
     }
 
@@ -286,12 +312,11 @@ class TestBoardFragment : Fragment() {
         override fun onCancelled(error: DatabaseError) {
             TODO("Not yet implemented")
         }
-
     }
 
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
+            boardRef.child(localGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
                 val currentPlayerId = dataSnapshot.value
                 println("comparing localPlayerId $localPlayerID to currentPlayerId $currentPlayerId")
                 if (currentPlayerId == localPlayerID){
@@ -301,7 +326,6 @@ class TestBoardFragment : Fragment() {
                     binding.diceButton.visibility  = View.INVISIBLE
                 }
             }
-
         }
         override fun onCancelled(error: DatabaseError) {
         }
@@ -316,7 +340,7 @@ class TestBoardFragment : Fragment() {
     }
     fun assignNextCurrentPlayer() {
         var playerIDarr = arrayListOf<String>()
-        myRef.child(currentGameID).child("players").get()
+        myRef.child(localGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val playerID = playerSnapshot.child("playerID").value.toString()
@@ -329,7 +353,7 @@ class TestBoardFragment : Fragment() {
 
                     if (index != -1) {
                         index = if (index < playerIDarr.size - 1) index + 1 else 0
-                        boardRef.child(currentGameID).child("currentPlayerId").setValue(playerIDarr[index])
+                        boardRef.child(localGameID).child("currentPlayerId").setValue(playerIDarr[index])
                     } else {
                         println("Error: currentPlayerID not found in arrList")
                     }

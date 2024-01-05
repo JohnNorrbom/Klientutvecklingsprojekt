@@ -48,7 +48,7 @@ class TestBoardFragment : Fragment() {
 
     //  meModel
     private var currentGameID = ""
-    private var currentPlayerID = ""
+    private var localPlayerID = ""
     private var meModel: MeModel? = null
 
     //boardModel
@@ -126,7 +126,7 @@ class TestBoardFragment : Fragment() {
     private fun setText() {
         meModel?.apply{
             currentGameID = gameID ?: ""
-            currentPlayerID = playerID ?: ""
+            localPlayerID = playerID ?: ""
             playerRef = database.getReference("Player Data").child(currentGameID)
             playersRef = playerRef.child("players")
             binding.playerBlue.visibility = View.GONE
@@ -221,7 +221,7 @@ class TestBoardFragment : Fragment() {
 
             playerModel?.apply {
                 position = currentImageViewIndex
-                playersRef.child(currentPlayerID).child("position").setValue(position)
+                playersRef.child(localPlayerID).child("position").setValue(position)
             }
             paintPlayers()
             assignNextCurrentPlayer()
@@ -248,8 +248,11 @@ class TestBoardFragment : Fragment() {
 
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener {
-                if (it.toString() == currentPlayerID){
+            boardRef.child(currentGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
+                val currentPlayerId = dataSnapshot.value
+                println("comparing localPlayerId $localPlayerID to currentPlayerId $currentPlayerId")
+                if (currentPlayerId == localPlayerID){
+                    println("went in to boardListener with localPlayerID = $localPlayerID and it = $currentPlayerId")
                     binding.diceButton.visibility = View.VISIBLE
                 }
             }
@@ -277,9 +280,9 @@ class TestBoardFragment : Fragment() {
                     val playerID = playerSnapshot.child("playerID").value.toString()
                     println("SOMEONES PLAYER ID $playerID")
                     playerIDarr.add(playerID)
-                    println("Current Player ID: $currentPlayerID")
+                    println("Current Player ID: $localPlayerID")
 
-                    var index = playerIDarr.indexOf(currentPlayerID)
+                    var index = playerIDarr.indexOf(localPlayerID)
                     println("Index before adjustment: $index")
 
                     if (index != -1) {

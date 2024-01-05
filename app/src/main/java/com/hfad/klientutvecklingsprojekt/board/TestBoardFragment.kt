@@ -208,24 +208,26 @@ class TestBoardFragment : Fragment() {
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
+            Log.d("testing", currentPlayerID + (meModel?.playerID ?: 0))
+            if(currentPlayerID == meModel?.playerID ?: 0) {
 //            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
-            var destination = "dice" + randomInt
-            val resourceId = resources.getIdentifier(
-                destination,
-                "drawable",
-                "com.hfad.klientutvecklingsprojekt"
-            )
-            binding.diceButton?.setImageResource(resourceId)
-            currentImageViewIndex += randomInt
+                var randomInt = Random.nextInt(6) + 1
+                var destination = "dice" + randomInt
+                val resourceId = resources.getIdentifier(
+                    destination,
+                    "drawable",
+                    "com.hfad.klientutvecklingsprojekt"
+                )
+                binding.diceButton?.setImageResource(resourceId)
+                currentImageViewIndex += randomInt
 
-            playerModel?.apply {
-                position = currentImageViewIndex
-                playersRef.child(currentPlayerID).child("position").setValue(position)
+                playerModel?.apply {
+                    position = currentImageViewIndex
+                    playersRef.child(currentPlayerID).child("position").setValue(position)
+                }
+                paintPlayers()
+                assignNextCurrentPlayer()
             }
-            paintPlayers()
-            assignNextCurrentPlayer()
-            binding.diceButton.visibility = View.GONE
         }
     }
 

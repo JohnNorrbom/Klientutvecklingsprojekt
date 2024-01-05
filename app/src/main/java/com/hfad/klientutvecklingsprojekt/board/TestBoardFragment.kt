@@ -263,7 +263,7 @@ class TestBoardFragment : Fragment() {
     private fun setMiniGame(randomVal: Int) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (randomVal == 0) {
-            view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
         } else if (randomVal == 1) {
             println("SOCCER GAME FERDINAND")
             view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)

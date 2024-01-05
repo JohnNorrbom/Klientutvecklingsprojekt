@@ -127,7 +127,7 @@ class LobbyFragment : Fragment() {
                     val lobbyData = dataSnapshot.getValue()
                     println("VÄRDET PÅ LOBBYDATA " + lobbyData)
                     println(lobbyData == "true")
-                    if(lobbyData == "true"){
+                    if(lobbyData == true){
                         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
                     }
                 }

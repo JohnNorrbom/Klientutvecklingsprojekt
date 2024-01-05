@@ -42,10 +42,12 @@ class GavleRouletteFragment : Fragment(){
         RouletteData.rouletteModel.observe(this) {rouletteModel ->
             Log.d("GavleRouletteFragment", "Observing rouletteModel: $rouletteModel")
             rouletteModel?.let {
-                this@GavleRouletteFragment.rouletteModel = it
-                setUi()
-            } ?: run {
-                Log.e("GavleRouletteFragment", "rouletteModel is null")
+                if (it.gameId.equals(null)){
+                    Log.e("GavleRouletteFragment", "rouletteModel is null")
+                }else{
+                    this@GavleRouletteFragment.rouletteModel = it
+                    setUi()
+                }
             }
         }
 
@@ -75,22 +77,21 @@ class GavleRouletteFragment : Fragment(){
     }
     fun setText(){
         //den här
-        localGameID= meModel?.gameID?:""
+        localGameID = meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
         Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
-
-        lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-            localPlayerID = it.child(meModel?.playerID ?: "").child("nickname").value.toString()
-        }
     }
 
     fun setUi() {
         rouletteModel?.apply {
+            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+
 
             binding.gameStatusText.text =
                 when (gameStatus) {
 
                     GameStatus.INPROGRESS -> {
+                        var text = ""
                         if (laps == 0) {
                             val resId = resources.getIdentifier(
                                 "chamber",
@@ -101,30 +102,35 @@ class GavleRouletteFragment : Fragment(){
                             binding.test.text = luckyNumber?.get(0)
                             setPlayerInfo()
                         }
-                        when(localPlayerID){
-                            currentPlayer -> "Your turn"
-                            else -> currentPlayer + " turn"
+                        when (localPlayerID) {
+                            currentPlayer -> text = "Your turn"
+                            else -> text = it.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
+
                         }
+                        text
                     }
 
                     GameStatus.FINISHED -> {
-                        when(localPlayerID){
-                            winner -> "You won"
-                            else -> winner + " won"
+                        var text = ""
+                        when (localPlayerID) {
+                            winner -> text = "You won"
+                            else -> text =
+                                it.child(winner ?: "").child("nickname").value.toString() + " won"
                         }
-
+                        text
                     }
 
-                    else -> {return}
+                    else -> {return@addOnSuccessListener}
                 }
+            }
         }
     }
     fun onTriggerPulled(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
                 Log.d("localPlayerID","${localPlayerID}")
-                Log.d("localPlayerID","${currentPlayer}")
-                if(localPlayerID != currentPlayer){
+                Log.d("localPlayerID","${rouletteModel?.currentPlayer}")
+                if(localPlayerID != rouletteModel?.currentPlayer){
                     Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                     return@addOnSuccessListener
                 }else{
@@ -144,41 +150,40 @@ class GavleRouletteFragment : Fragment(){
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
                 val snapshot = it
-                for(player in snapshot.children){
-                   var index = (players?.keys?.indexOf(player.key.toString())?.plus(1)).toString()
-                    Log.d("player i setPlayerInfo","${player.child("color").value}")
-                    Log.d("player index setPlayerInfo","${index}")
-                    val resId = resources.getIdentifier(
-                        "astro_${player.child("color").value.toString()}",
-                        "drawable",
-                        requireContext().packageName
-                    )
-                    //get id for Imageview
-                    val astroId = resources.getIdentifier(
-                        "player_${index}",
-                        "id",
-                        requireContext().packageName
-                    )
+                   players?.onEachIndexed { index, entry ->
+                       Log.d("player i setPlayerInfo","${snapshot.child(players?.keys?.elementAt(index) ?:"").child("color").value}")
+                       Log.d("player index setPlayerInfo","${index+1}")
+                       val resId = resources.getIdentifier(
+                           "astro_${snapshot.child(players?.keys?.elementAt(index) ?:"").child("color").value.toString()}",
+                           "drawable",
+                           requireContext().packageName
+                       )
+                       //get id for Imageview
+                       val astroId = resources.getIdentifier(
+                           "player_${index+1}",
+                           "id",
+                           requireContext().packageName
+                       )
 
-                    // change imageView
-                    val characterImageView =
-                        binding.root.findViewById<ImageView>(astroId)
-                    Log.d("resId", "${resId}")
-                    Log.d("astroId", "${astroId}")
-                    Log.d("characterImageView", "${characterImageView}")
-                    characterImageView.setImageResource(resId)
-                    characterImageView.visibility = View.VISIBLE
+                       // change imageView
+                       val characterImageView =
+                           binding.root.findViewById<ImageView>(astroId)
+                       Log.d("resId", "${resId}")
+                       Log.d("astroId", "${astroId}")
+                       Log.d("characterImageView", "${characterImageView}")
+                       characterImageView.setImageResource(resId)
+                       characterImageView.visibility = View.VISIBLE
 
-                    // get id for radio button and makes it visible
-                    val textId = resources.getIdentifier(
-                        "player_${index}_text",
-                        "id",
-                        requireContext().packageName
-                    )
-                    val text = binding.root.findViewById<TextView>(textId)
-                    text.text = player.child("nickname").value.toString()
-                    text.visibility = View.VISIBLE
-                }
+                       // get id for radio button and makes it visible
+                       val textId = resources.getIdentifier(
+                           "player_${index+1}_text",
+                           "id",
+                           requireContext().packageName
+                       )
+                       val text = binding.root.findViewById<TextView>(textId)
+                       text.text = snapshot.child(players?.keys?.elementAt(index) ?:"").child("nickname").value.toString()
+                       text.visibility = View.VISIBLE
+                   }
             }
         }
     }
@@ -276,7 +281,9 @@ class GavleRouletteFragment : Fragment(){
                     if (newIndex == players?.size) {
                         newIndex = 0
                     }
-                    currentPlayer = it.child(players?.keys?.elementAt(newIndex)?:"").child("nickname").value.toString()
+                    Log.d("current player","${currentPlayer}")
+                    currentPlayer = players?.keys?.elementAt(newIndex)?:""
+                    Log.d("current player","${currentPlayer}")
                     // if player is dead than it changes to the next player until it finds a player thats alive
                 } while (players?.get(currentPlayer ?: "") == PlayerStatus.DEAD)
                 updateGameData(this, localGameID)

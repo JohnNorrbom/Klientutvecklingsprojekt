@@ -15,6 +15,7 @@ object RouletteData {
     var rouletteModel : MutableLiveData<RouletteModel?> = _rouletteModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Roulette")
+    var gameID : String =""
 
 
     fun saveGameModel(model: RouletteModel,id : String){
@@ -30,8 +31,7 @@ object RouletteData {
 
     val rouletteListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val id = rouletteModel.value?.gameId
-            val model = snapshot.child(id ?: "").getValue(RouletteModel::class.java)
+            val model = snapshot.child(gameID).getValue(RouletteModel::class.java)
             _rouletteModel.postValue(model)
         }
 

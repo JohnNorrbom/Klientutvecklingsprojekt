@@ -247,7 +247,6 @@ class TestBoardFragment : Fragment() {
                 position = currentImageViewIndex
                 playersRef.child(currentPlayerID).child("position").setValue(position)
             }
-            paintPlayers()
         }
     }
 
@@ -263,4 +262,5 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
 }

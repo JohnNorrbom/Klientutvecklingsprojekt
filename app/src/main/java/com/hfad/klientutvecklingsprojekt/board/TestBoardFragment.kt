@@ -133,6 +133,10 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
         }
+        playerModel?.apply {
+            localScore = score!!
+            currentImageViewIndex = position!!
+        }
         paintPlayers()
     }
     /*
@@ -202,10 +206,6 @@ class TestBoardFragment : Fragment() {
     }
     fun diceButton() {
 
-        //updates the localScore to the online score
-        //playersRef.child(localPlayerID).child("score").get().addOnSuccessListener { dataSnapshot ->
-          //  localScore = dataSnapshot.value.toString().toInt()
-        //}
 
         //println("LOCALE SCORE "+localScore)
 

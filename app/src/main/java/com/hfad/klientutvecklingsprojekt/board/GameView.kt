@@ -262,26 +262,16 @@ class GameView : ConstraintLayout {
             val randomVal = Random.nextInt(4)
 
             if (randomVal == 0) {
-                println("STEN SAX PÅSE")
-                var id = meModel?.gameID
-                Log.d("Game ID", "${id}")
-                Log.d("Player ID", "${meModel?.playerID}")
-                StenSaxPaseData.saveGameModel(
-                    StenSaxPaseModel(
-                        gameID = id,
-                        status = false,
-                    )
-                )
 //                view.findNavController().navigate(R.id.action_boardFragment_to_stensaxpaseFragment)
-            } else if (randomVal == 1) {
-                println("SOCCER GAME FERDINAND")
+//            } else if (randomVal == 1) {
+//                println("SOCCER GAME FERDINAND")
 //                view.findNavController().navigate(R.id.action_boardFragment_to_soccerChooseFragment)
-            } else if (randomVal == 2) {
-                println("QUIZ GAME PONTUS")
+//            } else if (randomVal == 2) {
+//                println("QUIZ GAME PONTUS")
 //                view.findNavController().navigate(R.id.action_boardFragment_to_quizFragment)
-            } else {
-                println("ROULETTE WILLIAM")
-                view.findNavController()
+//            } else {
+//                println("ROULETTE WILLIAM")
+//                view.findNavController()
 //                    .navigate(R.id.action_boardFragment_to_gavleRouletteFragment)
             }
         }

@@ -81,8 +81,9 @@ class GameStartFragment : Fragment() {
         BoardData.saveBoardModel(
             BoardModel(
                 gameID = gameId,
-                currentPlayerId = "",
-                playerCount = 0
+                currentPlayerID = "",
+                playerCount = 0,
+                randomVal = -1
             )
         )
         joinLobby()

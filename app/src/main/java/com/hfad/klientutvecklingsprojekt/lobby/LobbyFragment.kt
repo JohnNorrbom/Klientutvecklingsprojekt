@@ -60,6 +60,8 @@ class LobbyFragment : Fragment() {
         LobbyData.fetchLobbyModel()
         PlayerData.fetchPlayerModel()
 
+
+
         //host (first in) will only see startButton
         binding.startButton.visibility = View.GONE
         setHost()
@@ -104,6 +106,22 @@ class LobbyFragment : Fragment() {
         }
         println("Me model in LobbyFragment"+meModel)
         println("GameId in LobbyFragment: " + localGameID)
+
+        var lobbyBtnRef = lobbyRef.child(localGameID)
+        lobbyBtnRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                if (dataSnapshot.exists()) {
+                    val lobbyData = dataSnapshot.getValue()
+                    println(lobbyData)
+                }
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Failed to read value
+                Log.w("YourTag", "Failed to read lobby data.", databaseError.toException())
+            }
+        })
         return view
     }
 
@@ -141,6 +159,7 @@ class LobbyFragment : Fragment() {
 
     fun startGame(){
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        lobbyRef.child(localGameID).child("btnPressed").setValue(true)
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
     }
     fun startRoulette(){
@@ -165,7 +184,7 @@ class LobbyFragment : Fragment() {
                         laps = 0,
                         nbrOfPlayers = myPlayers.size,
                         aliveCount = myPlayers.size,
-                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString(),"","","",""),
+                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
                         currentPlayer = myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))
                     ),localGameID
                 )

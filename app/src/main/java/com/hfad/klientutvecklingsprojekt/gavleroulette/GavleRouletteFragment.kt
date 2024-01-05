@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,8 +12,10 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.player.MeData
@@ -48,8 +51,7 @@ class GavleRouletteFragment : Fragment(){
                 }else{
                     this@GavleRouletteFragment.rouletteModel = it
                     setUi()
-                    addBullet()
-
+                    setPlayerInfo()
                 }
             }
         }
@@ -93,12 +95,12 @@ class GavleRouletteFragment : Fragment(){
                 when (gameStatus) {
                     GameStatus.INPROGRESS -> {
                         if (laps == 0 && attempts == 0) {
-                            setPlayerInfo()
                             val resId = resources.getIdentifier(
                                 "chamber",
                                 "drawable",
                                 requireContext().packageName
                             )
+                            setPlayerInfo()
                             binding.magasinSlot.setImageResource(resId)
                             binding.test.text = luckyNumber?.get(0)
                         }
@@ -116,7 +118,6 @@ class GavleRouletteFragment : Fragment(){
                         }
                         text
                     }
-
                     else -> {return@addOnSuccessListener}
                 }
             }
@@ -130,7 +131,6 @@ class GavleRouletteFragment : Fragment(){
                 Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                 return@addOnSuccessListener
             }else{
-                addBullet()
                 changePlayer()
                 pullTheTrigger()
                 checksForKill()
@@ -140,64 +140,50 @@ class GavleRouletteFragment : Fragment(){
     }
 
     //sets the correct info for each player
-    fun setPlayerInfo(){
+    fun setPlayerInfo() {
         rouletteModel?.apply {
             lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
-                val snapshot = it
-                   players?.onEachIndexed { index, entry ->
-                       Log.d("player i setPlayerInfo","${snapshot.child(players?.keys?.elementAt(index) ?:"").child("color").value}")
-                       Log.d("player index setPlayerInfo","${index+1}")
-                       val player = snapshot.child(players?.keys?.elementAt(index) ?:"").toString()
-                       if (players?.get(player) == PlayerStatus.ALIVE){
-                           val resId = resources.getIdentifier(
-                               "astro_${snapshot.child(players?.get(player).toString()).child("color").value.toString()}",
-                               "drawable",
-                               requireContext().packageName
-                           )
-                           //get id for Imageview
-                           val astroId = resources.getIdentifier(
-                               "player_${index+1}",
-                               "id",
-                               requireContext().packageName
-                           )
+                players?.onEachIndexed { index, entry ->
+                    val snapshot = it
+                    val playerId = players?.keys?.elementAt(index) ?: ""
+                    val status = players?.get(playerId) ?: PlayerStatus.DEAD // Default to DEAD if status is not available
 
-                           // change imageView
-                           val characterImageView =
-                               binding.root.findViewById<ImageView>(astroId)
-                           Log.d("resId", "${resId}")
-                           Log.d("astroId", "${astroId}")
-                           Log.d("characterImageView", "${characterImageView}")
-                           characterImageView.setImageResource(resId)
-                           characterImageView.visibility = View.VISIBLE
+                    val resId = if (status == PlayerStatus.ALIVE) {
+                        Log.d("alive","${status}")
+                        // Alive player image
+                        resources.getIdentifier(
+                            "astro_${snapshot.child(playerId).child("color").value.toString()}",
+                            "drawable",
+                            requireContext().packageName
+                        )
+                    } else {
+                        // Dead player image
+                        Log.d("dead","${status}")
+                        resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
+                    }
 
-                           // get id for radio button and makes it visible
-                           val textId = resources.getIdentifier(
-                               "player_${index+1}_text",
-                               "id",
-                               requireContext().packageName
-                           )
-                           val text = binding.root.findViewById<TextView>(textId)
-                           text.text = snapshot.child(players?.keys?.elementAt(index) ?:"").child("nickname").value.toString()
-                           text.visibility = View.VISIBLE
-                       }else{
-                           val resId = resources.getIdentifier("sceleton", "drawable", requireContext().packageName)
+                    // Get id for ImageView
+                    val astroId = resources.getIdentifier(
+                        "player_${index + 1}",
+                        "id",
+                        requireContext().packageName
+                    )
 
-                           //get id for Imageview
-                           val playerId = resources.getIdentifier(
-                               "player_${index+1}",
-                               "id",
-                               requireContext().packageName
-                           )
+                    // Change ImageView
+                    val characterImageView = binding.root.findViewById<ImageView>(astroId)
+                    characterImageView.setImageResource(resId)
+                    characterImageView.visibility = View.VISIBLE
 
-                           // change imageView
-                           val characterImageView =
-                               binding.root.findViewById<ImageView>(playerId)
-                           Log.d("resId", "${resId}")
-                           Log.d("astroId", "${playerId}")
-                           Log.d("characterImageView", "${characterImageView}")
-                           characterImageView.setImageResource(resId)
-                       }
-                   }
+                    // Get id for radio button and make it visible
+                    val textId = resources.getIdentifier(
+                        "player_${index + 1}_text",
+                        "id",
+                        requireContext().packageName
+                    )
+                    val text = binding.root.findViewById<TextView>(textId)
+                    text.text = snapshot.child(playerId).child("nickname").value.toString()
+                    text.visibility = View.VISIBLE
+                }
             }
         }
     }
@@ -217,54 +203,6 @@ class GavleRouletteFragment : Fragment(){
             }
             binding.test1.text = "current attempts" + attempts.toString()
             binding.test2.text = "total laps " + laps.toString()
-            updateGameData(this,localGameID)
-        }
-    }
-
-    fun addBullet() {
-        rouletteModel?.apply {
-            if (laps == 2 && luckyNumber?.get(1)?.isEmpty() ?: false) {
-                var temp: String
-                do {
-                    temp = (Random.nextInt(6) + 1).toString()
-                } while (temp == luckyNumber?.get(0))
-                luckyNumber?.add(temp)
-                binding.test.text = (luckyNumber?.get(0) + " " + luckyNumber?.get(1) )
-                val resId = resources.getIdentifier("chamber_2_bullet", "drawable", requireContext().packageName)
-                binding.magasinSlot.setImageResource(resId)
-            }
-            if (laps == 3 && luckyNumber?.get(2)?.isEmpty() ?: false) {
-                var temp: String
-                do {
-                    temp = (Random.nextInt(6) + 1).toString()
-                } while (luckyNumber?.contains(temp) ?: true || temp == luckyNumber?.get(2))
-                luckyNumber?.add(temp)
-                binding.test.text = luckyNumber?.get(0) + " " + luckyNumber?.get(1) + " " + luckyNumber?.get(2)
-                val resId = resources.getIdentifier("chamber_3_bullet", "drawable", requireContext().packageName)
-                binding.magasinSlot.setImageResource(resId)
-            }
-            if (laps == 4 && luckyNumber?.get(3)?.isEmpty() ?: false) {
-                var temp: String
-                do {
-                    temp = (Random.nextInt(6) + 1).toString()
-                } while (luckyNumber?.contains(temp) ?: true || temp == luckyNumber?.get(3))
-                luckyNumber?.add(temp)
-                binding.test.text =
-                    luckyNumber?.get(0) + " " + luckyNumber?.get(1) + " " + luckyNumber?.get(2) + " " + luckyNumber?.get(3)
-                val resId = resources.getIdentifier("chamber_4_bullet", "drawable", requireContext().packageName)
-                binding.magasinSlot.setImageResource(resId)
-            }
-            if (laps == 5 && luckyNumber?.get(4)?.isEmpty()?: false) {
-                var temp: String
-                do {
-                    temp = (Random.nextInt(6) + 1).toString()
-                } while (luckyNumber?.contains(temp) ?: true || temp == luckyNumber?.get(4))
-                luckyNumber?.add(temp)
-                binding.test.text =
-                    luckyNumber?.get(0) + " " + luckyNumber?.get(1) + " " + luckyNumber?.get(2) + " " + luckyNumber?.get(3) + " " + luckyNumber?.get(4)
-                val resId = resources.getIdentifier("chamber_5_bullet", "drawable", requireContext().packageName)
-                binding.magasinSlot.setImageResource(resId)
-            }
             updateGameData(this,localGameID)
         }
     }

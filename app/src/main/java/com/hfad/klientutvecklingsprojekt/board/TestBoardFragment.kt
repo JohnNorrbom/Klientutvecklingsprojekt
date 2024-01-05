@@ -232,6 +232,7 @@ class TestBoardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        currentImageViewIndex = playerModel?.position ?: 0
     }
 
     override fun onDestroy() {

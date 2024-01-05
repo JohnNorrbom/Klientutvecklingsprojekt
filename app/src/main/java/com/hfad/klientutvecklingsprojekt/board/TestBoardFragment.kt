@@ -6,15 +6,12 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
-import android.renderscript.Sampler.Value
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -28,7 +25,6 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 // TODO GIVE PLAYING PLAYER CORRECT COLOR
 // TODO GIVE EVERYONE CORRECT COLOR
@@ -58,6 +54,7 @@ class TestBoardFragment : Fragment() {
     // PLAYER
     private var playerModel: PlayerModel? = null
     private var currentImageViewIndex: Int = 0
+    private var localScore: Int = 0
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
@@ -98,9 +95,6 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
-
-
         BoardData.boardModel.observe(this) { boardModel ->
             boardModel?.let {
                 this@TestBoardFragment.boardModel = it
@@ -208,7 +202,7 @@ class TestBoardFragment : Fragment() {
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
-//            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
+            //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
@@ -219,9 +213,31 @@ class TestBoardFragment : Fragment() {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
+            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 16 ){
+                localScore += 1
+            }
+            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 17 ){
+                localScore += 2
+            }
+            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 18 ){
+                localScore += 3
+            }
+            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 19 ){
+                localScore += -5
+            }
+            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 15){
+                //minigame
+                //  Pick random game
+                val randomVal = Random.nextInt(4)
+                //laddauppminigamesiffra,
+                //gör en listener som kallar på setMinigame
+                // currentPlayer startar minigame
+
+            }
             playerModel?.apply {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
+                playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
             paintPlayers()
             assignNextCurrentPlayer()
@@ -231,7 +247,25 @@ class TestBoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    }
+
+    private fun setMinigame(randomVal: Int) {
+        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (randomVal == 0) {
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_stensaxpaseFragment)
+        } else if (randomVal == 1) {
+            println("SOCCER GAME FERDINAND")
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+        } else if (randomVal == 2) {
+            println("QUIZ GAME PONTUS")
+            view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+        } else {
+            println("ROULETTE WILLIAM")
+            view.findNavController()
+                .navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+        }
     }
 
     private val positionListener = object : ValueEventListener {

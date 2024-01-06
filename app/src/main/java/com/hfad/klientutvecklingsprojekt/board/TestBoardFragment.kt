@@ -247,19 +247,19 @@ class TestBoardFragment : Fragment() {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
-            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 16 ){
+            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 15 ){
                 localScore += 1
             }
-            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 17 ){
+            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 16 ){
                 localScore += 2
             }
-            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 18 ){
+            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 17 ){
                 localScore += 3
             }
-            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 19 ){
+            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 18 ){
                 localScore += -5
             }
-            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 15){
+            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 19){
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)

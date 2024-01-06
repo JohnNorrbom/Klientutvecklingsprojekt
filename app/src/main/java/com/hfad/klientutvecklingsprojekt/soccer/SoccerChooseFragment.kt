@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerChooseBinding
@@ -15,6 +17,7 @@ import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.gamestart.Progress
+import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData.myRef
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
@@ -31,8 +34,12 @@ class SoccerChooseFragment : Fragment() {
     //meModel
     private var meModel : MeModel?= null//den här
 
+    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Player Data")
+
     //Here you should get your color from meDataModel or boardModel
     private var yourColor: String  = "white"
+    private var yourId: String = "-1"
 
     //Here you should get the other colors from boardModel
     private var otherColors = arrayListOf("blue", "red", "yellow", "green")
@@ -50,41 +57,24 @@ class SoccerChooseFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerChooseBinding.inflate(inflater,container,false)
 
-//den här
-        MeData.meModel.observe(this) { meModel ->
-            meModel?.let {
-                this@SoccerChooseFragment.meModel = it
-                setValues()
-                getYourColor()
-                otherColors()
-            } ?: run {
-                Log.e("LobbyFragment", "meModel is null")
-            }
-        }
-
         binding.astroBlue.visibility = View.GONE
         binding.astroWhite.visibility = View.GONE
         binding.astroGreen.visibility = View.GONE
         binding.astroRed.visibility = View.GONE
         binding.astroYellow.visibility = View.GONE
+//den här
+        MeData.meModel.observe(this) { meModel ->
+            meModel?.let {
+                this@SoccerChooseFragment.meModel = it
+                setValues()
+                otherColors()
 
-        for (color: String in otherColors){
-            if(color == "blue"){
-                binding.astroBlue.visibility = View.VISIBLE
-            }
-            if(color == "white"){
-                binding.astroWhite.visibility = View.VISIBLE
-            }
-            if(color == "green"){
-                binding.astroGreen.visibility = View.VISIBLE
-            }
-            if(color == "red"){
-                binding.astroRed.visibility = View.VISIBLE
-            }
-            if(color == "yellow"){
-                binding.astroYellow.visibility = View.VISIBLE
+            } ?: run {
+                Log.e("LobbyFragment", "meModel is null")
             }
         }
+
+
 
         binding.astroBlue.setOnClickListener {
             if(yourColor != "blue"){
@@ -117,7 +107,9 @@ class SoccerChooseFragment : Fragment() {
             view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
         }
     }
+
         val view = binding.root
+
 
         return view
     }
@@ -125,23 +117,58 @@ class SoccerChooseFragment : Fragment() {
 //TODO MÅSTE ÄNDRAS
     fun createSoccerGame(p2Color: String, gameId: String){
         SoccerData.saveSoccerModel(
-            SoccerModel(gameId,0,0,"","", yourColor,p2Color,false)
+            SoccerModel(gameId,0,0,"","", yourColor,p2Color,false, yourId)
         )
     }
 
+    fun setColorButtonVisible(){
+        for (color in otherColors){
+            if(color == "blue" && yourColor != "blue"){
+                binding.astroBlue.visibility = View.VISIBLE
+            }
+            if(color == "white"&& yourColor != "white"){
+                binding.astroWhite.visibility = View.VISIBLE
+            }
+            if(color == "green" && yourColor != "green"){
+                binding.astroGreen.visibility = View.VISIBLE
+            }
+            if(color == "red"&& yourColor != "red"){
+                binding.astroRed.visibility = View.VISIBLE
+            }
+            if(color == "yellow"&& yourColor != "yellow"){
+                binding.astroYellow.visibility = View.VISIBLE
+            }
+        }
+    }
 
     fun setValues(){
         meModel?.apply {
             gameId = gameID?:""
+            yourId = playerID?:""
         }
-        println("gameid: "+gameId)
+
+
 
     }
-    fun getYourColor(){
-
+    fun getYourData(){
     }
 
     fun otherColors(){
+        otherColors = arrayListOf()
+        var colorArr = arrayListOf<String>()
+        myRef.child(gameId).child("players").get()
+            .addOnSuccessListener { dataSnapshot ->
+                dataSnapshot.children.forEach { playerSnapshot ->
+                    val playerId = playerSnapshot.child("playerID").value.toString()
+                    val color = playerSnapshot.child("color").value.toString()
+                    if(playerId == yourId){
+                        yourColor = color
+                    }
+                    otherColors.add(color)
+                }
+                setColorButtonVisible()
+            }
+
 
     }
 

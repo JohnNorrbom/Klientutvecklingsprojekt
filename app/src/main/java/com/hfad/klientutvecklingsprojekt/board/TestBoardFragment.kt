@@ -137,9 +137,36 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
             paintPlayers()
+            setMiniGameListener()
         }
     }
 
+    fun setMiniGameListener() {
+        val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
+        boardMiniGameRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                println(dataSnapshot.getValue())
+                if (dataSnapshot.exists()) {
+                    val miniGameNmbr = dataSnapshot.getValue()
+                    if(miniGameNmbr == 0){
+                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        println("sten sax pase vald")
+                    } else if(miniGameNmbr == 1) {
+                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                        println("soccer vald")
+                    } else if(miniGameNmbr == 2) {
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                    } else if(miniGameNmbr == 3){
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Failed to read value
+                Log.w("YourTag", "Failed to read board data.", databaseError.toException())
+            }
+        })
+    }
 
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
@@ -220,28 +247,27 @@ class TestBoardFragment : Fragment() {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
-            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 16 ){
+            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 15 ){
                 localScore += 1
             }
-            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 17 ){
+            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 16 ){
                 localScore += 2
             }
-            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 18 ){
+            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 17 ){
                 localScore += 3
             }
-            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 19 ){
+            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 18 ){
                 localScore += -5
             }
-            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 15){
+            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 19){
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
-                boardModel?.apply {
-                    boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
-                }
+                println("gameID: $localGameID entering mini-game: $localRandomVal")
+                boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
             }
             playerModel?.apply {
                 position = currentImageViewIndex

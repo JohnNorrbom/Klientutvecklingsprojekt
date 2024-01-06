@@ -266,9 +266,8 @@ class TestBoardFragment : Fragment() {
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
-                //boardModel?.apply {
-                    boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
-                //}
+                println("gameID: $localGameID entering mini-game: $localRandomVal")
+                boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
             }
             playerModel?.apply {
                 position = currentImageViewIndex

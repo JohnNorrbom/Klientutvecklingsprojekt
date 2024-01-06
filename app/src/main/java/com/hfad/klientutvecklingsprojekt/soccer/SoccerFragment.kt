@@ -3,6 +3,8 @@ package com.hfad.klientutvecklingsprojekt.soccer
 import android.graphics.drawable.AnimationDrawable
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -19,9 +21,9 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
-import com.hfad.klientutvecklingsprojekt.player.MeData.meModel
 import com.hfad.klientutvecklingsprojekt.player.MeModel
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
+import kotlinx.coroutines.delay
+import kotlin.concurrent.thread
 
 class SoccerFragment : Fragment() {
 
@@ -35,7 +37,6 @@ class SoccerFragment : Fragment() {
     private var goalieColor = "yellow"
     private var shooterColor = "red"
     var text: String = ""
-    private var yourColor = ""
     private var yourId = ""
 
 
@@ -45,7 +46,6 @@ class SoccerFragment : Fragment() {
 
     //meModel
     private var meModel : MeModel? = null
-
 
     //online variables
     private var localP1Id = ""
@@ -68,26 +68,24 @@ class SoccerFragment : Fragment() {
     private var p1IsReady: Boolean = false
     private var p2IsReady: Boolean = false
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
-        SoccerData.fetchSoccerModel()
+
         MeData.meModel.observe(this){
             meModel = it
             retrieveYourId()
+            SoccerData.fetchSoccerModel()
             SoccerData.soccerModel.observe(this) {
                 soccerModel = it
-                setValues()
+
             }
+            setValues()
         }
 
 
-        myRef.child("p1Choice").addValueEventListener(p1Listener)
-        myRef.child("p2Choice").addValueEventListener(p2Listener)
-        myRef.child("bothPlayerReady").addValueEventListener(bothReadyListener)
         return view
     }
 
@@ -96,14 +94,25 @@ class SoccerFragment : Fragment() {
             yourId = playerID.toString()
             localGameId = gameID.toString()
             println("retrieve your id: yourid: " + yourId)
+            myRef.child(localGameId).child("p1Choice").addValueEventListener(p1Listener)
+            myRef.child(localGameId).child("p2Choice").addValueEventListener(p2Listener)
+            myRef.child(localGameId).child("bothPlayerReady").addValueEventListener(bothReadyListener)
         }
     }
 
     private val p1Listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            myRef.child("p1Choice").get().addOnSuccessListener { dataSnapshot ->
-                p1Choice = dataSnapshot.value.toString()
-                p1IsReady = true
+            myRef.child(localGameId).child("p1Choice").get().addOnSuccessListener { dataSnapshot ->
+                println("what p1Choice is: "+dataSnapshot.value.toString())
+                if(dataSnapshot.value.toString() != "" && !p1IsReady){
+                    println("p1Listener: p1 is ready")
+                    p1Choice = dataSnapshot.value.toString()
+                    p1IsReady = true
+                    println("player1 is ready: "+p1IsReady)
+                    if(p2IsReady){
+                        myRef.child(localGameId).child("bothPlayerReady").setValue(true)
+                    }
+                }
             }
         }
         override fun onCancelled(error: DatabaseError) {
@@ -112,9 +121,17 @@ class SoccerFragment : Fragment() {
 
     private val p2Listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            myRef.child("p2Choice").get().addOnSuccessListener { dataSnapshot ->
-                p2Choice = dataSnapshot.value.toString()
-                p2IsReady = true
+            myRef.child(localGameId).child("p2Choice").get().addOnSuccessListener { dataSnapshot ->
+                println("what p2Choice is: "+dataSnapshot.value.toString())
+                println("player2 is ready: "+p2IsReady)
+                if(dataSnapshot.value.toString() != "" && !p2IsReady){
+                    println("p2listener: p2 is ready")
+                    p2Choice = dataSnapshot.value.toString()
+                    p2IsReady = true
+                    if(p1IsReady){
+                        myRef.child(localGameId).child("bothPlayerReady").setValue(true)
+                    }
+                }
             }
         }
         override fun onCancelled(error: DatabaseError) {
@@ -122,10 +139,12 @@ class SoccerFragment : Fragment() {
     }
     private val bothReadyListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            myRef.child("bothPlayerReady").get().addOnSuccessListener { dataSnapshot ->
+            myRef.child(localGameId).child("bothPlayerReady").get().addOnSuccessListener { dataSnapshot ->
                 if(dataSnapshot.value.toString().toBoolean()){
                     println("Both player is ready")
                     bothIsReady = true
+                    doMove()
+
                 }else{
                     //RESETS THE "READINESS"
                     bothIsReady = false
@@ -150,30 +169,17 @@ class SoccerFragment : Fragment() {
                 localP1Id = dataSnapshot.child("p1Id").value.toString()
                 localP2Id = dataSnapshot.child("p2Id").value.toString()
                 setPlayerValues()
+                var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
+                Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
+                binding.goalie.setImageResource(resourceId)
+                var resourceId2 = resources.getIdentifier("z" + shooterColor +"leftmiss", "drawable", "com.hfad.klientutvecklingsprojekt")
+                Log.d("shooterAnimation", "z" + shooterColor +"leftmiss")
+                binding.shooterMiss.setImageResource(resourceId2)
             }
 
         println("setvalues: shootercolor: " + shooterColor + " goalieColor: " + goalieColor)
         println("setvalues: p1Id: " + localP1Id + "p2Id: " + localP2Id)
 
-/*
-        soccerModel?.apply {
-            shooterColor = p1Color.toString()
-            goalieColor = p2Color.toString()
-            localP1Id = p1Id.toString()
-            localP2Id = p2Id.toString()
-            localGameId = gameID.toString()
-
-        }
-
-
- */
-
-        var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
-        Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
-        binding.goalie.setImageResource(resourceId)
-        var resourceId2 = resources.getIdentifier("z" + shooterColor +"leftmiss", "drawable", "com.hfad.klientutvecklingsprojekt")
-        Log.d("shooterAnimation", "z" + shooterColor +"leftmiss")
-        binding.shooterMiss.setImageResource(resourceId2)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -189,29 +195,15 @@ class SoccerFragment : Fragment() {
 
 
         binding.leftButton.setOnClickListener {
-
-            println("--------setonclicklistener-------")
-            println("your id: " + yourId)
-            println("your color: " + yourColor)
-            println("you are player1: " + youArePlayerOne)
-            println("you are player2: " + youArePlayerTwo)
-            println("--------setonclicklistener-------")
-
-            soccerViewModel.leftButtonClick(youArePlayerOne)
             sendChoiceOnline("left")
-            doAnimation(soccerViewModel)
             binding.bottomButtons.visibility = View.INVISIBLE
         }
         binding.rightButton.setOnClickListener {
-            soccerViewModel.rightButtonClick(youArePlayerOne)
             sendChoiceOnline("right")
-            doAnimation(soccerViewModel)
             binding.bottomButtons.visibility = View.INVISIBLE
         }
         binding.midButton.setOnClickListener {
-            soccerViewModel.midButtonClick(youArePlayerOne)
             sendChoiceOnline("mid")
-            doAnimation(soccerViewModel)
             binding.bottomButtons.visibility = View.INVISIBLE
         }
 
@@ -219,11 +211,44 @@ class SoccerFragment : Fragment() {
 
     }
 
+    fun doMove(){
+        if (p1Choice == "left"){
+            soccerViewModel.leftButtonClick(1)
+        }
+        if (p1Choice == "mid"){
+            soccerViewModel.midButtonClick(1)
+        }
+        if (p1Choice == "right"){
+            soccerViewModel.rightButtonClick(1)
+        }
+        if (p2Choice == "left"){
+            soccerViewModel.leftButtonClick(2)
+        }
+        if (p2Choice == "mid"){
+            soccerViewModel.midButtonClick(2)
+        }
+        if (p2Choice == "right"){
+            soccerViewModel.rightButtonClick(2)
+        }
+        soccerViewModel.startRound()
+
+        doAnimation(soccerViewModel)
+
+        if(youArePlayerOne || youArePlayerTwo){
+            binding.bottomButtons.visibility = View.VISIBLE
+            myRef.child(localGameId).child("bothPlayerReady").setValue(false)
+            myRef.child(localGameId).child("p1Choice").setValue("")
+            myRef.child(localGameId).child("p2Choice").setValue("")
+            p1IsReady = false
+            p2IsReady = false
+        }
+        updateScoreBoard()
+    }
+
     fun setPlayerValues(){
         println("shooter: "+ shooterColor)
         println("UNDER SHOULD BE YOUR COLOR")
         println("your id: " + yourId)
-        println("yourColor "+ yourColor)
         println("goalie: "+ goalieColor)
 
         //sets player1 and 2 locally  (p1 starts as shooter)
@@ -241,6 +266,31 @@ class SoccerFragment : Fragment() {
         soccerViewModel.setColors(shooterColor,goalieColor, 1)
     }
 
+    fun updateScoreBoard(){
+        val handler = Handler(Looper.getMainLooper())
+
+        handler.postDelayed({
+            binding.scoreBoard.text = "" + soccerViewModel.p1Points + "-" + soccerViewModel.p2Points + " "
+        }, 2000)
+        handler.postDelayed({
+            if (soccerViewModel.p2Points == 3 || soccerViewModel.p1Points == 3){
+                binding.finalScorePoint.visibility = View.VISIBLE
+                binding.finishedGameButton.visibility = View.VISIBLE
+                binding.finishedGameScreen.visibility = View.VISIBLE
+                if(soccerViewModel.p2Points == 3){
+                    binding.finalScorePoint.text = "" + soccerViewModel.getEnemyColor() + " won!"
+                }
+                if(soccerViewModel.p1Points == 3){
+                    binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
+                }
+                binding.finishedGameButton.setOnClickListener {
+                    findNavController().popBackStack()
+                }
+            }
+
+        }, 2000)
+    }
+
 
     fun checkOtherPlayerReady() {
         soccerModel?.apply {
@@ -251,16 +301,14 @@ class SoccerFragment : Fragment() {
 
 
     fun sendChoiceOnline(choice: String){
+        println("Send choice online")
         if (youArePlayerOne){
-            soccerModel?.apply {
-                p1Choice = choice
-                SoccerData.updateSoccerData(this)
-            }
-        }else{
-            soccerModel?.apply {
-                p2Choice = choice
-                SoccerData.updateSoccerData(this)
-            }
+                println("Send choice online as p1")
+                myRef.child(localGameId).child("p1Choice").setValue(choice)
+        }
+        if(youArePlayerTwo){
+                println("Send choice online as p2")
+                myRef.child(localGameId).child("p2Choice").setValue(choice)
         }
     }
 
@@ -304,25 +352,13 @@ class SoccerFragment : Fragment() {
                 binding.goalie.setImageResource(resourceId)
                 var goalieAnimation  = binding.goalie.drawable as AnimationDrawable
                 goalieAnimation.start()
-
             }
+
 
             soccerViewModel.switchType()
 
-            if (soccerViewModel.enemyPoints == 3 || soccerViewModel.points == 3){
-                binding.finalScorePoint.visibility = View.VISIBLE
-                binding.finishedGameButton.visibility = View.VISIBLE
-                binding.finishedGameScreen.visibility = View.VISIBLE
-                if(soccerViewModel.enemyPoints == 3){
-                    binding.finalScorePoint.text = "" + soccerViewModel.getEnemyColor() + " won!"
-                }
-                if(soccerViewModel.points == 3){
-                    binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
-                }
-                binding.finishedGameButton.setOnClickListener {
-                    findNavController().popBackStack()
-                }
-            }
+            val handler = Handler(Looper.getMainLooper())
+
             if(youArePlayerOne || youArePlayerTwo){
                 binding.bottomButtons.visibility = View.VISIBLE
             }

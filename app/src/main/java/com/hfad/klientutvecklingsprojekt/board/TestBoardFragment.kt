@@ -204,10 +204,10 @@ class TestBoardFragment : Fragment() {
      */
     // Function to get text for a leaderboard entry
     fun getLeaderText(index: Int): String {
-        return if (index < leaderboardList.size) {
+        return if (index in 0 until leaderboardList.size) {
             "${leaderboardList[index].first} ${leaderboardList[index].second}"
         } else {
-            "" // Empty string if index is out of bounds
+            "N/A" // Provide a default value or handle the empty list scenario
         }
     }
     private fun paintPlayers() {

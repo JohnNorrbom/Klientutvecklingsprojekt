@@ -152,7 +152,6 @@ class TestBoardFragment : Fragment() {
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
                 }
 
-
             val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -165,10 +164,12 @@ class TestBoardFragment : Fragment() {
                                 activity?.requestedOrientation =
                                     ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
-                                if (localCurrentPlayerTest == localPlayerID) view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                                else view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                                if (localCurrentPlayerTest == localPlayerID) {
+                                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                }
+                                else {
+                                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                                }
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
                                 activity?.requestedOrientation =

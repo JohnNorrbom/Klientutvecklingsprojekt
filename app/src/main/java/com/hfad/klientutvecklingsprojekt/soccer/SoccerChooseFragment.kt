@@ -38,14 +38,17 @@ class SoccerChooseFragment : Fragment() {
     private val myRef = database.getReference("Player Data")
 
     //Here you should get your color from meDataModel or boardModel
-    private var yourColor: String  = "white"
+    private var yourColor: String  = ""
     private var yourId: String = "-1"
 
     //Here you should get the other colors from boardModel
-    private var otherColors = arrayListOf("blue", "red", "yellow", "green")
+    private var otherColors = arrayListOf("")
 
     //id for other players
     private var otherIds = arrayListOf("-1")
+
+    //othermap is hashmap of otherids and othercolors
+    private var otherMap = hashMapOf<String,String>()
 
     //here you should get the id from boardModel
     private var gameId: String = Random.nextInt(1000..9999).toString()
@@ -120,7 +123,7 @@ class SoccerChooseFragment : Fragment() {
 //TODO MÅSTE ÄNDRAS
     fun createSoccerGame(p2Color: String, gameId: String){
         SoccerData.saveSoccerModel(
-            SoccerModel(gameId,0,0,"","", yourColor,p2Color,false, yourId)
+            SoccerModel(gameId,0,0,"","", yourColor,p2Color,false, yourId, otherMap.get(p2Color))
         )
     }
 
@@ -170,6 +173,7 @@ class SoccerChooseFragment : Fragment() {
                     }
                     otherColors.add(color)
                     otherIds.add(playerId)
+                    otherMap.set(color,playerId)
                 }
                 setColorButtonVisible()
             }

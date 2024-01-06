@@ -386,10 +386,12 @@ class TestBoardFragment : Fragment() {
     fun assignNextCurrentPlayer() {
         var playerIDarr = arrayListOf<String>()
         myRef.child(localGameID).child("players").get()
-            .addOnSuccessListener { dataSnapshot ->
-                dataSnapshot.children.forEach { playerSnapshot ->
-                    val playerID = playerSnapshot.child("playerID").value.toString()
+            .addOnSuccessListener {
+                val snapshot = it
+                for(player in snapshot.children) {
+                    val playerID = player.child("playerID").value.toString()
                     playerIDarr.add(playerID)
+                }
 
                     var index = playerIDarr.indexOf(localPlayerID)
 
@@ -400,7 +402,6 @@ class TestBoardFragment : Fragment() {
                         println("Error: currentPlayerID not found in arrList")
                     }
                 }
-            }
             .addOnFailureListener { exception ->
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }

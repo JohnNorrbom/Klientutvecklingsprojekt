@@ -60,6 +60,9 @@
             android:name="opponentID"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_stensaxpaseFragment_to_testBoardFragment"
+            app:destination="@id/testBoardFragment" />
     </fragment>
     <fragment
         android:id="@+id/playerInfoFragment"
@@ -101,7 +104,11 @@
         android:id="@+id/quizFragment"
         android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizFragment"
         android:label="fragment_quiz"
-        tools:layout="@layout/fragment_quiz" />
+        tools:layout="@layout/fragment_quiz" >
+        <action
+            android:id="@+id/action_quizFragment_to_testBoardFragment"
+            app:destination="@id/testBoardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/soccerChooseFragment"
         android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerChooseFragment"
@@ -123,9 +130,6 @@
             android:id="@+id/action_testBoardFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
         <action
-            android:id="@+id/action_testBoardFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
-        <action
             android:id="@+id/action_testBoardFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
@@ -137,6 +141,9 @@
         <action
             android:id="@+id/action_testBoardFragment_to_stenSaxPaseWaitFragment"
             app:destination="@id/stenSaxPaseWaitFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_waitingSoccerFragment"
+            app:destination="@id/waitingSoccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"

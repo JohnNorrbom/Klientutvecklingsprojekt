@@ -15,7 +15,9 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
-import kotlin.random.Random
+import android.os.Handler
+import androidx.navigation.findNavController
+import com.hfad.klientutvecklingsprojekt.R
 
 class StenSaxPaseFragment : Fragment() {
 
@@ -27,6 +29,11 @@ class StenSaxPaseFragment : Fragment() {
     var currentGameID : String = ""
     var currentPlayerID : String = ""
 
+    val handler = Handler()
+
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
+    private val playerDataRef = database.getReference("Player Data")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +53,30 @@ class StenSaxPaseFragment : Fragment() {
                 setText()
                 //viewModel.setID(currentGameID, currentPlayerID)
                 setID(currentGameID, currentPlayerID)
+
+                var stenSaxPaseStatusRef = stenSaxPaseRef.child(currentGameID).child("status")
+                stenSaxPaseStatusRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        println("------------->STATUS OF LOBBY: ${dataSnapshot.getValue()}")
+                        try {
+                            if (dataSnapshot.exists()) {
+                                println("CHECK IF STATUS IS FALSE FOR: ${dataSnapshot.getValue()} , ${dataSnapshot.getValue() == false}")
+                                if(dataSnapshot.getValue() == false) {
+                                    stenSaxPaseRef.child(gameID).setValue(null)
+                                    view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Failed to read value
+                        Log.w("YourTag", "Failed to read status of sten sax pase game.", databaseError.toException())
+                    }
+                })
+
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("StenSaxPaseFragment", "meModel is null")
@@ -63,10 +94,6 @@ class StenSaxPaseFragment : Fragment() {
         // initialize game
         //viewModel.initGame()
         initGame()
-
-
-
-
 
         // add view code here
         val sten = binding.sten
@@ -108,16 +135,16 @@ class StenSaxPaseFragment : Fragment() {
     private fun setVsText(text:String) {
         binding.vsText.text = text
     }
-
+/*
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+ */
+
     // Code starting from here was originally in view model
-    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
-    private val playerDataRef = database.getReference("Player Data")
+
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
@@ -138,9 +165,10 @@ class StenSaxPaseFragment : Fragment() {
         if(playerID == "null") {
             stenSaxPaseRef.child(gameID).get().addOnSuccessListener {
                 for(elem in it.children) {
-                    if(elem.key == "playerID") playerID = elem.value.toString()
-                    if(elem.key == "opponentID") opponentID = elem.value.toString()
+                    if(elem.key == "playerID") opponentID = elem.value.toString()
+                    if(elem.key == "opponentID") playerID = elem.value.toString()
                 }
+                println("!!PLAYERID WAS NULL!! Currently in game: $gameID , using playerID: $playerID")
                 loadPlayersFromGameID()
             }
         } else loadPlayersFromGameID()
@@ -170,7 +198,7 @@ class StenSaxPaseFragment : Fragment() {
     fun savePlayersToDatabase(players : MutableMap<String,MutableMap<String,String>>) {
         if(playerID != "null") {
             println("$playerID __VS__ $opponentID")
-            stenSaxPaseModel = StenSaxPaseModel(gameID, false, players, playerID, opponentID)
+            stenSaxPaseModel = StenSaxPaseModel(gameID, true, players, playerID, opponentID)
             stenSaxPaseRef.child(gameID).setValue(stenSaxPaseModel)
         }
     }
@@ -181,7 +209,7 @@ class StenSaxPaseFragment : Fragment() {
     var player2:String? = null
 
     fun setPlayers() {
-        println()
+
         player1 = playerID
         player2 = opponentID
 
@@ -193,8 +221,8 @@ class StenSaxPaseFragment : Fragment() {
 
     fun gameLoop() {
         // add eventlisteners to both players, specifically on attribute 'choice'
-        val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player1!!)
-        val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player2!!)
+        val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(playerID!!)
+        val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(opponentID!!)
         player1connection.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot){
                 val choice = dataSnapshot.getValue()
@@ -233,8 +261,8 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun getChoiceFromDatabase() {
-        val player1choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice")
-        val player2choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice")
+        val player1choiceRef = stenSaxPaseRef.child(gameID).child("players").child(playerID!!).child("choice")
+        val player2choiceRef = stenSaxPaseRef.child(gameID).child("players").child(opponentID!!).child("choice")
         var player1choice:Any?
         var player2choice:Any?
         player1choiceRef.get().addOnSuccessListener {
@@ -247,25 +275,36 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun checkOutcome(player1choice:Any?,player2choice:Any?) {
-        var outcome = "none"
+        var outcome = "round not started"
         println("$player1choice mot $player2choice")
         if(player1choice != "null" && player2choice != "null") {
             if(player1choice == player2choice) outcome = "even"
-            else if(player1choice == "sten" && player2choice == "sax") outcome = player1!!
-            else if(player1choice == "sax" && player2choice == "pase") outcome = player1!!
-            else if(player1choice == "pase" && player2choice == "sten") outcome = player1!!
-            else outcome = player2!!
+            else if(player1choice == "sten" && player2choice == "sax") outcome = playerID!!
+            else if(player1choice == "sax" && player2choice == "pase") outcome = playerID!!
+            else if(player1choice == "pase" && player2choice == "sten") outcome = playerID!!
+            else outcome = opponentID!!
         }
         println("-outcome: $outcome")
-        if(outcome == player1) {
-            setScoreInDatabase(player1!!)
-            setActionText("$player1 won with $player1choice beating $player2choice")
+        if(outcome == playerID) {
+            setActionText("$playerID won with $player1choice beating $player2choice")
+            // Fördröjning
+            handler.postDelayed({
+                setScoreInDatabase(playerID!!)
+            }, 4000)
         }
-        else if(outcome == player2) {
-            setScoreInDatabase(player2!!)
-            setActionText("$player2 won with $player2choice beating $player1choice")
+        else if(outcome == opponentID) {
+            setActionText("$opponentID won with $player2choice beating $player1choice")
+            // Fördröjning
+            handler.postDelayed({
+                setScoreInDatabase(opponentID!!)
+            }, 4000)
+        } else if(outcome == "even"){
+            setActionText("outcome of round: $outcome")
+            // Fördröjning
+            handler.postDelayed({
+                resetGame()
+            }, 4000)
         }
-        setActionText("outcome of round: $outcome")
     }
 
     fun setScoreInDatabase(player:String) {
@@ -283,8 +322,8 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun resetGame() {
-        stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice").setValue("null")
-        stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice").setValue("null")
+        stenSaxPaseRef.child(gameID).child("players").child(playerID!!).child("choice").setValue("null")
+        stenSaxPaseRef.child(gameID).child("players").child(opponentID!!).child("choice").setValue("null")
         resetUI()
     }
 
@@ -296,15 +335,18 @@ class StenSaxPaseFragment : Fragment() {
         binding.sten.visibility = View.VISIBLE
         binding.sax.visibility = View.VISIBLE
         binding.pase.visibility = View.VISIBLE
-
-        setActionText("Gör ett val")
     }
 
     fun checkForWin(player:String,score:Int) {
         if(score == 2) {
             println("player: $player wins")
             // apply logic for what should happen once a player wins
-            stenSaxPaseRef.child(gameID).setValue(null)
+            stenSaxPaseRef.child(gameID).child("status").setValue(false)
+            try {
+                view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         else println("no win yet for player: $player")
     }

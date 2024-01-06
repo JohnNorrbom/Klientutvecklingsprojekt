@@ -129,6 +129,8 @@ class TestBoardFragment : Fragment() {
 
         boardRef.addValueEventListener(boardListener)
         diceButton()
+        playerRef.addValueEventListener(positionListener)
+
         // Inflate the layout for this fragment
         return view
     }
@@ -151,7 +153,7 @@ class TestBoardFragment : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
                     try {
-                        if (dataSnapshot.exists()) {
+                        if (dataSnapshot.exists() && localCurrentPlayerTest != playerID) {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
@@ -167,7 +169,7 @@ class TestBoardFragment : Fragment() {
                                 activity?.requestedOrientation =
                                     ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                                    ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
                             } else if (miniGameNmbr == 2) {
                                 println("quiz vald")
                                 activity?.requestedOrientation =
@@ -347,8 +349,10 @@ class TestBoardFragment : Fragment() {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
-            val resourceId = resources.getIdentifier(
-                destination, "drawable", "com.hfad.klientutvecklingsprojekt"
+            var resourceId = resources.getIdentifier(
+                destination,
+                "drawable",
+                "com.hfad.klientutvecklingsprojekt"
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
@@ -369,6 +373,13 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
+
+                //TODO TA BORT RAD BARA ETT TEST GÖR SÅ ATT SOCCER SPELAS VARJE GÅNG
+                localRandomVal = 0
+
+                //laddauppminigamesiffra,
+                //gör en listener som kallar på setMinigame
+                // currentPlayer startar minigame
                 println("gameID: $localGameID entering mini-game: $localRandomVal")
                 boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
             }
@@ -381,7 +392,14 @@ class TestBoardFragment : Fragment() {
             binding.diceButton.visibility = View.GONE
             paintPlayers()
             assignNextCurrentPlayer()
-
+            destination = "dice" + randomInt + "grayed"
+            resourceId = resources.getIdentifier(
+                destination,
+                "drawable",
+                "com.hfad.klientutvecklingsprojekt"
+            )
+            binding.diceButton?.setImageResource(resourceId)
+            binding.diceButton.isEnabled = false
         }
     }
 
@@ -400,14 +418,25 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                    if(localCurrentPlayerTest == localPlayerID){
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                    }else{
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                    }
+
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-
+                    //means you are host
+                    if(localCurrentPlayerTest == localPlayerID){
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                    }else{
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                    }
                 }
                 println("SOCCER GAME FERDINAND")
             } else if (randomVal == 2) {
@@ -504,16 +533,15 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     val currentPlayerId = dataSnapshot.value
                     if (currentPlayerId == localPlayerID) {
-//                        binding.diceButton.visibility = View.VISIBLE
-//                        binding.diceButton.isEnabled = true
-//                        localCurrentPlayerTest = currentPlayerId.toString()
+                        binding.diceButton.setImageResource(R.drawable.dice1)
+                        binding.diceButton.isEnabled = true
                         binding.diceButton.visibility = View.VISIBLE
-                    } else {
-                        binding.diceButton.visibility = View.GONE
-//                        binding.diceButton.isEnabled = false
+                        localCurrentPlayerTest = currentPlayerId.toString()
+                    }else{
+                        binding.diceButton.setImageResource(R.drawable.dice1grayed)
+                        binding.diceButton.isEnabled = false
                     }
                     if (localRandomVal != -1) {
-
                         setMiniGame(localRandomVal)
                     }
                 }
@@ -533,25 +561,27 @@ class TestBoardFragment : Fragment() {
 
     fun assignNextCurrentPlayer() {
         var playerIDarr = arrayListOf<String>()
-        myRef.child(localGameID).child("players").get().addOnSuccessListener {
-            val snapshot = it
-            for (player in snapshot.children) {
-                val playerID = player.child("playerID").value.toString()
-                playerIDarr.add(playerID)
-            }
+        myRef.child(localGameID).child("players").get()
+            .addOnSuccessListener {
+                val snapshot = it
+                for (player in snapshot.children) {
+                    val playerID = player.child("playerID").value.toString()
+                    playerIDarr.add(playerID)
+                }
 
-            var index = playerIDarr.indexOf(localPlayerID)
+                var index = playerIDarr.indexOf(localPlayerID)
 
-            if (index != -1) {
-                index = if (index < playerIDarr.size - 1) index + 1 else 0
-                localCurrentPlayerTest = playerIDarr[index]
-                boardRef.child(localGameID).child("currentPlayerId")
-                    .setValue(playerIDarr[index])
-            } else {
-                println("Error: currentPlayerID not found in arrList")
+                if (index != -1) {
+                    index = if (index < playerIDarr.size - 1) index + 1 else 0
+                    localCurrentPlayerTest = playerIDarr[index]
+                    boardRef.child(localGameID).child("currentPlayerId")
+                        .setValue(playerIDarr[index])
+                } else {
+                    println("Error: currentPlayerID not found in arrList")
+                }
             }
-        }.addOnFailureListener { exception ->
-            Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
-        }
+            .addOnFailureListener { exception ->
+                Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
+            }
     }
 }

@@ -9,8 +9,8 @@ class SoccerViewModel() : ViewModel(){
 
 
     private var buttonCount = 0
-    private var color = "not assigned"
-    private var enemyColor = "not assigned"
+    private var p1Color = "not assigned"
+    private var p2Color = "not assigned"
     private var type = "not assigned"
     private var enemyType = "not assigned"
     var p1Points = 0
@@ -20,27 +20,27 @@ class SoccerViewModel() : ViewModel(){
     private var round = 1
     var animationReady = false
     var shooterHit = false
-    var shooterColor = color
-    var goalieColor = enemyColor
+    var shooterColor = p1Color
+    var goalieColor = p2Color
     var player1 = "shooter"
     var player2 = "goalie"
 
     fun getColor(): String {
-        return color
+        return p1Color
     }
     fun getEnemyColor(): String {
-        return enemyColor
+        return p2Color
     }
-    fun setColors(color: String, enemyColor: String, whoShootsFirst: Int){
-        this.color = color
-        this.enemyColor = enemyColor
+    fun setColors(p1Color: String, p2Color: String, whoShootsFirst: Int){
+        this.p1Color = p1Color
+        this.p2Color = p2Color
 
         if(whoShootsFirst == 1){
-            shooterColor = color
-            goalieColor = enemyColor
+            shooterColor = p1Color
+            goalieColor = p2Color
         }else{
-            shooterColor = enemyColor
-            goalieColor = color
+            shooterColor = p2Color
+            goalieColor = p1Color
         }
 
     }
@@ -96,25 +96,23 @@ class SoccerViewModel() : ViewModel(){
         goalieColor = shooterColor
         shooterColor = temp
 
-        //change type of goalie and shooter
-
+        //change player of goalie and shooter
         if(player1 == "shooter"){
             player1 = "goalie"
             player2 = "shooter"
         }else{
-            player2 = "shooter"
-            player1 = "goalie"
+            player1 = "shooter"
+            player2 = "goalie"
         }
     }
 
 
     fun startRound(){
         shooterHit = false
-        if(round == 1){
-            player1 = "shooter"
-            player2 = "goalie"
-        }
-
+        println("shooterChoice: " + shooterChoice)
+        println("goalieChoice: " + goalieChoice)
+        println("p1 is: " + player1)
+        println("p2 is: " + player2)
         if(goalieChoice == "right" && shooterChoice == "left"){
             if(player1 == "shooter"){
                 p1Points++

@@ -70,9 +70,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
-                tools:text="0"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"                tools:text="0"
                 android:visibility="gone"
                 />
 
@@ -82,8 +81,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 tools:text="0"
                 android:visibility="gone"/>
 
@@ -93,8 +92,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 tools:text="0"
                 android:visibility="gone"/>
 
@@ -104,8 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 tools:text="0"
                 android:visibility="gone"/>
             <TextView
@@ -114,8 +113,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 tools:text="0"
                 android:visibility="gone"/>
         </LinearLayout>
@@ -124,7 +123,7 @@
         android:id="@+id/lobby_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#F44336"
+        android:textColor="#6AFF00"
         android:textSize="40dp"
         android:layout_gravity="center"
         android:visibility="gone"/>

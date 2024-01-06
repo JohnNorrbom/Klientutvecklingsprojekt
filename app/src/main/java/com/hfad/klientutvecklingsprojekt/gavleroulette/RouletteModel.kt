@@ -11,10 +11,10 @@ data class RouletteModel (
     var currentPlayer : String ? = null,
     var attempts: Int ? = null,
     var laps : Int ? = null,
+    var score : MutableMap<String,Int> ?= null,
     val nbrOfPlayers : Int ? = null,
     var aliveCount : Int ? = null,
     val luckyNumber : MutableList<String>? = null,
-        //mutableListOf((Random.nextInt(6)+1).toString(),"","","",""),
     var currentBullet : Int ? = null
     )
 

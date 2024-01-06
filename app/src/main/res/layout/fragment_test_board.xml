@@ -90,7 +90,7 @@
         android:layout_height="56dp"
         android:tag="plus2"
         app:layout_constraintBottom_toTopOf="@+id/tile9"
-        app:layout_constraintEnd_toStartOf="@+id/leaderboardImageView"
+        app:layout_constraintEnd_toStartOf="@+id/textViewLeader1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile7"
         app:layout_constraintTop_toTopOf="parent"
@@ -123,7 +123,7 @@
         android:layout_height="56dp"
         android:tag="mini_game"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/leaderboardImageView"
+        app:layout_constraintEnd_toStartOf="@+id/textViewLeader1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile12"
         app:layout_constraintTop_toBottomOf="@+id/tile10"
@@ -282,16 +282,74 @@
         app:layout_constraintStart_toEndOf="@+id/tile20"
         app:layout_constraintTop_toBottomOf="@+id/tile5" />
 
-    <ImageView
-        android:id="@+id/leaderboardImageView"
+
+    <TextView
+        android:id="@+id/textViewLeader1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/leaderboard"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/number_1"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintWidth_percent="0.33"/>
+        app:layout_constraintBottom_toTopOf="@+id/textViewLeader2"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <TextView
+        android:id="@+id/textViewLeader2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/number_2"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLeader1"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLeader3"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <TextView
+        android:id="@+id/textViewLeader3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/number_3"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLeader2"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLeader4"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <TextView
+        android:id="@+id/textViewLeader4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/number_4"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLeader3"
+        app:layout_constraintBottom_toTopOf="@+id/textViewLeader5"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <TextView
+        android:id="@+id/textViewLeader5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/number_5"
+        app:layout_constraintStart_toEndOf="@+id/tile9"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLeader4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintWidth_percent="0.2"/>
+
+    <!-- Set the vertical chain style to spread inside the parent -->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="textViewLeader1,textViewLeader2,textViewLeader3,textViewLeader4,textViewLeader5"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

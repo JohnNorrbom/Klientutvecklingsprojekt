@@ -161,8 +161,10 @@ class StenSaxPaseChooseFragment : Fragment() {
         val action = StenSaxPaseChooseFragmentDirections.actionStenSaxPaseChooseFragmentToStensaxpaseFragment(playerID,opponentID)
         view?.findNavController()?.navigate(action)
     }
+    /*
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
+     */
 }

@@ -74,6 +74,9 @@ class SoccerFragment : Fragment() {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
 
+
+
+
         MeData.meModel.observe(this){
             meModel = it
             retrieveYourId()
@@ -84,6 +87,8 @@ class SoccerFragment : Fragment() {
             }
             setValues()
         }
+
+
         return view
     }
 
@@ -156,6 +161,18 @@ class SoccerFragment : Fragment() {
                 localP1Id = dataSnapshot.child("p1Id").value.toString()
                 localP2Id = dataSnapshot.child("p2Id").value.toString()
                 setPlayerValues()
+
+                if(localP1Id.toInt() % 3 == 0){
+                    binding.background.setImageResource(R.drawable.aliencrowdfast)
+                }else if (localP1Id.toInt() % 3 == 1){
+                    binding.background.setImageResource(R.drawable.soccergame1)
+
+                    }else{
+                        binding.background.setImageResource(R.drawable.soccergame2)
+                }
+
+
+
                 var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
                 Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
                 binding.goalie.setImageResource(resourceId)

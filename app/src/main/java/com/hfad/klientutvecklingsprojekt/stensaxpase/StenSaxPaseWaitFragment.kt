@@ -80,6 +80,7 @@ class StenSaxPaseWaitFragment : Fragment() {
                             playerID = elem.child("playerID").value.toString()
                             opponentID = elem.child("opponentID").value.toString()
                         }
+
                         println("wait fragment got playerID: $playerID and opponentID: $opponentID")
                         val action = StenSaxPaseWaitFragmentDirections.actionStenSaxPaseWaitFragmentToStensaxpaseFragment(playerID,opponentID)
                         view?.findNavController()?.navigate(action)
@@ -91,8 +92,15 @@ class StenSaxPaseWaitFragment : Fragment() {
         override fun onCancelled(error: DatabaseError) {
         }
     }
+    /*
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+     */
+    override fun onStop() {
+        super.onStop()
+        gameIDRef.removeEventListener(gameStartListener)
     }
 }

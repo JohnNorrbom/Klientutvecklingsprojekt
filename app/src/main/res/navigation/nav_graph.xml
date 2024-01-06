@@ -78,6 +78,12 @@
         <action
             android:id="@+id/action_lobbyFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_lobbyFragment_to_soccerChooseFragment"
+            app:destination="@id/soccerChooseFragment" />
+        <action
+            android:id="@+id/action_lobbyFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStartFragment"

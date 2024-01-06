@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".gavleroulette.GavleRouletteFragment"
-    android:background="#000000">
+    android:background="@drawable/space_cowboy">
 
     <TextView
         android:layout_width="wrap_content"
@@ -145,18 +145,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="450dp"
         android:text="Try your luck"
         android:tag="roulet_action" />
 
-    <ImageView
-        android:id="@+id/magasin_slot"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_marginTop="150dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/chamber"
-        android:layout_gravity="center"/>
+
     <TextView
         android:id="@+id/test1"
         android:layout_width="wrap_content"

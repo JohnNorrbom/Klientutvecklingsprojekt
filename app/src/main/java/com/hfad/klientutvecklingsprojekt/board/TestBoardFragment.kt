@@ -252,7 +252,7 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = 5
-            //Random.nextInt(6) + 1
+            Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
                 destination,

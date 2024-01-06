@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -277,8 +278,10 @@ class SoccerFragment : Fragment() {
                 if(soccerViewModel.p1Points == 3){
                     binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
                 }
+                database.getReference().child("Board Data").child(localGameId).child("randomVal").setValue(-1)
                 binding.finishedGameButton.setOnClickListener {
-                    findNavController().popBackStack()
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
                 }
             }
 

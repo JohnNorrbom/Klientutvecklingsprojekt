@@ -24,8 +24,6 @@ import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
 import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteData
 import com.hfad.klientutvecklingsprojekt.gavleroulette.RouletteModel
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyData
-import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
@@ -80,16 +78,26 @@ class TestBoardFragment : Fragment() {
     }
 
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
+    // LEADERBOARD
+    var number1 = -1
+    var number2 = -1
+    var number3 = -1
+    var number4 = -1
+    var number5 = -1
+    var nickname1 = ""
+    var nickname2 = ""
+    var nickname3 = ""
+    var nickname4 = ""
+    var nickname5 = ""
+    val leaderboardList = mutableListOf<Pair<String, Int>>()
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
 
         mediaPlayer = MediaPlayer.create(
-            requireContext(),
-            R.raw.android_song2_140bpm
+            requireContext(), R.raw.android_song2_140bpm
         )
         mediaPlayer?.isLooping = true // Disable built-in looping
         mediaPlayer?.start()
@@ -149,23 +157,29 @@ class TestBoardFragment : Fragment() {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
-                                if(localCurrentPlayerTest == localPlayerID) view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                                else view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                                if (localCurrentPlayerTest == localPlayerID) view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                else view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
                             } else if (miniGameNmbr == 2) {
                                 println("quiz vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                             }
@@ -186,66 +200,113 @@ class TestBoardFragment : Fragment() {
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
      */
+    // Function to get text for a leaderboard entry
+    fun getLeaderText(index: Int): String {
+        return if (index < leaderboardList.size) {
+            "${leaderboardList[index].first} ${leaderboardList[index].second}"
+        } else {
+            "" // Empty string if index is out of bounds
+        }
+    }
     private fun paintPlayers() {
-        myRef.child(localGameID).child("players").get()
-            .addOnSuccessListener { dataSnapshot ->
-                dataSnapshot.children.forEach { playerSnapshot ->
-                    val playerId = playerSnapshot.child("playerId").value.toString()
-                    val color = playerSnapshot.child("color").value.toString()
-                    val position =
-                        Integer.valueOf(playerSnapshot.child("position").value.toString())
-                    val imageView = when (color) {
-                        "blue" -> binding.playerBlue
-                        "red" -> binding.playerRed
-                        "green" -> binding.playerGreen
-                        "yellow" -> binding.playerYellow
-                        "white" -> binding.playerWhite
-                        else -> null // Handle any other colors if needed
+
+        myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
+            dataSnapshot.children.forEach { playerSnapshot ->
+                val playerId = playerSnapshot.child("playerId").value.toString()
+                val color = playerSnapshot.child("color").value.toString()
+                val position =
+                    Integer.valueOf(playerSnapshot.child("position").value.toString())
+                val imageView = when (color) {
+                    "blue" -> binding.playerBlue
+                    "red" -> binding.playerRed
+                    "green" -> binding.playerGreen
+                    "yellow" -> binding.playerYellow
+                    "white" -> binding.playerWhite
+                    else -> null // Handle any other colors if needed
+                }
+
+                Log.d("score", "testing: $number1")
+                // Sorterar leaderboarden
+                //  index
+                var i = 0
+
+
+                // Extracting values from playerSnapshot
+                val number1 = playerSnapshot.child("score").value.toString().toInt()
+                val nickname1 = playerSnapshot.child("nickname").value.toString()
+
+                if (leaderboardList.isEmpty()) {
+                    // Add the first pair to the list
+                    leaderboardList.add(nickname1 to number1)
+                    Log.d("score", "leaderboardList $nickname1 $number1")
+                } else {
+                    // Check if the nickname is already in the list
+                    val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
+
+                    if (existingIndex != -1) {
+                        // If the nickname already exists, update the score if the new score is higher
+                        if (number1 > leaderboardList[existingIndex].second) {
+                            leaderboardList[existingIndex] = nickname1 to number1
+                        }
+                    } else {
+                        // Add the new pair to the list
+                        leaderboardList.add(nickname1 to number1)
+
+                        // Sort the list based on the 'number1' values in descending order
+                        leaderboardList.sortByDescending { it.second }
                     }
+                    Log.d("score", "after leaderboardList $nickname1 $number1")
+                }
 
-                    imageView?.let { view ->
-                        //make player imageView visible
-                        view.visibility = View.VISIBLE
+                binding.textViewLeader1.text = getLeaderText(0)
+                binding.textViewLeader2.text = getLeaderText(1)
+                binding.textViewLeader3.text = getLeaderText(2)
+                binding.textViewLeader4.text = getLeaderText(3)
+                binding.textViewLeader5.text = getLeaderText(4)
 
-                        //take player imageView same pos as corresponding tile
-                        val tileId = position % 20 + 1
-                        val tileName = "tile$tileId"
+                imageView?.let { view ->
+                    //make player imageView visible
+                    view.visibility = View.VISIBLE
 
-                        var tile = when (tileName) {
-                            "tile1" -> binding.tile1
-                            "tile2" -> binding.tile2
-                            "tile3" -> binding.tile3
-                            "tile4" -> binding.tile4
-                            "tile5" -> binding.tile5
-                            "tile6" -> binding.tile6
-                            "tile7" -> binding.tile7
-                            "tile8" -> binding.tile8
-                            "tile9" -> binding.tile9
-                            "tile10" -> binding.tile10
-                            "tile11" -> binding.tile11
-                            "tile12" -> binding.tile12
-                            "tile13" -> binding.tile13
-                            "tile14" -> binding.tile14
-                            "tile15" -> binding.tile15
-                            "tile16" -> binding.tile16
-                            "tile17" -> binding.tile17
-                            "tile18" -> binding.tile18
-                            "tile19" -> binding.tile19
-                            "tile20" -> binding.tile20
-                            else -> null
-                        }
-                        if (tile != null) {
-                            val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
-                            layoutParams.topToTop = tile.id
-                            layoutParams.endToEnd = tile.id
-                            view.layoutParams = layoutParams
-                        }
+                    //take player imageView same pos as corresponding tile
+                    val tileId = position % 20 + 1
+                    val tileName = "tile$tileId"
+
+                    var tile = when (tileName) {
+                        "tile1" -> binding.tile1
+                        "tile2" -> binding.tile2
+                        "tile3" -> binding.tile3
+                        "tile4" -> binding.tile4
+                        "tile5" -> binding.tile5
+                        "tile6" -> binding.tile6
+                        "tile7" -> binding.tile7
+                        "tile8" -> binding.tile8
+                        "tile9" -> binding.tile9
+                        "tile10" -> binding.tile10
+                        "tile11" -> binding.tile11
+                        "tile12" -> binding.tile12
+                        "tile13" -> binding.tile13
+                        "tile14" -> binding.tile14
+                        "tile15" -> binding.tile15
+                        "tile16" -> binding.tile16
+                        "tile17" -> binding.tile17
+                        "tile18" -> binding.tile18
+                        "tile19" -> binding.tile19
+                        "tile20" -> binding.tile20
+                        else -> null
+                    }
+                    if (tile != null) {
+                        val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
+                        layoutParams.topToTop = tile.id
+                        layoutParams.endToEnd = tile.id
+                        view.layoutParams = layoutParams
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.e("paintPlayers", "Error fetching players", exception)
-            }
+        }.addOnFailureListener { exception ->
+            Log.e("paintPlayers", "Error fetching players", exception)
+        }
+
     }
 
     fun diceButton() {
@@ -282,7 +343,7 @@ class TestBoardFragment : Fragment() {
                 localRandomVal = Random.nextInt(4)
 
                 //TODO TA BORT RAD BARA ETT TEST GÖR SÅ ATT SOCCER SPELAS VARJE GÅNG
-                localRandomVal = 0
+                localRandomVal = 1
 
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
@@ -295,6 +356,8 @@ class TestBoardFragment : Fragment() {
                 playersRef.child(localPlayerID).child("position").setValue(position)
                 playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
+            // TODO TA BORT KODRADEN UNDER
+            binding.diceButton.visibility = View.GONE
             paintPlayers()
             assignNextCurrentPlayer()
             destination = "dice" + randomInt + "grayed"
@@ -407,10 +470,29 @@ class TestBoardFragment : Fragment() {
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             paintPlayers()
+            updateScore()
         }
 
         override fun onCancelled(error: DatabaseError) {
         }
+    }
+
+    private fun updateScore() {
+        playersRef.child(localCurrentPlayerTest).child("score")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val score = dataSnapshot.getValue(Int::class.java)
+                    Log.d("score", score.toString())
+                    score?.toString()?.forEach { digit ->
+                        Log.d("IndividualDigit", digit.toString())
+                    }
+                    binding.textViewLeader1.text = score.toString()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle errors
+                }
+            })
     }
 
     private val boardListener = object : ValueEventListener {

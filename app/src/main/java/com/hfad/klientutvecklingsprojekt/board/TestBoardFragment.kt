@@ -231,35 +231,34 @@ class TestBoardFragment : Fragment() {
                 // Extracting values from playerSnapshot
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()
-
-                if (leaderboardList.isEmpty()) {
-                    // Add the first pair to the list
-                    leaderboardList.add(nickname1 to number1)
-                    Log.d("score", "leaderboardList $nickname1 $number1")
-                } else {
-                    // Check if the nickname is already in the list
-                    val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
-
-                    if (existingIndex != -1) {
-                        // If the nickname already exists, update the score if the new score is higher
-                        if (number1 > leaderboardList[existingIndex].second) {
-                            leaderboardList[existingIndex] = nickname1 to number1
-                        }
-                    } else {
-                        // Add the new pair to the list
+                    if (leaderboardList.isEmpty()) {
+                        // Add the first pair to the list
                         leaderboardList.add(nickname1 to number1)
+                        Log.d("score", "leaderboardList $nickname1 $number1")
+                    } else {
+                        // Check if the nickname is already in the list
+                        val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
 
-                        // Sort the list based on the 'number1' values in descending order
-                        leaderboardList.sortByDescending { it.second }
+                        if (existingIndex != -1) {
+                            // If the nickname already exists, update the score if the new score is higher
+                            if (number1 > leaderboardList[existingIndex].second) {
+                                leaderboardList[existingIndex] = nickname1 to number1
+                            }
+                        } else {
+                            // Add the new pair to the list
+                            leaderboardList.add(nickname1 to number1)
+
+                            // Sort the list based on the 'number1' values in descending order
+                            leaderboardList.sortByDescending { it.second }
+                        }
+                        Log.d("score", "after leaderboardList $nickname1 $number1")
                     }
-                    Log.d("score", "after leaderboardList $nickname1 $number1")
-                }
 
-                binding.textViewLeader1.text = getLeaderText(0)
-                binding.textViewLeader2.text = getLeaderText(1)
-                binding.textViewLeader3.text = getLeaderText(2)
-                binding.textViewLeader4.text = getLeaderText(3)
-                binding.textViewLeader5.text = getLeaderText(4)
+                    binding.textViewLeader1.text = getLeaderText(0)
+                    binding.textViewLeader2.text = getLeaderText(1)
+                    binding.textViewLeader3.text = getLeaderText(2)
+                    binding.textViewLeader4.text = getLeaderText(3)
+                    binding.textViewLeader5.text = getLeaderText(4)
 
                 imageView?.let { view ->
                     //make player imageView visible
@@ -461,31 +460,11 @@ class TestBoardFragment : Fragment() {
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             paintPlayers()
-            updateScore()
         }
 
         override fun onCancelled(error: DatabaseError) {
         }
     }
-
-    private fun updateScore() {
-        playersRef.child(localCurrentPlayerTest).child("score")
-            .addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val score = dataSnapshot.getValue(Int::class.java)
-                    Log.d("score", score.toString())
-                    score?.toString()?.forEach { digit ->
-                        Log.d("IndividualDigit", digit.toString())
-                    }
-                    binding.textViewLeader1.text = score.toString()
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Handle errors
-                }
-            })
-    }
-
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             boardRef.child(localGameID).child("currentPlayerId").get()

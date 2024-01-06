@@ -143,6 +143,7 @@ class TestBoardFragment : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
                     try {
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                         if (dataSnapshot.exists()) {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
@@ -302,8 +303,8 @@ class TestBoardFragment : Fragment() {
     }
 
     private fun setMiniGame(randomVal: Int) {
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         try {
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
                     view.findNavController()

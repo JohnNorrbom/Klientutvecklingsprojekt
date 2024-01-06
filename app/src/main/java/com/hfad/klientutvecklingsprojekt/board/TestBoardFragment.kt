@@ -228,10 +228,6 @@ class TestBoardFragment : Fragment() {
                 }
                 Log.d("score", "testing: $number1")
                 // Sorterar leaderboarden
-                //  index
-                var i = 0
-
-
                 // Extracting values from playerSnapshot
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()

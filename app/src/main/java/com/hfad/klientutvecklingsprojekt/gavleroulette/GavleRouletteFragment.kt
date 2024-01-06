@@ -101,7 +101,6 @@ class GavleRouletteFragment : Fragment(){
                                 requireContext().packageName
                             )
                             setPlayerInfo()
-//                            binding.magasinSlot.setImageResource(resId)
                             binding.test.text = luckyNumber?.get(0)
                         }
                         when (localPlayerID) {

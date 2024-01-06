@@ -81,6 +81,7 @@
         android:layout_height="wrap_content"
         android:textSize="100dp"
         android:text="0-0 "
+
         android:textColor="@color/white"
         android:background="@color/darkgreen"
         />

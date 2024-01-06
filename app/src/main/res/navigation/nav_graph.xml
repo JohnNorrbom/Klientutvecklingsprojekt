@@ -34,7 +34,11 @@
         android:id="@+id/soccerFragment"
         android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerFragment"
         android:label="fragment_soccer"
-        tools:layout="@layout/fragment_soccer" />
+        tools:layout="@layout/fragment_soccer" >
+        <action
+            android:id="@+id/action_soccerFragment_to_testBoardFragment"
+            app:destination="@id/testBoardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/gavleRouletteFragment"
         android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteFragment"

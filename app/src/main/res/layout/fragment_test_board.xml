@@ -7,14 +7,6 @@
     tools:context=".board.TestBoardFragment">
 
     <ImageView
-        android:id="@+id/character"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
-        app:layout_constraintStart_toStartOf="@+id/tile1"
-        app:layout_constraintTop_toTopOf="@+id/tile1"
-        app:srcCompat="@drawable/astro_white" />
-
-    <ImageView
         android:id="@+id/tile1"
         android:layout_width="56dp"
         android:layout_height="56dp"
@@ -98,7 +90,7 @@
         android:layout_height="56dp"
         android:tag="plus2"
         app:layout_constraintBottom_toTopOf="@+id/tile9"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboardImageView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile7"
         app:layout_constraintTop_toTopOf="parent"
@@ -131,7 +123,7 @@
         android:layout_height="56dp"
         android:tag="mini_game"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/leaderboardImageView"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/tile12"
         app:layout_constraintTop_toBottomOf="@+id/tile10"
@@ -290,15 +282,16 @@
         app:layout_constraintStart_toEndOf="@+id/tile20"
         app:layout_constraintTop_toBottomOf="@+id/tile5" />
 
-    <Button
-        android:id="@+id/leaderBoardButton"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/leaderboardImageView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="LEADERBOARD"
-        app:layout_constraintBottom_toTopOf="@+id/tile4"
+        android:src="@drawable/leaderboard"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintWidth_percent="0.33"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

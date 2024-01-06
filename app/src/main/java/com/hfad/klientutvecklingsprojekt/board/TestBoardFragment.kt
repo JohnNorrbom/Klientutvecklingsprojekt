@@ -120,12 +120,7 @@ class TestBoardFragment : Fragment() {
         boardRef.addValueEventListener(boardListener)
         diceButton()
         playerRef.addValueEventListener(positionListener)
-        //  leader button
-        binding.leaderBoardButton.setOnClickListener {
-//            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//            view.findNavController().navigate(R.id.action_testBoardFragment_to_leaderBoardFragment)
-//            binding.root.rootView.setBackgroundResource(R.drawable.leaderboard)
-        }
+
         // Inflate the layout for this fragment
         return view
     }

@@ -149,10 +149,10 @@ class TestBoardFragment : Fragment() {
                 if (dataSnapshot.exists()) {
                     val miniGameNmbr = dataSnapshot.getValue()
                     if(miniGameNmbr == 0){
-                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                         println("sten sax pase vald")
                     } else if(miniGameNmbr == 1) {
-                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
                         println("soccer vald")
                     } else if(miniGameNmbr == 2) {
                         view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)

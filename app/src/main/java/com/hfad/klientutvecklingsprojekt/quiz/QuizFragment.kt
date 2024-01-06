@@ -71,6 +71,9 @@ class QuizFragment : Fragment() {
                 Log.e("QuizFragment", "meModel is null")
             }
         }
+
+        //Berätta för databasen att du inte är klar med quizet
+        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(false)
         try {
             //  Läs in frågorna från JSON-filen
             val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
@@ -288,7 +291,9 @@ class QuizFragment : Fragment() {
 
         // Ladda upp poäng på databasen
         myRef.child(currentGameID).child("Scores").child(currentPlayerID).setValue(score)
-
+        binding.scoreTextView.text = "WAITING FOR ALL PLAYERS TO FINISH THE QUIZ"
+        //PLUSSA PÅ SPELARENS POÄNG I DATABASEN
+        increasePlayerScore(currentPlayerID, score)
         // Initiera processen för att visa leaderboard
         initiateLeaderboardDisplay()
     }
@@ -326,36 +331,77 @@ class QuizFragment : Fragment() {
             }
         })
     }
+    data class PlayerScore(val nickname: String?, val score: Int)
     private fun showLeaderboard() = CoroutineScope(Dispatchers.Main).launch {
         try {
             val scoresRef = myRef.child(currentGameID).child("Scores")
             val playerRef = database.getReference("Player Data").child(currentGameID).child("players")
             val dataSnapshot = withContext(Dispatchers.IO) { scoresRef.get().await() }
-
             if (dataSnapshot.exists()) {
-                val allScores = StringBuilder()
+                val scoresList = mutableListOf<PlayerScore>()
 
                 for (userSnapshot in dataSnapshot.children) {
                     val userNickname = withContext(Dispatchers.IO) {
-                        playerRef.child(userSnapshot.key ?: "").child("nickname").get().await().value
+                        playerRef.child(userSnapshot.key ?: "").child("nickname").get().await().value as String?
                     }
-                    val userScore = userSnapshot.value.toString()
-                    allScores.append("User: $userNickname, Score: $userScore\n")
+                    val userScore = userSnapshot.value.toString().toIntOrNull() ?: 0
+                    scoresList.add(PlayerScore(userNickname, userScore))
                 }
+
+                // Sortera listan så att högsta poängen kommer först
+                val sortedList = scoresList.sortedByDescending { it.score }
+
+                val allScores = StringBuilder()
+                sortedList.forEach {
+                    allScores.append("User: ${it.nickname}, Score: ${it.score}\n")
+                }
+
                 binding.scoreTextView.text = allScores.toString()
 
                 delay(10000)
                 if (isAdded && view != null) {
-
                     database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
                     view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
                 }
+            } else {
+                binding.scoreTextView.text = "Ingen poäng att visa."
             }
         } catch (e: Exception) {
             binding.scoreTextView.text = "Failed to load scores."
             e.printStackTrace()
         }
     }
+    private fun increasePlayerScore(playerId: String, increment: Int) = CoroutineScope(Dispatchers.IO).launch {
+        val scoreRef = database.getReference("Player Data")
+            .child(currentGameID)
+            .child("players")
+            .child(playerId)
+            .child("score")
+
+        try {
+            val currentScoreSnapshot = scoreRef.get().await()
+            val currentScore = currentScoreSnapshot.getValue(Int::class.java) ?: 0
+            val newScore = currentScore + increment
+
+            withContext(Dispatchers.Main) {
+                scoreRef.setValue(newScore).addOnSuccessListener {
+                    // Uppdatera UI här, visa bekräftelsemeddelande, etc.
+                    Log.d("UpdateScore", "Poängen har framgångsrikt uppdaterats till $newScore")
+                    // Exempel: Toast.makeText(context, "Poäng uppdaterad till $newScore", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    // Hantera misslyckad uppdatering
+                    Log.e("UpdateScore", "Misslyckades med att uppdatera poängen", it)
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                // Hantera fel vid läsning av poängen
+                Log.e("UpdateScore", "Fel vid läsning av aktuell poäng", e)
+            }
+        }
+    }
+
+
 
 
 

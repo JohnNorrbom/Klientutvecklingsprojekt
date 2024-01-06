@@ -377,10 +377,10 @@ class TestBoardFragment : Fragment() {
         mediaPlayer = null
     }
     fun assignNextCurrentPlayer() {
+        var playerIDarr = arrayListOf<String>()
         myRef.child(localGameID).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
                 dataSnapshot.children.forEach { playerSnapshot ->
-                    var playerIDarr = arrayListOf<String>()
                     val playerID = playerSnapshot.child("playerID").value.toString()
                     playerIDarr.add(playerID)
 

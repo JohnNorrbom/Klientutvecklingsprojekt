@@ -60,6 +60,9 @@
             android:name="opponentID"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_stensaxpaseFragment_to_testBoardFragment"
+            app:destination="@id/testBoardFragment" />
     </fragment>
     <fragment
         android:id="@+id/playerInfoFragment"

@@ -147,7 +147,7 @@ class TestBoardFragment : Fragment() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 println(dataSnapshot.getValue())
                 if (dataSnapshot.exists()) {
-                    val miniGameNmbr = dataSnapshot.getValue()
+                    val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                     if(miniGameNmbr == 0){
                         view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                         println("sten sax pase vald")

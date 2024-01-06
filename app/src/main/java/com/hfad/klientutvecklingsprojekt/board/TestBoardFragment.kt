@@ -356,8 +356,6 @@ class TestBoardFragment : Fragment() {
                 playersRef.child(localPlayerID).child("position").setValue(position)
                 playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
-            // TODO TA BORT KODRADEN UNDER
-            binding.diceButton.visibility = View.GONE
             paintPlayers()
             assignNextCurrentPlayer()
             destination = "dice" + randomInt + "grayed"

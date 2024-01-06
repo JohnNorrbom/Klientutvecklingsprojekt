@@ -150,12 +150,18 @@ class PlayerInfoFragment : Fragment() {
             view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
         }
     fun checkName(callback: (Boolean) -> Unit) {
-        lobbyRef.child(gameModel?.gameID?:"").get().addOnSuccessListener {
+        lobbyRef.child(gameModel?.gameID?:"").child("players").get().addOnSuccessListener {
+            val snapshot = it
             var check = false
-            Log.d("player","${it.child("players").child(playerName).child("nickname").value}")
-            Log.d("realName","${playerName}")
-            if (it.child("players").child(playerName).child("nickname").value == playerName){
-                check = true
+            for(player in snapshot.children){
+                if (player.child("nickname").value.toString() == playerName) {
+                    Log.d(
+                        "player",
+                        "${player.child("nickname").value.toString()}"
+                    )
+                    Log.d("realName", "${playerName}")
+                    check = true
+                }
             }
             callback(check)
         }.addOnFailureListener {

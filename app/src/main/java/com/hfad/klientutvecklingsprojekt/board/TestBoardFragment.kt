@@ -120,11 +120,25 @@ class TestBoardFragment : Fragment() {
         boardRef.addValueEventListener(boardListener)
         diceButton()
         playerRef.addValueEventListener(positionListener)
-        binding.textViewLeader1.text = playersRef.child("score").get().toString()
-        binding.textViewLeader2.text = playersRef.child("score").get().toString()
-        binding.textViewLeader3.text = playersRef.child("score").get().toString()
-        binding.textViewLeader4.text = playersRef.child("score").get().toString()
-        binding.textViewLeader5.text = playersRef.child("score").get().toString()
+        Log.d("score", playersRef.child(localPlayerID).child("score").get().toString())
+        Log.d("score", playerRef.child(localPlayerID).child("score").get().toString())
+        playersRef.child(localPlayerID).child("score")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val score = dataSnapshot.getValue(Int::class.java)
+                    Log.d("score", score.toString())
+                    binding.textViewLeader1.text = score.toString()
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Handle errors
+                }
+            })
+//        binding.textViewLeader1.text = playersRef.child(localPlayerID).child("score").get().toString()
+//        binding.textViewLeader2.text = playersRef.child(localPlayerID).child("score").get().toString()
+//        binding.textViewLeader3.text = playersRef.child(localPlayerID).child("score").get().toString()
+//        binding.textViewLeader4.text = playersRef.child(localPlayerID).child("score").toString()
+//        binding.textViewLeader5.text = playersRef.child(localPlayerID).child("score").get().toString()
         // Inflate the layout for this fragment
         return view
     }
@@ -146,34 +160,38 @@ class TestBoardFragment : Fragment() {
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
-//                    try {
-//                        if (dataSnapshot.exists()) {
-//                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-//                            if (miniGameNmbr == 0) {
-//                                println("sten sax pase vald")
-//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//                                view?.findNavController()
-//                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-//                            } else if (miniGameNmbr == 1) {
-//                                println("soccer vald")
-//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//                                view?.findNavController()
-//                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-//                            } else if (miniGameNmbr == 2) {
-//                                println("quiz vald")
-//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//                                view?.findNavController()
-//                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-//                            } else if (miniGameNmbr == 3) {
-//                                println("roulette vald")
-//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-//                                view?.findNavController()
-//                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
-//                            }
-//                        }
-//                    } catch (e: Exception) {
-//                        e.printStackTrace()
-//                    }
+                    try {
+                        if (dataSnapshot.exists()) {
+                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                            if (miniGameNmbr == 0) {
+                                println("sten sax pase vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                            } else if (miniGameNmbr == 1) {
+                                println("soccer vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                            } else if (miniGameNmbr == 2) {
+                                println("quiz vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                            } else if (miniGameNmbr == 3) {
+                                println("roulette vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -402,7 +420,7 @@ class TestBoardFragment : Fragment() {
                     }
                     if (localRandomVal != -1) {
 
-//                        setMiniGame(localRandomVal)
+                        setMiniGame(localRandomVal)
                     }
                 }
         }

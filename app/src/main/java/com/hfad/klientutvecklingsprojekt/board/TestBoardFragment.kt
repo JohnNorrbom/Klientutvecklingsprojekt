@@ -95,7 +95,7 @@ class TestBoardFragment : Fragment() {
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@TestBoardFragment.meModel = it
-                setText()
+                setText(view)
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
@@ -125,7 +125,7 @@ class TestBoardFragment : Fragment() {
         return view
     }
 
-    private fun setText() {
+    private fun setText(view:ConstraintLayout) {
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
@@ -137,11 +137,11 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
             paintPlayers()
-            setMiniGameListener()
+            setMiniGameListener(view)
         }
     }
 
-    fun setMiniGameListener() {
+    fun setMiniGameListener(view:ConstraintLayout) {
         val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
         boardMiniGameRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {

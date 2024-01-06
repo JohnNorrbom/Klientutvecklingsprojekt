@@ -145,7 +145,7 @@ class TestBoardFragment : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
                     try {
-                        if (dataSnapshot.exists()) {
+                        if (dataSnapshot.exists() && localCurrentPlayerTest != playerID) {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
@@ -157,7 +157,7 @@ class TestBoardFragment : Fragment() {
                                 println("soccer vald")
                                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                                    ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
                             } else if (miniGameNmbr == 2) {
                                 println("quiz vald")
                                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -254,10 +254,9 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5
-                //Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
-            val resourceId = resources.getIdentifier(
+            var resourceId = resources.getIdentifier(
                 destination,
                 "drawable",
                 "com.hfad.klientutvecklingsprojekt"
@@ -280,8 +279,11 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
+                localRandomVal = Random.nextInt(4)
+
+                //TODO TA BORT RAD BARA ETT TEST GÖR SÅ ATT SOCCER SPELAS VARJE GÅNG
                 localRandomVal = 0
-                    //Random.nextInt(4)
+
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -295,7 +297,14 @@ class TestBoardFragment : Fragment() {
             }
             paintPlayers()
             assignNextCurrentPlayer()
-            binding.diceButton.visibility = View.GONE
+            destination = "dice" + randomInt + "grayed"
+            resourceId = resources.getIdentifier(
+                destination,
+                "drawable",
+                "com.hfad.klientutvecklingsprojekt"
+            )
+            binding.diceButton?.setImageResource(resourceId)
+            binding.diceButton.isEnabled = false
         }
     }
 
@@ -314,14 +323,25 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
+                    if(localCurrentPlayerTest == localPlayerID){
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                    }else{
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                    }
+
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-
+                    //means you are host
+                    if(localCurrentPlayerTest == localPlayerID){
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                    }else{
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                    }
                 }
                 println("SOCCER GAME FERDINAND")
             } else if (randomVal == 2) {
@@ -399,13 +419,15 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     val currentPlayerId = dataSnapshot.value
                     if (currentPlayerId == localPlayerID) {
+                        binding.diceButton.setImageResource(R.drawable.dice1)
+                        binding.diceButton.isEnabled = true
                         binding.diceButton.visibility = View.VISIBLE
                         localCurrentPlayerTest = currentPlayerId.toString()
-                    } else {
-                        binding.diceButton.visibility = View.INVISIBLE
+                    }else{
+                        binding.diceButton.setImageResource(R.drawable.dice1grayed)
+                        binding.diceButton.isEnabled = false
                     }
                     if (localRandomVal != -1) {
-
                         setMiniGame(localRandomVal)
                     }
                 }

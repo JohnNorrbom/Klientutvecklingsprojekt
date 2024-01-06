@@ -126,9 +126,6 @@
             android:id="@+id/action_testBoardFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
         <action
-            android:id="@+id/action_testBoardFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
-        <action
             android:id="@+id/action_testBoardFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
@@ -140,6 +137,9 @@
         <action
             android:id="@+id/action_testBoardFragment_to_stenSaxPaseWaitFragment"
             app:destination="@id/stenSaxPaseWaitFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_waitingSoccerFragment"
+            app:destination="@id/waitingSoccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"

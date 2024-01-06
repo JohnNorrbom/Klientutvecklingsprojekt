@@ -69,6 +69,8 @@ class TestBoardFragment : Fragment() {
     //  minigame
     private var localRandomVal = -1
 
+    private var localCurrentPlayerTest = ""
+
     //  DICE SOUND
     private val maxStreams = 5 // Number of simultaneous sounds
     private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -148,8 +150,9 @@ class TestBoardFragment : Fragment() {
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
                                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
+                                if(localCurrentPlayerTest == localPlayerID) view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                else view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
                                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -251,8 +254,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5
-            //Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
                 destination,
@@ -310,8 +312,8 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
@@ -396,6 +398,7 @@ class TestBoardFragment : Fragment() {
                     val currentPlayerId = dataSnapshot.value
                     if (currentPlayerId == localPlayerID) {
                         binding.diceButton.visibility = View.VISIBLE
+                        localCurrentPlayerTest = currentPlayerId.toString()
                     } else {
                         binding.diceButton.visibility = View.INVISIBLE
                     }
@@ -432,6 +435,7 @@ class TestBoardFragment : Fragment() {
 
                 if (index != -1) {
                     index = if (index < playerIDarr.size - 1) index + 1 else 0
+                    localCurrentPlayerTest = playerIDarr[index]
                     boardRef.child(localGameID).child("currentPlayerId")
                         .setValue(playerIDarr[index])
                 } else {
@@ -441,6 +445,5 @@ class TestBoardFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }
-
     }
 }

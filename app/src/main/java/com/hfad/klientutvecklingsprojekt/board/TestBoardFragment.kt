@@ -31,8 +31,6 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 
-
-//TODO fixa minigame variabel till board så att minigame startar för alla (förutom de med choose)
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
@@ -148,6 +146,12 @@ class TestBoardFragment : Fragment() {
             binding.playerGreen.visibility = View.GONE
             paintPlayers()
 
+            println("local player id: " + localPlayerID)
+            playersRef.child(localPlayerID).get()
+                .addOnSuccessListener { dataSnapshot ->
+                    currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
+                }
+
             val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -218,6 +222,7 @@ class TestBoardFragment : Fragment() {
                 val color = playerSnapshot.child("color").value.toString()
                 val position =
                     Integer.valueOf(playerSnapshot.child("position").value.toString())
+
                 val imageView = when (color) {
                     "blue" -> binding.playerBlue
                     "red" -> binding.playerRed
@@ -312,6 +317,7 @@ class TestBoardFragment : Fragment() {
     }
 
     fun diceButton() {
+
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER

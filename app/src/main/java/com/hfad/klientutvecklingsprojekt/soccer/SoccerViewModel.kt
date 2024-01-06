@@ -1,13 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.soccer
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.gavleroulette.GameStatus
-import com.hfad.klientutvecklingsprojekt.gavleroulette.PlayerStatus
-import kotlin.random.Random
 
 class SoccerViewModel() : ViewModel(){
 
@@ -19,8 +13,8 @@ class SoccerViewModel() : ViewModel(){
     private var enemyColor = "not assigned"
     private var type = "not assigned"
     private var enemyType = "not assigned"
-    var points = 0
-    var enemyPoints = 0
+    var p1Points = 0
+    var p2Points = 0
     var shooterChoice = "not assigned"
     var goalieChoice = "not assigned"
     private var round = 1
@@ -28,6 +22,8 @@ class SoccerViewModel() : ViewModel(){
     var shooterHit = false
     var shooterColor = color
     var goalieColor = enemyColor
+    var player1 = "shooter"
+    var player2 = "goalie"
 
     fun getColor(): String {
         return color
@@ -49,61 +45,48 @@ class SoccerViewModel() : ViewModel(){
 
     }
 
-    fun setTypes(type: String, enemyType: String){
-        this.type = type
-        this.enemyType = enemyType
-    }
-
-    fun getType(): String{
-        return type
-    }
-
-    fun getEnemyType(): String{
-        return enemyType
-    }
-
-    fun leftButtonClick(isPlayer1: Boolean){
-        Log.d("Count", "" + buttonCount)
-
-        if(buttonCount%2 == 0){
+    fun leftButtonClick(playerNbr: Int){
+        if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "left"
-            animationReady = false
-
         }
-        if(buttonCount%2 == 1){
+        if (playerNbr == 1 && player1 == "goalie"){
             goalieChoice = "left"
-            startRound()
-            animationReady = true
         }
-        buttonCount++
-    }
-    fun rightButtonClick(isPlayer1: Boolean){
-        Log.d("Count", "" + buttonCount)
+        if (playerNbr == 2 && player2 == "shooter"){
+            shooterChoice = "left"
+        }
+        if (playerNbr == 2 && player2 == "goalie"){
+            goalieChoice = "left"
+        }
 
-        if(buttonCount%2 == 0){
+    }
+    fun rightButtonClick(playerNbr: Int){
+        if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "right"
-            animationReady = false
         }
-        if(buttonCount%2 == 1){
+        if (playerNbr == 1 && player1 == "goalie"){
             goalieChoice = "right"
-            startRound()
-            animationReady = true
         }
-        buttonCount++
+        if (playerNbr == 2 && player2 == "shooter"){
+            shooterChoice = "right"
+        }
+        if (playerNbr == 2 && player2 == "goalie"){
+            goalieChoice = "right"
+        }
     }
-    fun midButtonClick(isPlayer1: Boolean){
-        Log.d("Count", "" + buttonCount)
-
-        if(buttonCount%2 == 0){
+    fun midButtonClick(playerNbr: Int){
+        if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "mid"
-            animationReady = false
         }
-        if(buttonCount%2 == 1){
+        if (playerNbr == 1 && player1 == "goalie"){
             goalieChoice = "mid"
-            startRound()
-            animationReady = true
         }
-        buttonCount++
+        if (playerNbr == 2 && player2 == "shooter"){
+            shooterChoice = "mid"
+        }
+        if (playerNbr == 2 && player2 == "goalie"){
+            goalieChoice = "mid"
+        }
     }
 
 
@@ -115,12 +98,12 @@ class SoccerViewModel() : ViewModel(){
 
         //change type of goalie and shooter
 
-        if(type == "shooter"){
-            type = "goalie"
-            enemyType = "shooter"
+        if(player1 == "shooter"){
+            player1 = "goalie"
+            player2 = "shooter"
         }else{
-            type = "shooter"
-            enemyType = "goalie"
+            player2 = "shooter"
+            player1 = "goalie"
         }
     }
 
@@ -128,59 +111,59 @@ class SoccerViewModel() : ViewModel(){
     fun startRound(){
         shooterHit = false
         if(round == 1){
-            type = "shooter"
-            enemyType = "goalie"
+            player1 = "shooter"
+            player2 = "goalie"
         }
 
         if(goalieChoice == "right" && shooterChoice == "left"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
 
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }
 
         if(goalieChoice == "mid" && shooterChoice == "left"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
 
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }
         if(goalieChoice == "left" && shooterChoice == "mid"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
 
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }
         if(goalieChoice == "right" && shooterChoice == "mid"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }
         if(goalieChoice == "left" && shooterChoice == "right"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }
         if(goalieChoice == "mid" && shooterChoice == "right"){
-            if(type == "shooter"){
-                points++
+            if(player1 == "shooter"){
+                p1Points++
             }else{
-                enemyPoints++
+                p2Points++
             }
             shooterHit = true
         }

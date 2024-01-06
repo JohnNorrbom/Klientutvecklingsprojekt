@@ -11,12 +11,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseChooseBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
-import kotlin.random.Random
-import kotlin.random.nextInt
 
 class StenSaxPaseChooseFragment : Fragment() {
 
@@ -59,7 +56,7 @@ class StenSaxPaseChooseFragment : Fragment() {
                 Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
-
+        /*
         // Remove this once testing done
         if(gameID == "") {
             gameID = "5369"
@@ -68,7 +65,7 @@ class StenSaxPaseChooseFragment : Fragment() {
             loadPlayersFromGameID()
         }
         // End of test section
-
+         */
         binding.astroBlue.setOnClickListener {
             setOpponentID("blue")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
@@ -163,5 +160,9 @@ class StenSaxPaseChooseFragment : Fragment() {
         println("__$playerID and __$opponentID")
         val action = StenSaxPaseChooseFragmentDirections.actionStenSaxPaseChooseFragmentToStensaxpaseFragment(playerID,opponentID)
         view?.findNavController()?.navigate(action)
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

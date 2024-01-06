@@ -226,7 +226,12 @@ class TestBoardFragment : Fragment() {
                 }
 
                 Log.d("score", "testing: $number1")
-               // Sortera leaderboarden
+                // Sorterar leaderboarden
+                //  index
+                var i = 0
+
+
+                // Extracting values from playerSnapshot
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()
 
@@ -253,7 +258,6 @@ class TestBoardFragment : Fragment() {
                     Log.d("score", "after leaderboardList $nickname1 $number1")
                 }
 
-// Update UI with leaderboard information
                 binding.textViewLeader1.text = getLeaderText(0)
                 binding.textViewLeader2.text = getLeaderText(1)
                 binding.textViewLeader3.text = getLeaderText(2)
@@ -337,10 +341,6 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
-
-                //TODO TA BORT RAD BARA ETT TEST GÖR SÅ ATT SOCCER SPELAS VARJE GÅNG
-                localRandomVal = 0
-
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -352,8 +352,6 @@ class TestBoardFragment : Fragment() {
                 playersRef.child(localPlayerID).child("position").setValue(position)
                 playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
-            // TODO TA BORT KODRADEN UNDER
-            binding.diceButton.visibility = View.GONE
             paintPlayers()
             assignNextCurrentPlayer()
             destination = "dice" + randomInt + "grayed"

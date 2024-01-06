@@ -142,23 +142,32 @@ class TestBoardFragment : Fragment() {
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
-                    if (dataSnapshot.exists()) {
-                        val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-                        if(miniGameNmbr == 0){
-                            println("sten sax pase vald")
-                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                        } else if(miniGameNmbr == 1) {
-                            println("soccer vald")
-                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-                        } else if(miniGameNmbr == 2) {
-                            println("quiz vald")
-                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-                        } else if(miniGameNmbr == 3){
-                            println("roulette vald")
-                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    try {
+                        if (dataSnapshot.exists()) {
+                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                            if (miniGameNmbr == 0) {
+                                println("sten sax pase vald")
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                            } else if (miniGameNmbr == 1) {
+                                println("soccer vald")
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                            } else if (miniGameNmbr == 2) {
+                                println("quiz vald")
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                            } else if (miniGameNmbr == 3) {
+                                println("roulette vald")
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
+
                 override fun onCancelled(databaseError: DatabaseError) {
                     // Failed to read value
                     Log.w("YourTag", "Failed to read board data.", databaseError.toException())
@@ -176,7 +185,8 @@ class TestBoardFragment : Fragment() {
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val playerId = playerSnapshot.child("playerId").value.toString()
                     val color = playerSnapshot.child("color").value.toString()
-                    val position = Integer.valueOf(playerSnapshot.child("position").value.toString())
+                    val position =
+                        Integer.valueOf(playerSnapshot.child("position").value.toString())
                     val imageView = when (color) {
                         "blue" -> binding.playerBlue
                         "red" -> binding.playerRed
@@ -194,7 +204,7 @@ class TestBoardFragment : Fragment() {
                         val tileId = position % 20 + 1
                         val tileName = "tile$tileId"
 
-                        var tile = when (tileName){
+                        var tile = when (tileName) {
                             "tile1" -> binding.tile1
                             "tile2" -> binding.tile2
                             "tile3" -> binding.tile3
@@ -217,7 +227,7 @@ class TestBoardFragment : Fragment() {
                             "tile20" -> binding.tile20
                             else -> null
                         }
-                        if (tile != null){
+                        if (tile != null) {
                             val layoutParams = view.layoutParams as ConstraintLayout.LayoutParams
                             layoutParams.topToTop = tile.id
                             layoutParams.endToEnd = tile.id
@@ -230,6 +240,7 @@ class TestBoardFragment : Fragment() {
                 Log.e("paintPlayers", "Error fetching players", exception)
             }
     }
+
     fun diceButton() {
         //  DICE BUTTON
         val dice = binding.diceButton
@@ -237,7 +248,7 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = 5
-                //Random.nextInt(6) + 1
+            //Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
                 destination,
@@ -247,19 +258,19 @@ class TestBoardFragment : Fragment() {
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
 
-            if(currentImageViewIndex%20 == 1 || currentImageViewIndex%20 == 6 || currentImageViewIndex%20 == 11 || currentImageViewIndex%20 == 15 ){
+            if (currentImageViewIndex % 20 == 1 || currentImageViewIndex % 20 == 6 || currentImageViewIndex % 20 == 11 || currentImageViewIndex % 20 == 15) {
                 localScore += 1
             }
-            if(currentImageViewIndex%20 == 2 || currentImageViewIndex%20 == 7 || currentImageViewIndex%20 == 12 || currentImageViewIndex%20 == 16 ){
+            if (currentImageViewIndex % 20 == 2 || currentImageViewIndex % 20 == 7 || currentImageViewIndex % 20 == 12 || currentImageViewIndex % 20 == 16) {
                 localScore += 2
             }
-            if(currentImageViewIndex%20 == 3 || currentImageViewIndex%20 == 8 || currentImageViewIndex%20 == 13 || currentImageViewIndex%20 == 17 ){
+            if (currentImageViewIndex % 20 == 3 || currentImageViewIndex % 20 == 8 || currentImageViewIndex % 20 == 13 || currentImageViewIndex % 20 == 17) {
                 localScore += 3
             }
-            if(currentImageViewIndex%20 == 4 || currentImageViewIndex%20 == 9 || currentImageViewIndex%20 == 14 || currentImageViewIndex%20 == 18 ){
+            if (currentImageViewIndex % 20 == 4 || currentImageViewIndex % 20 == 9 || currentImageViewIndex % 20 == 14 || currentImageViewIndex % 20 == 18) {
                 localScore += -5
             }
-            if(currentImageViewIndex%20 == 5 || currentImageViewIndex%20 == 10 || currentImageViewIndex%20 == 19){
+            if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
@@ -279,98 +290,116 @@ class TestBoardFragment : Fragment() {
             binding.diceButton.visibility = View.GONE
         }
     }
+
     override fun onPause() {
         super.onPause()
     }
+
     override fun onResume() {
         super.onResume()
-
         // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
     private fun setMiniGame(randomVal: Int) {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (randomVal == 0) {
-            if (isAdded && view != null) {
-                view.findNavController().navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-            }
-        } else if (randomVal == 1) {
-            if (isAdded && view != null) {
-                view.findNavController().navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-
-            }
-                println("SOCCER GAME FERDINAND")
-        } else if (randomVal == 2) {
-            println("QUIZ GAME PONTUS")
-            if (isAdded && view != null) {
-                view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
-
-            }
-        } else {
-            println("ROULETTE WILLIAM")
-            if (isAdded && view != null) {
-                var i = 0
-                if (i == 0){
-                    var gamePlayer : MutableMap<String, PlayerStatus> = mutableMapOf()
-                    var scorePlayers : MutableMap<String, Int> = mutableMapOf()
-                    myRef.child(localGameID).child("players").get().addOnSuccessListener {
-                        val snapshot = it
-                        for (player in snapshot.children){
-                            Log.d("player","${player}")
-                            gamePlayer?.put(player.key.toString(),PlayerStatus.ALIVE)
-                            scorePlayers?.put(player.key.toString(),0)
-                            Log.d("players","${gamePlayer}")
-                        }
-
-                        Log.d("currentPlayer","${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}")
-
-                        if (gamePlayer.size>1){
-                            RouletteData.saveGameModel(
-                                RouletteModel(
-                                    gameId = localGameID,
-                                    players = gamePlayer,
-                                    gameStatus = GameStatus.INPROGRESS,
-                                    attempts = 0,
-                                    laps = 0,
-                                    score = scorePlayers,
-                                    nbrOfPlayers = gamePlayer.size,
-                                    aliveCount = gamePlayer.size,
-                                    luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
-                                    currentPlayer = gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))
-                                ),localGameID
-                            )
-                        }
-                        // set the btnPressed to true if anny player presses it then every player goes to the same game
-                    }
-                    i++
+        try {
+            if (randomVal == 0) {
+                if (isAdded && view != null) {
+                    view.findNavController()
+                        .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                 }
-                view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+            } else if (randomVal == 1) {
+                if (isAdded && view != null) {
+                    view.findNavController()
+                        .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+
+                }
+                println("SOCCER GAME FERDINAND")
+            } else if (randomVal == 2) {
+                println("QUIZ GAME PONTUS")
+                if (isAdded && view != null) {
+                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+
+                }
+            } else {
+                println("ROULETTE WILLIAM")
+                if (isAdded && view != null) {
+                    var i = 0
+                    if (i == 0) {
+                        var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                        var scorePlayers: MutableMap<String, Int> = mutableMapOf()
+                        myRef.child(localGameID).child("players").get().addOnSuccessListener {
+                            val snapshot = it
+                            for (player in snapshot.children) {
+                                Log.d("player", "${player}")
+                                gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
+                                scorePlayers?.put(player.key.toString(), 0)
+                                Log.d("players", "${gamePlayer}")
+                            }
+
+                            Log.d(
+                                "currentPlayer",
+                                "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
+                            )
+
+                            if (gamePlayer.size > 1) {
+                                RouletteData.saveGameModel(
+                                    RouletteModel(
+                                        gameId = localGameID,
+                                        players = gamePlayer,
+                                        gameStatus = GameStatus.INPROGRESS,
+                                        attempts = 0,
+                                        laps = 0,
+                                        score = scorePlayers,
+                                        nbrOfPlayers = gamePlayer.size,
+                                        aliveCount = gamePlayer.size,
+                                        luckyNumber = mutableListOf((Random.nextInt(6) + 1).toString()),
+                                        currentPlayer = gamePlayer.keys.elementAt(
+                                            Random.nextInt(
+                                                gamePlayer.size
+                                            )
+                                        )
+                                    ), localGameID
+                                )
+                            }
+                            // set the btnPressed to true if anny player presses it then every player goes to the same game
+                        }
+                        i++
+                    }
+                    view?.findNavController()
+                        ?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
+
     private val positionListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             paintPlayers()
         }
+
         override fun onCancelled(error: DatabaseError) {
         }
     }
 
     private val boardListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(localGameID).child("currentPlayerId").get().addOnSuccessListener { dataSnapshot ->
-                val currentPlayerId = dataSnapshot.value
-                if (currentPlayerId == localPlayerID){
-                    binding.diceButton.visibility = View.VISIBLE
-                }else{
-                    binding.diceButton.visibility  = View.INVISIBLE
-                }
-                if(localRandomVal != -1) {
+            boardRef.child(localGameID).child("currentPlayerId").get()
+                .addOnSuccessListener { dataSnapshot ->
+                    val currentPlayerId = dataSnapshot.value
+                    if (currentPlayerId == localPlayerID) {
+                        binding.diceButton.visibility = View.VISIBLE
+                    } else {
+                        binding.diceButton.visibility = View.INVISIBLE
+                    }
+                    if (localRandomVal != -1) {
 
-                    setMiniGame(localRandomVal)
+                        setMiniGame(localRandomVal)
+                    }
                 }
-            }
         }
 
         override fun onCancelled(error: DatabaseError) {
@@ -384,25 +413,27 @@ class TestBoardFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+
     fun assignNextCurrentPlayer() {
         var playerIDarr = arrayListOf<String>()
         myRef.child(localGameID).child("players").get()
             .addOnSuccessListener {
                 val snapshot = it
-                for(player in snapshot.children) {
+                for (player in snapshot.children) {
                     val playerID = player.child("playerID").value.toString()
                     playerIDarr.add(playerID)
                 }
 
-                    var index = playerIDarr.indexOf(localPlayerID)
+                var index = playerIDarr.indexOf(localPlayerID)
 
-                    if (index != -1) {
-                        index = if (index < playerIDarr.size - 1) index + 1 else 0
-                        boardRef.child(localGameID).child("currentPlayerId").setValue(playerIDarr[index])
-                    } else {
-                        println("Error: currentPlayerID not found in arrList")
-                    }
+                if (index != -1) {
+                    index = if (index < playerIDarr.size - 1) index + 1 else 0
+                    boardRef.child(localGameID).child("currentPlayerId")
+                        .setValue(playerIDarr[index])
+                } else {
+                    println("Error: currentPlayerID not found in arrList")
                 }
+            }
             .addOnFailureListener { exception ->
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }

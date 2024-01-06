@@ -142,9 +142,36 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
             paintPlayers()
+            setMiniGameListener()
         }
     }
 
+    fun setMiniGameListener() {
+        val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
+        boardMiniGameRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                println(dataSnapshot.getValue())
+                if (dataSnapshot.exists()) {
+                    val miniGameNmbr = dataSnapshot.getValue()
+                    if(miniGameNmbr == 0){
+                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        println("sten sax pase vald")
+                    } else if(miniGameNmbr == 1) {
+                        //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                        println("soccer vald")
+                    } else if(miniGameNmbr == 2) {
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                    } else if(miniGameNmbr == 3){
+                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    }
+                }
+            }
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Failed to read value
+                Log.w("YourTag", "Failed to read board data.", databaseError.toException())
+            }
+        })
+    }
 
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens

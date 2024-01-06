@@ -48,7 +48,16 @@
         android:id="@+id/stensaxpaseFragment"
         android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseFragment"
         android:label="StenSaxPaseFragment"
-        tools:layout="@layout/fragment_sten_sax_pase" />
+        tools:layout="@layout/fragment_sten_sax_pase" >
+        <argument
+            android:name="playerID"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="opponentID"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/playerInfoFragment"
         android:name="com.hfad.klientutvecklingsprojekt.playerinfo.PlayerInfoFragment"

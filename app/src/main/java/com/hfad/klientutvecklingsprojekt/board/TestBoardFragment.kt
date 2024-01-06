@@ -341,10 +341,6 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
-
-                //TODO TA BORT RAD BARA ETT TEST GÖR SÅ ATT SOCCER SPELAS VARJE GÅNG
-                localRandomVal = 1
-
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame

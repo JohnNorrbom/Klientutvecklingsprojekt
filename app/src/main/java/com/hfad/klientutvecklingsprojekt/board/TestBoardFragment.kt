@@ -226,7 +226,6 @@ class TestBoardFragment : Fragment() {
                     "white" -> binding.playerWhite
                     else -> null // Handle any other colors if needed
                 }
-
                 Log.d("score", "testing: $number1")
                 // Sorterar leaderboarden
                 //  index

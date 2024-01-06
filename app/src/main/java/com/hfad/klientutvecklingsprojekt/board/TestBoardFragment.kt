@@ -226,43 +226,7 @@ class TestBoardFragment : Fragment() {
                 }
 
                 Log.d("score", "testing: $number1")
-                // Sorterar leaderboarden
-                //  index
-                var i = 0
-//                number1 = playerSnapshot.child("score").value.toString().toInt()
-//                nickname1 = playerSnapshot.child("nickname").value.toString()
-//                //  skapar en dynamisk parlista string + int
-//                val leaderboardList = mutableListOf<Pair<String, Int>>()
-//                //  loopar igenom listan
-//                if(leaderboardList.isEmpty()) {
-//                    // lägger till ett par i listan
-//                    leaderboardList.add(nickname1 to number1)
-//                    binding.textViewLeader1.text = leaderboardList[0].first + leaderboardList[0].second
-//                    Log.d("score", "leaderboardList " + nickname1 + number1)
-//                } else {
-//                    // kollar om paret redan är i listan
-//                    val isPairInList = leaderboardList.any { (stringVal, intVal) ->
-//                        stringVal == nickname1 && intVal == number1
-//                    }
-//                    if (!isPairInList) {
-//                        // lägger till det nya paret i listan
-//                        leaderboardList.add(nickname1 to number1)
-//                        // sorterar listan
-//                        leaderboardList.sortByDescending { it.second }
-//                    }
-//                    Log.d("score", "afterleaderboardList " + nickname1 + number1)
-//                    binding.textViewLeader1.text = leaderboardList[0].first + " " + leaderboardList[0].second
-//                    binding.textViewLeader2.text = leaderboardList[1].first + " " + leaderboardList[1].second
-//                    binding.textViewLeader3.text = leaderboardList[2].first + " " + leaderboardList[2].second
-//                    binding.textViewLeader4.text = leaderboardList[3].first + " " + leaderboardList[3].second
-//                    binding.textViewLeader5.text = leaderboardList[4].first + " " + leaderboardList[4].second
-//                }
-// Declare the leaderboardList outside the loop
-
-// Loop through your data (playerSnapshot)
-// Assuming this is inside a loop based on your usage of playerSnapshot
-
-// Extracting values from playerSnapshot
+               // Sortera leaderboarden
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()
 

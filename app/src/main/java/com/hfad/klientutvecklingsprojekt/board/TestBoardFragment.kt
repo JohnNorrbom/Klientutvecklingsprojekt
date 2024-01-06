@@ -45,7 +45,7 @@ class TestBoardFragment : Fragment() {
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Player Data") // används den här?
+    private val myRef = database.getReference("Player Data")
     private var playerRef = database.getReference("Player Data").child(gameID)
     private var playersRef = playerRef.child("players")
 
@@ -68,6 +68,8 @@ class TestBoardFragment : Fragment() {
 
     //  minigame
     private var localRandomVal = -1
+
+    private var localCurrentPlayerTest = ""
 
     //  DICE SOUND
     private val maxStreams = 5 // Number of simultaneous sounds
@@ -165,10 +167,10 @@ class TestBoardFragment : Fragment() {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
+                                if(localCurrentPlayerTest == localPlayerID) view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                else view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
                                 activity?.requestedOrientation =
@@ -328,8 +330,8 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
@@ -415,6 +417,7 @@ class TestBoardFragment : Fragment() {
                     if (currentPlayerId == localPlayerID) {
                         binding.diceButton.visibility = View.VISIBLE
                         binding.diceButton.isEnabled = true
+                        localCurrentPlayerTest = currentPlayerId.toString()
                     } else {
                         binding.diceButton.isEnabled = false
                     }
@@ -451,6 +454,7 @@ class TestBoardFragment : Fragment() {
 
                 if (index != -1) {
                     index = if (index < playerIDarr.size - 1) index + 1 else 0
+                    localCurrentPlayerTest = playerIDarr[index]
                     boardRef.child(localGameID).child("currentPlayerId")
                         .setValue(playerIDarr[index])
                 } else {
@@ -460,6 +464,5 @@ class TestBoardFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Log.e("assignNextCurrentPlayer", "Error fetching players", exception)
             }
-
     }
 }

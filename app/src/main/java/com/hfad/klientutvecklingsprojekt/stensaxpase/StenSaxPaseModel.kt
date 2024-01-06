@@ -10,5 +10,7 @@ data class StenSaxPaseModel
     (
     val gameID : String? = null,
     var status : Boolean? = null,
-    var players: MutableMap<String, MutableMap<String,String>>? = null
+    var players: MutableMap<String, MutableMap<String,String>>? = null,
+    var playerID : String? = null,
+    var opponentID: String? = null
     )

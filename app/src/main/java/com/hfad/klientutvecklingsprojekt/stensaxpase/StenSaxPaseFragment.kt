@@ -51,13 +51,14 @@ class StenSaxPaseFragment : Fragment() {
                 Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
-
+        /*
         // For testing when mini-game is launched from start screen button
         if(currentGameID == "") {
             currentGameID = "5369"
             currentPlayerID = "1986"
             setID(currentGameID, currentPlayerID)
         }
+         */
 
         // initialize game
         //viewModel.initGame()
@@ -134,7 +135,15 @@ class StenSaxPaseFragment : Fragment() {
     fun initGame() {
         println("Currently in game: $gameID , using playerID: $playerID")
         // Load players from lobby
-        loadPlayersFromGameID()
+        if(playerID == "null") {
+            stenSaxPaseRef.child(gameID).get().addOnSuccessListener {
+                for(elem in it.children) {
+                    if(elem.key == "playerID") playerID = elem.value.toString()
+                    if(elem.key == "opponentID") opponentID = elem.value.toString()
+                }
+                loadPlayersFromGameID()
+            }
+        } else loadPlayersFromGameID()
     }
 
     fun loadPlayersFromGameID() {
@@ -159,8 +168,11 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun savePlayersToDatabase(players : MutableMap<String,MutableMap<String,String>>) {
-        stenSaxPaseModel = StenSaxPaseModel(gameID, false, players)
-        stenSaxPaseRef.child(gameID).setValue(stenSaxPaseModel)
+        if(playerID != "null") {
+            println("$playerID __VS__ $opponentID")
+            stenSaxPaseModel = StenSaxPaseModel(gameID, false, players, playerID, opponentID)
+            stenSaxPaseRef.child(gameID).setValue(stenSaxPaseModel)
+        }
     }
 
     // Maybe remove this whole setPlayers thing and instead use solution where a player chooses who to compete with
@@ -169,7 +181,7 @@ class StenSaxPaseFragment : Fragment() {
     var player2:String? = null
 
     fun setPlayers() {
-
+        println()
         player1 = playerID
         player2 = opponentID
 

@@ -119,6 +119,9 @@
         <action
             android:id="@+id/action_testBoardFragment_to_stenSaxPaseChooseFragment"
             app:destination="@id/stenSaxPaseChooseFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_leaderBoardFragment"
+            app:destination="@id/leaderBoardFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"
@@ -129,4 +132,9 @@
             android:id="@+id/action_stenSaxPaseChooseFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/leaderBoardFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.leaderboard.leaderBoardFragment"
+        android:label="fragment_leader_board"
+        tools:layout="@layout/fragment_leader_board" />
 </navigation>

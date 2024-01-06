@@ -285,9 +285,20 @@
         android:scaleType="fitCenter"
         android:src="@drawable/dice1"
         android:text=""
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tile14"
+        app:layout_constraintEnd_toStartOf="@+id/tile9"
+        app:layout_constraintStart_toEndOf="@+id/tile20"
+        app:layout_constraintTop_toBottomOf="@+id/tile5" />
+
+    <Button
+        android:id="@+id/leaderBoardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LEADERBOARD"
+        app:layout_constraintBottom_toTopOf="@+id/tile4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tile14" />
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

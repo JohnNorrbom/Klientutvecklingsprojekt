@@ -346,7 +346,7 @@ class QuizFragment : Fragment() {
 
                 delay(10000)
                 if (isAdded && view != null) {
-                    
+
                     database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
                     view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
                 }

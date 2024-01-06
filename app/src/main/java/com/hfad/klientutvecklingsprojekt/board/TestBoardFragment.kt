@@ -143,23 +143,26 @@ class TestBoardFragment : Fragment() {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
                     try {
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                         if (dataSnapshot.exists()) {
                             val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
                             if (miniGameNmbr == 0) {
                                 println("sten sax pase vald")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
                             } else if (miniGameNmbr == 2) {
                                 println("quiz vald")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
                                     ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                             }

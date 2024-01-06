@@ -95,7 +95,7 @@ class TestBoardFragment : Fragment() {
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@TestBoardFragment.meModel = it
-                setText(view)
+                setText()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
@@ -125,7 +125,7 @@ class TestBoardFragment : Fragment() {
         return view
     }
 
-    private fun setText(view:ConstraintLayout) {
+    private fun setText() {
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
@@ -137,37 +137,34 @@ class TestBoardFragment : Fragment() {
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
             paintPlayers()
-            setMiniGameListener(view)
-        }
-    }
 
-    fun setMiniGameListener(view:ConstraintLayout) {
-        val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
-        boardMiniGameRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                println(dataSnapshot.getValue())
-                if (dataSnapshot.exists()) {
-                    val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-                    if(miniGameNmbr == 0){
-                        println("sten sax pase vald")
-                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                    } else if(miniGameNmbr == 1) {
-                        println("soccer vald")
-                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-                    } else if(miniGameNmbr == 2) {
-                        println("quiz vald")
-                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-                    } else if(miniGameNmbr == 3){
-                        println("roulette vald")
-                        view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+            val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
+            boardMiniGameRef.addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    println(dataSnapshot.getValue())
+                    if (dataSnapshot.exists()) {
+                        val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                        if(miniGameNmbr == 0){
+                            println("sten sax pase vald")
+                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        } else if(miniGameNmbr == 1) {
+                            println("soccer vald")
+                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                        } else if(miniGameNmbr == 2) {
+                            println("quiz vald")
+                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                        } else if(miniGameNmbr == 3){
+                            println("roulette vald")
+                            //view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                        }
                     }
                 }
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Failed to read value
-                Log.w("YourTag", "Failed to read board data.", databaseError.toException())
-            }
-        })
+                override fun onCancelled(databaseError: DatabaseError) {
+                    // Failed to read value
+                    Log.w("YourTag", "Failed to read board data.", databaseError.toException())
+                }
+            })
+        }
     }
 
     /*
@@ -239,7 +236,8 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
+            var randomInt = 5
+                //Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
                 destination,
@@ -369,6 +367,7 @@ class TestBoardFragment : Fragment() {
                     binding.diceButton.visibility  = View.INVISIBLE
                 }
                 if(localRandomVal != -1) {
+
                     setMiniGame(localRandomVal)
                 }
             }

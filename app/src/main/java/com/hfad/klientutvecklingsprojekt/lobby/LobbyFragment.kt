@@ -177,7 +177,7 @@ class LobbyFragment : Fragment() {
     }
 
     fun joinSoccer(){
-        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_soccerFragment)
+        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_waitingSoccerFragment)
 
     }
 

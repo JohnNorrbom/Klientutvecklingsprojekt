@@ -44,6 +44,9 @@ class SoccerChooseFragment : Fragment() {
     //Here you should get the other colors from boardModel
     private var otherColors = arrayListOf("blue", "red", "yellow", "green")
 
+    //id for other players
+    private var otherIds = arrayListOf("-1")
+
     //here you should get the id from boardModel
     private var gameId: String = Random.nextInt(1000..9999).toString()
 
@@ -155,6 +158,7 @@ class SoccerChooseFragment : Fragment() {
 
     fun otherColors(){
         otherColors = arrayListOf()
+        otherIds = arrayListOf()
         var colorArr = arrayListOf<String>()
         myRef.child(gameId).child("players").get()
             .addOnSuccessListener { dataSnapshot ->
@@ -165,6 +169,7 @@ class SoccerChooseFragment : Fragment() {
                         yourColor = color
                     }
                     otherColors.add(color)
+                    otherIds.add(playerId)
                 }
                 setColorButtonVisible()
             }

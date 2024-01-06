@@ -45,7 +45,7 @@ class TestBoardFragment : Fragment() {
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val myRef = database.getReference("Player Data")
+    private val myRef = database.getReference("Player Data") // används den här?
     private var playerRef = database.getReference("Player Data").child(gameID)
     private var playersRef = playerRef.child("players")
 
@@ -120,7 +120,11 @@ class TestBoardFragment : Fragment() {
         boardRef.addValueEventListener(boardListener)
         diceButton()
         playerRef.addValueEventListener(positionListener)
-
+        binding.textViewLeader1.text = playersRef.child("score").get().toString()
+        binding.textViewLeader2.text = playersRef.child("score").get().toString()
+        binding.textViewLeader3.text = playersRef.child("score").get().toString()
+        binding.textViewLeader4.text = playersRef.child("score").get().toString()
+        binding.textViewLeader5.text = playersRef.child("score").get().toString()
         // Inflate the layout for this fragment
         return view
     }
@@ -142,34 +146,34 @@ class TestBoardFragment : Fragment() {
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     println(dataSnapshot.getValue())
-                    try {
-                        if (dataSnapshot.exists()) {
-                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-                            if (miniGameNmbr == 0) {
-                                println("sten sax pase vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                            } else if (miniGameNmbr == 1) {
-                                println("soccer vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-                            } else if (miniGameNmbr == 2) {
-                                println("quiz vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-                            } else if (miniGameNmbr == 3) {
-                                println("roulette vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
+//                    try {
+//                        if (dataSnapshot.exists()) {
+//                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+//                            if (miniGameNmbr == 0) {
+//                                println("sten sax pase vald")
+//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                                view?.findNavController()
+//                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+//                            } else if (miniGameNmbr == 1) {
+//                                println("soccer vald")
+//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                                view?.findNavController()
+//                                    ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+//                            } else if (miniGameNmbr == 2) {
+//                                println("quiz vald")
+//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                                view?.findNavController()
+//                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+//                            } else if (miniGameNmbr == 3) {
+//                                println("roulette vald")
+//                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                                view?.findNavController()
+//                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+//                            }
+//                        }
+//                    } catch (e: Exception) {
+//                        e.printStackTrace()
+//                    }
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
@@ -251,8 +255,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5
-            Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             val resourceId = resources.getIdentifier(
                 destination,
@@ -278,9 +281,6 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
-                //laddauppminigamesiffra,
-                //gör en listener som kallar på setMinigame
-                // currentPlayer startar minigame
                 println("gameID: $localGameID entering mini-game: $localRandomVal")
                 boardRef.child(localGameID).child("randomVal").setValue(localRandomVal)
             }
@@ -291,7 +291,7 @@ class TestBoardFragment : Fragment() {
             }
             paintPlayers()
             assignNextCurrentPlayer()
-            binding.diceButton.visibility = View.GONE
+
         }
     }
 
@@ -396,12 +396,13 @@ class TestBoardFragment : Fragment() {
                     val currentPlayerId = dataSnapshot.value
                     if (currentPlayerId == localPlayerID) {
                         binding.diceButton.visibility = View.VISIBLE
+                        binding.diceButton.isEnabled = true
                     } else {
-                        binding.diceButton.visibility = View.INVISIBLE
+                        binding.diceButton.isEnabled = false
                     }
                     if (localRandomVal != -1) {
 
-                        setMiniGame(localRandomVal)
+//                        setMiniGame(localRandomVal)
                     }
                 }
         }

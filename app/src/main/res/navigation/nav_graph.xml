@@ -108,7 +108,11 @@
         android:id="@+id/quizFragment"
         android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizFragment"
         android:label="fragment_quiz"
-        tools:layout="@layout/fragment_quiz" />
+        tools:layout="@layout/fragment_quiz" >
+        <action
+            android:id="@+id/action_quizFragment_to_testBoardFragment"
+            app:destination="@id/testBoardFragment" />
+    </fragment>
     <fragment
         android:id="@+id/soccerChooseFragment"
         android:name="com.hfad.klientutvecklingsprojekt.soccer.SoccerChooseFragment"

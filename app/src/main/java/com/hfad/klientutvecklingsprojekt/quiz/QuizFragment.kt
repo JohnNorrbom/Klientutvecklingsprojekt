@@ -26,6 +26,12 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -287,12 +293,12 @@ class QuizFragment : Fragment() {
         initiateLeaderboardDisplay()
     }
     private fun initiateLeaderboardDisplay() {
-        val playersCountRef = myRef.child("Quiz").child(currentGameID).child("Players")
+        val playersCountRef = myRef.child(currentGameID).child("Players")
         playersCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 totalPlayersCount = dataSnapshot.childrenCount.toInt()
 
-                val playersRef = myRef.child("Quiz").child(currentGameID).child("Players")
+                val playersRef = myRef.child(currentGameID).child("Players")
                 playersRef.addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var donePlayersCount = 0
@@ -320,42 +326,37 @@ class QuizFragment : Fragment() {
             }
         })
     }
-    private fun showLeaderboard() {
-        val scoresRef = myRef.child(currentGameID).child("Scores")
-        println("GameID i showleader" + currentGameID)
+    private fun showLeaderboard() = CoroutineScope(Dispatchers.Main).launch {
+        try {
+            val scoresRef = myRef.child(currentGameID).child("Scores")
+            val playerRef = database.getReference("Player Data").child(currentGameID).child("players")
+            val dataSnapshot = withContext(Dispatchers.IO) { scoresRef.get().await() }
 
-        scoresRef.get().addOnSuccessListener { dataSnapshot ->
-            println(dataSnapshot.value)
             if (dataSnapshot.exists()) {
                 val allScores = StringBuilder()
 
                 for (userSnapshot in dataSnapshot.children) {
-                    val userID = userSnapshot.key
+                    val userNickname = withContext(Dispatchers.IO) {
+                        playerRef.child(userSnapshot.key ?: "").child("nickname").get().await().value
+                    }
                     val userScore = userSnapshot.value.toString()
-                    allScores.append("User: $userID, Score: $userScore\n")
+                    allScores.append("User: $userNickname, Score: $userScore\n")
                 }
-
                 binding.scoreTextView.text = allScores.toString()
 
-                Handler(Looper.getMainLooper()).postDelayed({
-                    try{
-                        if (isAdded && view != null) {
-                            println("Nuvarande destination: ${findNavController().currentDestination}")
-
-                            //view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
-                        }
-                    }
-                    catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                    super.onDestroyView()
-                }, 1000)
-            } else {
-                binding.scoreTextView.text = "Ingen poäng att visa."
+                delay(10000)
+                if (isAdded && view != null) {
+                    println("Nuvarande destination: ${findNavController().currentDestination}")
+                    database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
+                    view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
+                }
             }
-        }.addOnFailureListener {
+        } catch (e: Exception) {
             binding.scoreTextView.text = "Failed to load scores."
+            e.printStackTrace()
         }
     }
+
+
 
 }

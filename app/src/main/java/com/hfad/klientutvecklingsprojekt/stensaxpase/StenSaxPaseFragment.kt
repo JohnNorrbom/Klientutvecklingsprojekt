@@ -343,6 +343,7 @@ class StenSaxPaseFragment : Fragment() {
             // apply logic for what should happen once a player wins
             stenSaxPaseRef.child(gameID).child("status").setValue(false)
             try {
+                database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
                 view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
             } catch (e: Exception) {
                 e.printStackTrace()

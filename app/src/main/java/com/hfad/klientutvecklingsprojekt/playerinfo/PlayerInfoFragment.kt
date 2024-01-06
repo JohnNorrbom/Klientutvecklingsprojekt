@@ -51,7 +51,7 @@ class PlayerInfoFragment : Fragment() {
     private var currentPlayerID = ""
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Game Data")
-    private val lobbyRef = database.getReference("Lobby Data")
+    private val playerRef = database.getReference("Player Data")
     private val boardRef = database.getReference("Board Data")
 
     override fun onCreateView(
@@ -84,73 +84,75 @@ class PlayerInfoFragment : Fragment() {
                 Toast.LENGTH_SHORT).show()
                 return@addOnSuccessListener
             }
-        }
-        currentPlayerID = Random.nextInt(1000..9999).toString()
-        playerName = binding.nicknameInput.text.toString()
-        if (playerName == "") {
-            binding.nicknameInput.error = (getText(R.string.enter_user_name))
-            return
-        }
-        checkName { isNameTaken ->
-            if (isNameTaken) {
-                binding.nicknameInput.error = getText(R.string.enter_valid_user_name)
-                return@checkName
+            currentPlayerID = Random.nextInt(1000..9999).toString()
+            playerName = binding.nicknameInput.text.toString()
+            Log.d("playerName","${playerName}")
+            if (playerName == "") {
+                binding.nicknameInput.error = (getText(R.string.enter_user_name))
+                return@addOnSuccessListener
             }
-            setPlayerInfo()
-            if (playerColor == "") {
-                Toast.makeText(
-                    requireContext().applicationContext,
-                    getText(R.string.choose_character),
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@checkName
-            }
-            gameModel?.apply {
-                takenPosition?.put(playerColor, CharacterStatus.TAKEN)
-                updateGameData(this)
-            }
-            LobbyData.saveLobbyModel(
-                LobbyModel(
-                    gameID = currentGameID,
-                    btnPressed = false
-                ),currentGameID
-            )
-            PlayerData.savePlayerModel(
-                PlayerModel(
-                    playerID = currentPlayerID,
-                    nickname = playerName,
-                    color = playerColor,
-                    position = 0,
-                    score = 0
-
-                ), currentGameID
-            )
-
-
-            checkSizeOfLobby()
-            MeData.saveMeModel(
-                MeModel(
-                    gameID = currentGameID,
-                    playerID = currentPlayerID
-                )
-            )
-
-
-            var playerCountRef = boardRef.child(currentGameID).child("playerCount")
-            playerCountRef.get().addOnSuccessListener {
-                var playerCount = it.value.toString().toInt()
-                if (playerCount == 0){
-                    boardRef.child(currentGameID).child("currentPlayerId").setValue(currentPlayerID)
+            checkName { isNameTaken ->
+                Log.d("isNameTaken","${isNameTaken}")
+                if (isNameTaken) {
+                    binding.nicknameInput.error = getText(R.string.enter_valid_user_name)
+                    return@checkName
                 }
-                playerCount++
-                boardRef.child(currentGameID).child("playerCount").setValue(playerCount)
+                setPlayerInfo()
+                if (playerColor == "") {
+                    Toast.makeText(
+                        requireContext().applicationContext,
+                        getText(R.string.choose_character),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@checkName
+                }
+                gameModel?.apply {
+                    takenPosition?.put(playerColor, CharacterStatus.TAKEN)
+                    updateGameData(this)
+                }
+                LobbyData.saveLobbyModel(
+                    LobbyModel(
+                        gameID = currentGameID,
+                        btnPressed = false
+                    ),currentGameID
+                )
+                PlayerData.savePlayerModel(
+                    PlayerModel(
+                        playerID = currentPlayerID,
+                        nickname = playerName,
+                        color = playerColor,
+                        position = 0,
+                        score = 0
+
+                    ), currentGameID
+                )
+
+                checkSizeOfLobby()
+                MeData.saveMeModel(
+                    MeModel(
+                        gameID = currentGameID,
+                        playerID = currentPlayerID
+                    )
+                )
+
+
+                var playerCountRef = boardRef.child(currentGameID).child("playerCount")
+                playerCountRef.get().addOnSuccessListener {
+                    var playerCount = it.value.toString().toInt()
+                    if (playerCount == 0){
+                        boardRef.child(currentGameID).child("currentPlayerId").setValue(currentPlayerID)
+                    }
+                    playerCount++
+                    boardRef.child(currentGameID).child("playerCount").setValue(playerCount)
+                }
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
             }
-            }
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view?.findNavController()?.navigate(R.id.action_playerInfoFragment_to_lobbyFragment)
+
         }
+    }
     fun checkName(callback: (Boolean) -> Unit) {
-        lobbyRef.child(gameModel?.gameID?:"").child("players").get().addOnSuccessListener {
+        playerRef.child(gameModel?.gameID?:"").child("players").get().addOnSuccessListener {
             val snapshot = it
             var check = false
             for(player in snapshot.children){

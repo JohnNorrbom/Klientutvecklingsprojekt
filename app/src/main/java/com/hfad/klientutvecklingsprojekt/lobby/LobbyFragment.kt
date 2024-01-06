@@ -187,29 +187,32 @@ class LobbyFragment : Fragment() {
         view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
     }
     fun startRoulette(){
-        var myPlayers : MutableMap<String, PlayerStatus> = mutableMapOf()
+        var gamePlayer : MutableMap<String, PlayerStatus> = mutableMapOf()
+        var scorePlayers : MutableMap<String, Int> = mutableMapOf()
         myRef.child(localGameID).child("players").get().addOnSuccessListener {
             val snapshot = it
             for (player in snapshot.children){
                 Log.d("player","${player}")
-                myPlayers?.put(player.key.toString(),PlayerStatus.ALIVE)
-                Log.d("players","${myPlayers}")
+                gamePlayer?.put(player.key.toString(),PlayerStatus.ALIVE)
+                scorePlayers?.put(player.key.toString(),0)
+                Log.d("players","${gamePlayer}")
             }
 
-            Log.d("currentPlayer","${myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))}")
+            Log.d("currentPlayer","${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}")
 
-            if (myPlayers.size>1){
+            if (gamePlayer.size>1){
                 RouletteData.saveGameModel(
                     RouletteModel(
                         gameId = localGameID,
-                        players = myPlayers,
+                        players = gamePlayer,
                         gameStatus = GameStatus.INPROGRESS,
                         attempts = 0,
                         laps = 0,
-                        nbrOfPlayers = myPlayers.size,
-                        aliveCount = myPlayers.size,
+                        score = scorePlayers,
+                        nbrOfPlayers = gamePlayer.size,
+                        aliveCount = gamePlayer.size,
                         luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
-                        currentPlayer = myPlayers.keys.elementAt(Random.nextInt(myPlayers.size))
+                        currentPlayer = gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))
                     ),localGameID
                 )
                 LobbyData.saveLobbyModel(

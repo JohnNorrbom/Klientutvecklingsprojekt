@@ -256,7 +256,7 @@ class TestBoardFragment : Fragment() {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
-            val resourceId = resources.getIdentifier(
+            var resourceId = resources.getIdentifier(
                 destination,
                 "drawable",
                 "com.hfad.klientutvecklingsprojekt"
@@ -293,7 +293,14 @@ class TestBoardFragment : Fragment() {
             }
             paintPlayers()
             assignNextCurrentPlayer()
-            binding.diceButton.visibility = View.GONE
+            destination = "dice" + randomInt + "grayed"
+            resourceId = resources.getIdentifier(
+                destination,
+                "drawable",
+                "com.hfad.klientutvecklingsprojekt"
+            )
+            binding.diceButton?.setImageResource(resourceId)
+            binding.diceButton.isEnabled = false
         }
     }
 
@@ -397,6 +404,8 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     val currentPlayerId = dataSnapshot.value
                     if (currentPlayerId == localPlayerID) {
+                        binding.diceButton.setImageResource(R.drawable.dice1)
+                        binding.diceButton.isEnabled = true
                         binding.diceButton.visibility = View.VISIBLE
                         localCurrentPlayerTest = currentPlayerId.toString()
                     } else {

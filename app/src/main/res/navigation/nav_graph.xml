@@ -85,8 +85,8 @@
             android:id="@+id/action_lobbyFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
-            android:id="@+id/action_lobbyFragment_to_soccerFragment"
-            app:destination="@id/soccerFragment" />
+            android:id="@+id/action_lobbyFragment_to_waitingSoccerFragment"
+            app:destination="@id/waitingSoccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStartFragment"
@@ -143,6 +143,15 @@
         <action
             android:id="@+id/action_stenSaxPaseChooseFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/waitingSoccerFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.WaitingSoccerFragment"
+        android:label="fragment_waiting_soccer"
+        tools:layout="@layout/fragment_waiting_soccer" >
+        <action
+            android:id="@+id/action_waitingSoccerFragment_to_soccerFragment"
+            app:destination="@id/soccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"

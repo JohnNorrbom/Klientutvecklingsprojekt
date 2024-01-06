@@ -62,7 +62,7 @@ class SoccerViewModel() : ViewModel(){
         return enemyType
     }
 
-    fun leftButtonClick(){
+    fun leftButtonClick(isPlayer1: Boolean){
         Log.d("Count", "" + buttonCount)
 
         if(buttonCount%2 == 0){
@@ -77,7 +77,7 @@ class SoccerViewModel() : ViewModel(){
         }
         buttonCount++
     }
-    fun rightButtonClick(){
+    fun rightButtonClick(isPlayer1: Boolean){
         Log.d("Count", "" + buttonCount)
 
         if(buttonCount%2 == 0){
@@ -91,7 +91,7 @@ class SoccerViewModel() : ViewModel(){
         }
         buttonCount++
     }
-    fun midButtonClick(){
+    fun midButtonClick(isPlayer1: Boolean){
         Log.d("Count", "" + buttonCount)
 
         if(buttonCount%2 == 0){

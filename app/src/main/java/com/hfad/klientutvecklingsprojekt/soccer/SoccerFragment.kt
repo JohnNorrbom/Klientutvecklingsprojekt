@@ -11,8 +11,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentSoccerBinding
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeData.meModel
+import com.hfad.klientutvecklingsprojekt.player.MeModel
+import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 
 class SoccerFragment : Fragment() {
 
@@ -27,9 +36,37 @@ class SoccerFragment : Fragment() {
     private var shooterColor = "red"
     var text: String = ""
     private var yourColor = ""
+    private var yourId = ""
+
+
+    //player choices
+    private var p1Choice: String = ""
+    private var p2Choice: String = ""
+
+    //meModel
+    private var meModel : MeModel? = null
+
+
+    //online variables
+    private var localP1Id = ""
+    private var localP2Id = ""
+    private var localGameId = ""
+
+    //  DATABASE
+    private val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val myRef = database.getReference("Soccer")
 
     //variable that see if you are p1 or p2
     private var youArePlayerOne: Boolean = false
+    private var youArePlayerTwo: Boolean = false
+
+    //variables to see if both player are ready
+    private var bothIsReady: Boolean = false
+
+    //variables to see if both player are ready
+    private var p1IsReady: Boolean = false
+    private var p2IsReady: Boolean = false
 
 
     override fun onCreateView(
@@ -38,28 +75,98 @@ class SoccerFragment : Fragment() {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
         SoccerData.fetchSoccerModel()
-        SoccerData.soccerModel.observe(this) {
-            soccerModel = it
-            Log.d("observe model", soccerModel.toString())
-            setValues()
+        MeData.meModel.observe(this){
+            meModel = it
+            retrieveYourId()
+            SoccerData.soccerModel.observe(this) {
+                soccerModel = it
+                setValues()
+            }
         }
+
+
+        myRef.child("p1Choice").addValueEventListener(p1Listener)
+        myRef.child("p2Choice").addValueEventListener(p2Listener)
+        myRef.child("bothPlayerReady").addValueEventListener(bothReadyListener)
         return view
     }
 
+    fun retrieveYourId(){
+        meModel?.apply {
+            yourId = playerID.toString()
+            localGameId = gameID.toString()
+            println("retrieve your id: yourid: " + yourId)
+        }
+    }
+
+    private val p1Listener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            myRef.child("p1Choice").get().addOnSuccessListener { dataSnapshot ->
+                p1Choice = dataSnapshot.value.toString()
+                p1IsReady = true
+            }
+        }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+
+    private val p2Listener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            myRef.child("p2Choice").get().addOnSuccessListener { dataSnapshot ->
+                p2Choice = dataSnapshot.value.toString()
+                p2IsReady = true
+            }
+        }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+    private val bothReadyListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            myRef.child("bothPlayerReady").get().addOnSuccessListener { dataSnapshot ->
+                if(dataSnapshot.value.toString().toBoolean()){
+                    println("Both player is ready")
+                    bothIsReady = true
+                }else{
+                    //RESETS THE "READINESS"
+                    bothIsReady = false
+                    p1IsReady = false
+                    p1IsReady = false
+                }
+            }
+        }
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+
+
+
     //this retrieves the game data from last fragment
-    fun setValues(){
+    fun setValues(){ //THIS DONT WORK
+        myRef.child(localGameId).get()
+            .addOnSuccessListener { dataSnapshot ->
+                localGameId = dataSnapshot.child("gameID").value.toString()
+                shooterColor = dataSnapshot.child("p1Color").value.toString()
+                goalieColor = dataSnapshot.child("p2Color").value.toString()
+                localP1Id = dataSnapshot.child("p1Id").value.toString()
+                localP2Id = dataSnapshot.child("p2Id").value.toString()
+                setPlayerValues()
+            }
+
+        println("setvalues: shootercolor: " + shooterColor + " goalieColor: " + goalieColor)
+        println("setvalues: p1Id: " + localP1Id + "p2Id: " + localP2Id)
+
+/*
         soccerModel?.apply {
             shooterColor = p1Color.toString()
             goalieColor = p2Color.toString()
+            localP1Id = p1Id.toString()
+            localP2Id = p2Id.toString()
+            localGameId = gameID.toString()
+
         }
-        Log.d("shooter","shooter: "+ shooterColor)
-        Log.d("goalie","goalie: "+ goalieColor)
 
 
-        //sets player1 and 2 locally  (p1 starts as shooter)
-        youArePlayerOne = yourColor == shooterColor
-
-        soccerViewModel.setColors(shooterColor,goalieColor, 1)
+ */
 
         var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
         Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
@@ -71,49 +178,75 @@ class SoccerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        Log.d("after observe model", soccerModel.toString())
-        //red yellow
-        Log.d("onViewCreated after observe model", shooterColor)
-        Log.d("onViewCreated after observe model", goalieColor)
-
         binding.finalScorePoint.visibility = View.INVISIBLE
         binding.finishedGameButton.visibility = View.INVISIBLE
         binding.finishedGameScreen.visibility = View.INVISIBLE
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song3_140bpm)
-        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.isLooping = true
         mediaPlayer?.start()
 
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
 
 
         binding.leftButton.setOnClickListener {
-            soccerViewModel.leftButtonClick()
+
+            println("--------setonclicklistener-------")
+            println("your id: " + yourId)
+            println("your color: " + yourColor)
+            println("you are player1: " + youArePlayerOne)
+            println("you are player2: " + youArePlayerTwo)
+            println("--------setonclicklistener-------")
+
+            soccerViewModel.leftButtonClick(youArePlayerOne)
             sendChoiceOnline("left")
             doAnimation(soccerViewModel)
+            binding.bottomButtons.visibility = View.INVISIBLE
         }
         binding.rightButton.setOnClickListener {
-            soccerViewModel.rightButtonClick()
+            soccerViewModel.rightButtonClick(youArePlayerOne)
             sendChoiceOnline("right")
             doAnimation(soccerViewModel)
+            binding.bottomButtons.visibility = View.INVISIBLE
         }
         binding.midButton.setOnClickListener {
-            soccerViewModel.midButtonClick()
+            soccerViewModel.midButtonClick(youArePlayerOne)
             sendChoiceOnline("mid")
             doAnimation(soccerViewModel)
+            binding.bottomButtons.visibility = View.INVISIBLE
         }
 
 
 
     }
 
+    fun setPlayerValues(){
+        println("shooter: "+ shooterColor)
+        println("UNDER SHOULD BE YOUR COLOR")
+        println("your id: " + yourId)
+        println("yourColor "+ yourColor)
+        println("goalie: "+ goalieColor)
 
-    fun checkOtherPlayerReady(): Boolean {
-        soccerModel?.apply {
+        //sets player1 and 2 locally  (p1 starts as shooter)
+        youArePlayerOne = yourId == localP1Id
+        youArePlayerTwo = yourId == localP2Id
 
+        println("you are player one: " + youArePlayerOne)
+        println("you are player two: " + youArePlayerTwo)
+        if(youArePlayerOne || youArePlayerTwo){
+            binding.bottomButtons.visibility = View.VISIBLE
+        }else{
+            binding.bottomButtons.visibility = View.INVISIBLE
         }
-        return false
+
+        soccerViewModel.setColors(shooterColor,goalieColor, 1)
+    }
+
+
+    fun checkOtherPlayerReady() {
+        soccerModel?.apply {
+            bothIsReady = bothPlayerReady.toString().toBoolean()
+        }
+        //TODO KAN HOPPA ÖVER OM DET ÄR THREADS
     }
 
 
@@ -133,7 +266,7 @@ class SoccerFragment : Fragment() {
 
 
     fun doAnimation(soccerViewModel: SoccerViewModel){
-        if (soccerViewModel.animationReady){
+        if (bothIsReady){
             var currentImageView: ImageView
             var hitStatus: String
             if (soccerViewModel.shooterHit){
@@ -173,8 +306,6 @@ class SoccerFragment : Fragment() {
                 goalieAnimation.start()
 
             }
-            Log.d("Goal Destination", goalDestination)
-            Log.d("all choices", soccerViewModel.shooterColor+"shooter: " + soccerViewModel.shooterChoice + " " + soccerViewModel.goalieColor+"goalie: " + soccerViewModel.goalieChoice)
 
             soccerViewModel.switchType()
 
@@ -191,6 +322,9 @@ class SoccerFragment : Fragment() {
                 binding.finishedGameButton.setOnClickListener {
                     findNavController().popBackStack()
                 }
+            }
+            if(youArePlayerOne || youArePlayerTwo){
+                binding.bottomButtons.visibility = View.VISIBLE
             }
         }
     }

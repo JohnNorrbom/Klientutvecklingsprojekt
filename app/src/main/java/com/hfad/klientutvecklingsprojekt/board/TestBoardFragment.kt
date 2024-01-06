@@ -408,8 +408,6 @@ class TestBoardFragment : Fragment() {
                         binding.diceButton.isEnabled = true
                         binding.diceButton.visibility = View.VISIBLE
                         localCurrentPlayerTest = currentPlayerId.toString()
-                    } else {
-                        binding.diceButton.visibility = View.INVISIBLE
                     }
                     if (localRandomVal != -1) {
 

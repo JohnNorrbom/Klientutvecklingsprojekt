@@ -29,7 +29,7 @@ class GavleRouletteFragment : Fragment(){
     private var rouletteModel: RouletteModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Roulette")
-    val lobbyRef = database.getReference("Player Data")
+    val playerRef = database.getReference("Player Data")
     var localPlayerID =""
     var localGameID = ""
 
@@ -88,22 +88,14 @@ class GavleRouletteFragment : Fragment(){
 
     fun setUi() {
         rouletteModel?.apply {
-            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+            playerRef.child(localGameID).child("players").get().addOnSuccessListener {
                 val snapshot = it
                 var text = ""
             binding.gameStatusText.text =
                 when (gameStatus) {
                     GameStatus.INPROGRESS -> {
-                        if (laps == 0 && attempts == 0) {
-                            val resId = resources.getIdentifier(
-                                "chamber",
-                                "drawable",
-                                requireContext().packageName
-                            )
                             setPlayerInfo()
-                            binding.magasinSlot.setImageResource(resId)
                             binding.test.text = luckyNumber?.get(0)
-                        }
                         when (localPlayerID) {
                             currentPlayer -> text = "Your turn"
                             else -> text = snapshot.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
@@ -117,7 +109,17 @@ class GavleRouletteFragment : Fragment(){
                             else -> text = snapshot.child(winner ?: "").child("nickname").value.toString() + " won"
                         }
                         text
+
                     }
+                    else -> {return@addOnSuccessListener}
+                }
+                when (gameStatus) {
+                    GameStatus.FINISHED ->{
+                        setScore()
+                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                        view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                    }
+
                     else -> {return@addOnSuccessListener}
                 }
             }
@@ -142,7 +144,7 @@ class GavleRouletteFragment : Fragment(){
     //sets the correct info for each player
     fun setPlayerInfo() {
         rouletteModel?.apply {
-            lobbyRef.child(localGameID).child("players").get().addOnSuccessListener {
+            playerRef.child(localGameID).child("players").get().addOnSuccessListener {
                 players?.onEachIndexed { index, entry ->
                     val snapshot = it
                     val playerId = players?.keys?.elementAt(index) ?: ""
@@ -197,7 +199,7 @@ class GavleRouletteFragment : Fragment(){
             attempts = attempts?.plus(1)
             Log.d("attempts","${attempts}")
             Log.d("nbrOfPlayers","${this.nbrOfPlayers}")
-            if (attempts == nbrOfPlayers) {
+            if (attempts == aliveCount) {
                 attempts = 0
                 laps = laps?.plus(1)
             }
@@ -256,6 +258,7 @@ class GavleRouletteFragment : Fragment(){
         rouletteModel?.apply {
             if (luckyNumber?.contains(currentBullet.toString()) == true) {
                 players?.put(currentPlayer?:"",PlayerStatus.DEAD)
+                score?.put(currentPlayer?:"",laps ?:0)
                 aliveCount = aliveCount?.minus(1)
                 updateGameData(this,localGameID)
             }
@@ -267,6 +270,7 @@ class GavleRouletteFragment : Fragment(){
             if (aliveCount == 1) {
                 for (i in 0 until nbrOfPlayers!!){
                     if (players?.get(players?.keys?.elementAt(i)) == PlayerStatus.ALIVE){
+                        score?.put(players?.keys?.elementAt(i)?:"",laps ?:0)
                         winner = players?.keys?.elementAt(i)
                         break
                     }
@@ -274,6 +278,22 @@ class GavleRouletteFragment : Fragment(){
                 gameStatus = GameStatus.FINISHED
                 updateGameData(this,localGameID)
             }
+        }
+    }
+
+    fun setScore() {
+        playerRef.child(localGameID).child("players").get().addOnSuccessListener {
+            val snapshot = it
+            rouletteModel?.apply {
+                for (player in snapshot.children) {
+                    val currentScore = player.child("score").value.toString()
+                    val newScore =
+                        rouletteModel?.score?.get(player.toString())?.plus(currentScore.toInt())
+                            ?: 0
+                    playerRef.child(localGameID).child("players").child(player.toString()).child("score").setValue(newScore)
+                }
+            }
+
         }
     }
 

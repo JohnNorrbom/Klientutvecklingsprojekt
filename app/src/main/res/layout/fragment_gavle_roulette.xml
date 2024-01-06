@@ -16,7 +16,8 @@
         android:layout_gravity="center"
         android:layout_margin="8dp"
         android:padding="8dp"
-        android:textColor="#F44336"/>
+        android:textColor="#6AFF00"
+        />
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,9 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
-                android:visibility="gone"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
+                android:visibility="visible"
                 tools:text="0"/>
 
             <TextView
@@ -88,8 +89,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 android:visibility="gone"
                 tools:text="0"/>
 
@@ -99,8 +100,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 android:visibility="gone"
                 tools:text="0"/>
 
@@ -110,8 +111,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 android:visibility="gone"
                 tools:text="0"/>
 
@@ -121,8 +122,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="@integer/material_motion_duration_long_1"
                 android:gravity="center"
-                android:textSize="10sp"
-                android:textColor="#F44336"
+                android:textSize="20sp"
+                android:textColor="#6AFF00"
                 android:visibility="gone"
                 tools:text="0"/>
         </LinearLayout>
@@ -138,7 +139,8 @@
         android:gravity="center"
         android:layout_margin="10dp"
         android:letterSpacing="0.04"
-        android:textColor="#F44336"/>
+        android:textColor="#6AFF00"
+        />
 
     <Button
         android:id="@+id/roulet_action"

@@ -346,7 +346,7 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = Random.nextInt(3)
+                localRandomVal = Random.nextInt(2) + 1
 //                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
@@ -399,13 +399,13 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
                     //means you are host    TODO SOCCER
-//                    if (localCurrentPlayerTest == localPlayerID) {
-//                        view.findNavController()
-//                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-//                    } else {
-//                        view.findNavController()
-//                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
-//                    }
+                    if (localCurrentPlayerTest == localPlayerID) {
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                    } else {
+                        view.findNavController()
+                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                    }
                 }
                 println("SOCCER GAME FERDINAND")
             } else if (randomVal == 2) {

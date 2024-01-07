@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".quiz.QuizFragment">
+    tools:context=".quiz.QuizWaitingFragment">
 
 
     <ImageView
@@ -24,7 +24,7 @@
             android:textSize="25dp"
             android:layout_gravity="center"
             android:textColor="@color/green"
-            android:text="waiting for minigame"/>
+            android:text="WAITING FOR QUIZ SEED TO GENERATE..."/>
 
         <ImageView
             android:id="@+id/loading_symbol"
@@ -32,12 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/loadingframe"/>
-        <Button
-            android:id="@+id/start_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/start_game"/>
     </LinearLayout>
 
 

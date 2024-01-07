@@ -1,6 +1,8 @@
-package com.hfad.klientutvecklingsprojekt.gavleroulette
+package com.hfad.klientutvecklingsprojekt.quiz
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -26,6 +28,7 @@ class QuizWaitingFragment : Fragment() {
     val myRef = database.getReference("Quiz")
     var localPlayerID = ""
     var localGameID = ""
+    private val handler = Handler()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +37,8 @@ class QuizWaitingFragment : Fragment() {
     ): View? {
         _binding = FragmentQuizWaitingBinding.inflate(inflater, container, false)
         val view = binding.root
+        var loadingAnimation = binding.loadingSymbol.drawable as AnimationDrawable
+        loadingAnimation.start()
 
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -46,10 +51,9 @@ class QuizWaitingFragment : Fragment() {
             }
         }
 
-        binding.startGame.setOnClickListener{
+        handler.postDelayed({
             startGame()
-        }
-
+        }, 5000)
         return view
     }
 

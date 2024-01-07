@@ -37,6 +37,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
+import java.util.Random
 
 
 class QuizFragment : Fragment() {
@@ -65,32 +66,23 @@ class QuizFragment : Fragment() {
     ): View? {
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
         val view = binding.root
+
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
                 this@QuizFragment.meModel = it
                 setText()
             } ?: run {
-                // Handle the case when meModel is null
                 Log.e("QuizFragment", "meModel is null")
             }
         }
-        println("NU ÄR VI HÄR....")
-        //Berätta för databasen att du inte är klar med quizet
-        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz")
-            .setValue(false)
-            println("KALLAR FETCH QUIZ SEED")
-            fetchQuizSeed()
+
+        // Berätta för databasen att du inte är klar med quizet
+        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(false)
+
+        // Anropa metoden för att hämta seed och ladda frågor
+        fetchQuizSeed()
 
 
-
-        try {
-            //  Läs in frågorna från JSON-filen
-            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
-            val allQuestions = JSONArray(jsonQuestions)
-            // Slumpmässigt välj 10 frågor
-            questions = JSONArray(selectRandomQuestions(allQuestions, 10).toString())
-            displayQuestion()
-            // TOP LEFT BUTTON
             binding.option1Button.setOnClickListener {
                 checkAnswer(binding.option1Button.text.toString(), binding.option1Button)
             }
@@ -109,9 +101,7 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
+
         println("Körs detta flera gånger??")
         return view
     }
@@ -119,27 +109,28 @@ class QuizFragment : Fragment() {
         try {
             val seedRef = myRef.child(currentGameID).child("seed")
             val dataSnapshot = seedRef.get().await()
-
             if (dataSnapshot.exists()) {
-                // Använd den existerande seeden
                 val seed = dataSnapshot.getValue(Int::class.java)
-                if (seed != null) {
+                seed?.let {
                     withContext(Dispatchers.Main) {
-                        println("SEED ÄR: " + seed)
+                        loadQuestions(it)
                     }
-                } else {
-                    println( "Seed finns men är null")
-                    // Hantera fallet där seed-värdet är null
                 }
             } else {
-                println( "Seed finns inte i databasen")
-                // Hantera fallet där seed inte finns
+                println("Seed finns inte i databasen")
             }
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-               println("DE BLEV EXCEPTION!!!")
-                // Hantera eventuella fel här, t.ex. visa felmeddelande
-            }
+            Log.e("QuizFragment", "Error fetching seed", e)
+        }
+    }
+    private fun loadQuestions(seed: Int) {
+        try {
+            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
+            val allQuestions = JSONArray(jsonQuestions)
+            questions = JSONArray(selectRandomQuestions(allQuestions, 10, seed.toLong()).toString())
+            displayQuestion()
+        } catch (e: JSONException) {
+            e.printStackTrace()
         }
     }
 
@@ -315,25 +306,13 @@ class QuizFragment : Fragment() {
         countDownTimer?.cancel()
     }
 
-    private fun selectRandomQuestions(
-        allQuestions: JSONArray,
-        numberOfQuestions: Int
-    ): List<JSONObject> {
-        val selectedQuestions = mutableListOf<JSONObject>()
+    private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int, seed: Long): List<JSONObject> {
+        val random = Random(seed)
         val totalQuestions = allQuestions.length()
-
-        // Skapa en lista med alla frågornas index
         val allQuestionsIndices = (0 until totalQuestions).toMutableList()
+        val randomIndices = allQuestionsIndices.shuffled(random).take(numberOfQuestions)
 
-        // Slumpmässigt välj 10 index från listan
-        val randomIndices = allQuestionsIndices.shuffled().take(numberOfQuestions)
-
-        // Lägg till de slumpmässigt valda frågorna i den nya listan
-        for (index in randomIndices) {
-            selectedQuestions.add(allQuestions.getJSONObject(index))
-        }
-
-        return selectedQuestions
+        return randomIndices.map { allQuestions.getJSONObject(it) }
     }
 
     private fun finishQuiz() {

@@ -206,7 +206,7 @@
     </fragment>
     <fragment
         android:id="@+id/quizWaitingFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.QuizWaitingFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizWaitingFragment"
         android:label="QuizWaitingFragment" >
         <action
             android:id="@+id/action_quizWaitingFragment_to_quizFragment"

@@ -242,14 +242,17 @@ class TestBoardFragment : Fragment() {
         binding.textViewLeader5.text = getLeaderText(4)
         checkForWinner(leaderboardList)
     }
+
     private fun checkForWinner(leaderboard: MutableList<Pair<String, Int>>) {
-        if(leaderboard[0].second > 29) {
+        if (leaderboard[0].second > 29) {
             try {
-//                val fragmentB = supportFragmentManager.findFragmentByTag("fragmentB") as? SecondFragment
-//                fragmentB?.updateText(newText)
-                val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(leaderboard[0].first,leaderboard[0].second)
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(
+                    leaderboard[0].first,
+                    leaderboard[0].second
+                )
                 view.findNavController().navigate(action)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 println(e.stackTrace)
             }
         }
@@ -453,7 +456,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
-                                    winner ="",
+                                    winner = "",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,

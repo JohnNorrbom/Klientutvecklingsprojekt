@@ -17,7 +17,6 @@ class winnerFragment : Fragment() {
     ): View {
         _binding = FragmentWinnerBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.root.rootView.setBackgroundResource(R.drawable.leaderboard)
         // referens till databasen
         val winner = winnerFragmentArgs.fromBundle(requireArguments()).winnerName
         val score = winnerFragmentArgs.fromBundle(requireArguments()).winnerScore

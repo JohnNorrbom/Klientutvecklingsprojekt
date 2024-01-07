@@ -4,17 +4,34 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.runtime.currentRecomposeScope
+import androidx.lifecycle.LifecycleOwner
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import org.json.JSONArray
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizBinding
 import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+import com.hfad.klientutvecklingsprojekt.player.MeData
+import com.hfad.klientutvecklingsprojekt.player.MeModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
@@ -29,19 +46,34 @@ class QuizFragment : Fragment() {
     private var score = 0 // Lägg till poängräknare
     private val handler = Handler()
     private var isAnswerChecked = false
-
+    private var meModel : MeModel? = null
+    private var currentGameID = ""
+    private var currentPlayerID = ""
     private lateinit var scoreTextView: TextView // Lägg till referens till textvy för poäng
     private var countDownTimer: CountDownTimer? = null
     private var _binding: FragmentQuizBinding? = null
     private val binding get() = _binding!!
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Quiz")
+    var totalPlayersCount: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
+        MeData.meModel.observe(context as LifecycleOwner) { meModel ->
+            meModel?.let {
+                this@QuizFragment.meModel = it
+                setText()
+            } ?: run {
+                // Handle the case when meModel is null
+                Log.e("QuizFragment", "meModel is null")
+            }
+        }
+
+        //Berätta för databasen att du inte är klar med quizet
+        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(false)
         try {
             //  Läs in frågorna från JSON-filen
             val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
@@ -73,7 +105,11 @@ class QuizFragment : Fragment() {
         }
         return binding.root
     }
-
+    fun setText() {
+        currentGameID = meModel?.gameID ?: ""
+        currentPlayerID = meModel?.playerID ?: ""
+        Log.d("StenSaxPaseFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
+    }
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null
         try {
@@ -119,31 +155,11 @@ class QuizFragment : Fragment() {
             }
             startTimer()
         } else {
-            // Alla frågor är besvarade
-            binding.option1Button.visibility = View.GONE
-            binding.option2Button.visibility = View.GONE
-            binding.option3Button.visibility = View.GONE
-            binding.option4Button.visibility = View.GONE
-            //binding.scoreTextView.visibility = View.GONE
+            //alla frågor är besvarade
+            finishQuiz()
 
-            // Visa poängen
-            val scoreText = "End result: $score points"
-            binding.questionTextView.text = scoreText
-            //LADDA UPP POÄNG PÅ DATABASEN!
-            myRef.child("GameID").child("userID").child("Score").setValue(score)
-            val scoreRef = myRef.child("GameID").child("userID").child("Score")
 
-// Hämta poängen från databasen
-            scoreRef.get().addOnSuccessListener { dataSnapshot ->
-                // Hämta poängvärdet
-                val userScore = dataSnapshot.value
 
-                // Skriv ut användarpoängen
-                binding.scoreTextView.text = "$userScore"
-            }.addOnFailureListener { e ->
-                // Hantera fel här om det uppstår något problem med att hämta data
-                binding.scoreTextView.text = "Failed to load scoreboard."
-            }
 
 
         }
@@ -173,7 +189,7 @@ class QuizFragment : Fragment() {
             setClickable(true)
         }
     }
-//
+    //
 //
     private fun checkAnswer(selectedOption: String, selectedButton: View) {
         val correctAnswer = questions.getJSONObject(currentQuestionIndex).getString("correctAnswer")
@@ -214,7 +230,7 @@ class QuizFragment : Fragment() {
             displayQuestion() // Visa nästa fråga
         }, 2000) // 2000 ms = 2 sekunder
     }
-//    // Uppdatera textvyen för att visa poängen
+    //    // Uppdatera textvyen för att visa poängen
     private fun updateScore() {
         scoreTextView.text = "Points: $score"
     }
@@ -259,4 +275,134 @@ class QuizFragment : Fragment() {
 
         return selectedQuestions
     }
+
+    private fun finishQuiz() {
+        // Dölj alternativknapparna och visa poängen
+        binding.option1Button.visibility = View.GONE
+        binding.option2Button.visibility = View.GONE
+        binding.option3Button.visibility = View.GONE
+        binding.option4Button.visibility = View.GONE
+
+        val scoreText = "End result: $score points"
+        binding.questionTextView.text = scoreText
+
+        // Berätta för databasen att du är klar med quiz
+        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(true)
+
+        // Ladda upp poäng på databasen
+        myRef.child(currentGameID).child("Scores").child(currentPlayerID).setValue(score)
+        binding.scoreTextView.text = "WAITING FOR ALL PLAYERS TO FINISH THE QUIZ"
+        //PLUSSA PÅ SPELARENS POÄNG I DATABASEN
+        increasePlayerScore(currentPlayerID, score)
+        // Initiera processen för att visa leaderboard
+        initiateLeaderboardDisplay()
+    }
+    private fun initiateLeaderboardDisplay() {
+        val playersCountRef = myRef.child(currentGameID).child("Players")
+        playersCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                totalPlayersCount = dataSnapshot.childrenCount.toInt()
+
+                val playersRef = myRef.child(currentGameID).child("Players")
+                playersRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        var donePlayersCount = 0
+                        for (playerSnapshot in dataSnapshot.children) {
+                            val done = playerSnapshot.child("doneWithQuiz").getValue(Boolean::class.java)
+                            if (done == true) {
+                                donePlayersCount++
+                            }
+                        }
+
+                        if (donePlayersCount == totalPlayersCount) {
+                            // Alla spelare är klara, visa leaderboard
+                            showLeaderboard()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Hantera eventuella fel här
+                    }
+                })
+            }
+
+            override fun onCancelled(databaseError: DatabaseError) {
+                // Hantera eventuella fel här
+            }
+        })
+    }
+    data class PlayerScore(val nickname: String?, val score: Int)
+    private fun showLeaderboard() = CoroutineScope(Dispatchers.Main).launch {
+        try {
+            val scoresRef = myRef.child(currentGameID).child("Scores")
+            val playerRef = database.getReference("Player Data").child(currentGameID).child("players")
+            val dataSnapshot = withContext(Dispatchers.IO) { scoresRef.get().await() }
+            if (dataSnapshot.exists()) {
+                val scoresList = mutableListOf<PlayerScore>()
+
+                for (userSnapshot in dataSnapshot.children) {
+                    val userNickname = withContext(Dispatchers.IO) {
+                        playerRef.child(userSnapshot.key ?: "").child("nickname").get().await().value as String?
+                    }
+                    val userScore = userSnapshot.value.toString().toIntOrNull() ?: 0
+                    scoresList.add(PlayerScore(userNickname, userScore))
+                }
+
+                // Sortera listan så att högsta poängen kommer först
+                val sortedList = scoresList.sortedByDescending { it.score }
+
+                val allScores = StringBuilder()
+                sortedList.forEach {
+                    allScores.append("User: ${it.nickname}, Score: ${it.score}\n")
+                }
+
+                binding.scoreTextView.text = allScores.toString()
+
+                delay(10000)
+                if (isAdded && view != null) {
+                    database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
+                    view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
+                }
+            } else {
+                binding.scoreTextView.text = "Ingen poäng att visa."
+            }
+        } catch (e: Exception) {
+            binding.scoreTextView.text = "Failed to load scores."
+            e.printStackTrace()
+        }
+    }
+    private fun increasePlayerScore(playerId: String, increment: Int) = CoroutineScope(Dispatchers.IO).launch {
+        val scoreRef = database.getReference("Player Data")
+            .child(currentGameID)
+            .child("players")
+            .child(playerId)
+            .child("score")
+
+        try {
+            val currentScoreSnapshot = scoreRef.get().await()
+            val currentScore = currentScoreSnapshot.getValue(Int::class.java) ?: 0
+            val newScore = currentScore + increment
+
+            withContext(Dispatchers.Main) {
+                scoreRef.setValue(newScore).addOnSuccessListener {
+                    // Uppdatera UI här, visa bekräftelsemeddelande, etc.
+                    Log.d("UpdateScore", "Poängen har framgångsrikt uppdaterats till $newScore")
+                    // Exempel: Toast.makeText(context, "Poäng uppdaterad till $newScore", Toast.LENGTH_SHORT).show()
+                }.addOnFailureListener {
+                    // Hantera misslyckad uppdatering
+                    Log.e("UpdateScore", "Misslyckades med att uppdatera poängen", it)
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+                // Hantera fel vid läsning av poängen
+                Log.e("UpdateScore", "Fel vid läsning av aktuell poäng", e)
+            }
+        }
+    }
+
+
+
+
+
 }

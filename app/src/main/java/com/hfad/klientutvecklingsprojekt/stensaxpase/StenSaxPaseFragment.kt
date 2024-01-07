@@ -15,7 +15,9 @@ import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
-import kotlin.random.Random
+import android.os.Handler
+import androidx.navigation.findNavController
+import com.hfad.klientutvecklingsprojekt.R
 
 class StenSaxPaseFragment : Fragment() {
 
@@ -27,6 +29,11 @@ class StenSaxPaseFragment : Fragment() {
     var currentGameID : String = ""
     var currentPlayerID : String = ""
 
+    val handler = Handler()
+
+    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
+    private val playerDataRef = database.getReference("Player Data")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +53,30 @@ class StenSaxPaseFragment : Fragment() {
                 setText()
                 //viewModel.setID(currentGameID, currentPlayerID)
                 setID(currentGameID, currentPlayerID)
+
+                var stenSaxPaseStatusRef = stenSaxPaseRef.child(currentGameID).child("status")
+                stenSaxPaseStatusRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        println("------------->STATUS OF LOBBY: ${dataSnapshot.getValue()}")
+                        try {
+                            if (dataSnapshot.exists()) {
+                                println("CHECK IF STATUS IS FALSE FOR: ${dataSnapshot.getValue()} , ${dataSnapshot.getValue() == false}")
+                                if(dataSnapshot.getValue() == false) {
+                                    stenSaxPaseRef.child(gameID).setValue(null)
+                                    view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Failed to read value
+                        Log.w("YourTag", "Failed to read status of sten sax pase game.", databaseError.toException())
+                    }
+                })
+
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("StenSaxPaseFragment", "meModel is null")
@@ -63,10 +94,6 @@ class StenSaxPaseFragment : Fragment() {
         // initialize game
         //viewModel.initGame()
         initGame()
-
-
-
-
 
         // add view code here
         val sten = binding.sten
@@ -108,16 +135,16 @@ class StenSaxPaseFragment : Fragment() {
     private fun setVsText(text:String) {
         binding.vsText.text = text
     }
-
+/*
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
+ */
+
     // Code starting from here was originally in view model
-    val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
-    private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
-    private val playerDataRef = database.getReference("Player Data")
+
 
     private var stenSaxPaseModel : StenSaxPaseModel? = null
 
@@ -138,13 +165,21 @@ class StenSaxPaseFragment : Fragment() {
         if(playerID == "null") {
             stenSaxPaseRef.child(gameID).get().addOnSuccessListener {
                 for(elem in it.children) {
-                    if(elem.key == "playerID") playerID = elem.value.toString()
-                    if(elem.key == "opponentID") opponentID = elem.value.toString()
+                    if(elem.key == "playerID") opponentID = elem.value.toString()
+                    if(elem.key == "opponentID") playerID = elem.value.toString()
                 }
+                println("!!PLAYERID WAS NULL!! Currently in game: $gameID , using playerID: $playerID")
+                resetUI()
                 loadPlayersFromGameID()
             }
-        } else loadPlayersFromGameID()
+        } else {
+            resetUI()
+            loadPlayersFromGameID()
+        }
     }
+
+    var player1:String? = null
+    var player2:String? = null
 
     fun loadPlayersFromGameID() {
         playerDataRef.child(gameID).get().addOnSuccessListener {
@@ -153,6 +188,8 @@ class StenSaxPaseFragment : Fragment() {
             val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
             // Loop through all players and add to local 'players' Map
             for(player in it.child("players").children) {
+                if(player.key == playerID) player1 = player.child("nickname").value.toString()
+                else if(player.key == opponentID) player2 = player.child("nickname").value.toString()
                 players.put("${player.child("playerID").value}", mutableMapOf(
                     "nickname" to "${player.child("nickname").value}",
                     "color" to "${player.child("color").value}",
@@ -170,21 +207,16 @@ class StenSaxPaseFragment : Fragment() {
     fun savePlayersToDatabase(players : MutableMap<String,MutableMap<String,String>>) {
         if(playerID != "null") {
             println("$playerID __VS__ $opponentID")
-            stenSaxPaseModel = StenSaxPaseModel(gameID, false, players, playerID, opponentID)
+            stenSaxPaseModel = StenSaxPaseModel(gameID, true, players, playerID, opponentID)
             stenSaxPaseRef.child(gameID).setValue(stenSaxPaseModel)
         }
     }
 
     // Maybe remove this whole setPlayers thing and instead use solution where a player chooses who to compete with
 
-    var player1:String? = null
-    var player2:String? = null
+
 
     fun setPlayers() {
-        println()
-        player1 = playerID
-        player2 = opponentID
-
         println("player1_id: $player1 -vs- player2_id: $player2")
         setVsText("$player1 -vs- $player2")
     }
@@ -193,8 +225,8 @@ class StenSaxPaseFragment : Fragment() {
 
     fun gameLoop() {
         // add eventlisteners to both players, specifically on attribute 'choice'
-        val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player1!!)
-        val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(player2!!)
+        val player1connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(playerID!!)
+        val player2connection = database.getReference("Sten Sax Pase").child(gameID).child("players").child(opponentID!!)
         player1connection.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot){
                 val choice = dataSnapshot.getValue()
@@ -233,8 +265,8 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun getChoiceFromDatabase() {
-        val player1choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice")
-        val player2choiceRef = stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice")
+        val player1choiceRef = stenSaxPaseRef.child(gameID).child("players").child(playerID!!).child("choice")
+        val player2choiceRef = stenSaxPaseRef.child(gameID).child("players").child(opponentID!!).child("choice")
         var player1choice:Any?
         var player2choice:Any?
         player1choiceRef.get().addOnSuccessListener {
@@ -247,25 +279,36 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun checkOutcome(player1choice:Any?,player2choice:Any?) {
-        var outcome = "none"
+        var outcome = "round not started"
         println("$player1choice mot $player2choice")
         if(player1choice != "null" && player2choice != "null") {
             if(player1choice == player2choice) outcome = "even"
-            else if(player1choice == "sten" && player2choice == "sax") outcome = player1!!
-            else if(player1choice == "sax" && player2choice == "pase") outcome = player1!!
-            else if(player1choice == "pase" && player2choice == "sten") outcome = player1!!
-            else outcome = player2!!
+            else if(player1choice == "sten" && player2choice == "sax") outcome = playerID!!
+            else if(player1choice == "sax" && player2choice == "pase") outcome = playerID!!
+            else if(player1choice == "pase" && player2choice == "sten") outcome = playerID!!
+            else outcome = opponentID!!
         }
         println("-outcome: $outcome")
-        if(outcome == player1) {
-            setScoreInDatabase(player1!!)
+        if(outcome == playerID) {
             setActionText("$player1 won with $player1choice beating $player2choice")
+            // Fördröjning
+            handler.postDelayed({
+                setScoreInDatabase(playerID!!)
+            }, 4000)
         }
-        else if(outcome == player2) {
-            setScoreInDatabase(player2!!)
+        else if(outcome == opponentID) {
             setActionText("$player2 won with $player2choice beating $player1choice")
+            // Fördröjning
+            handler.postDelayed({
+                setScoreInDatabase(opponentID!!)
+            }, 4000)
+        } else if(outcome == "even"){
+            setActionText("outcome of round: $outcome")
+            // Fördröjning
+            handler.postDelayed({
+                resetGame()
+            }, 4000)
         }
-        setActionText("outcome of round: $outcome")
     }
 
     fun setScoreInDatabase(player:String) {
@@ -283,28 +326,42 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun resetGame() {
-        stenSaxPaseRef.child(gameID).child("players").child(player1!!).child("choice").setValue("null")
-        stenSaxPaseRef.child(gameID).child("players").child(player2!!).child("choice").setValue("null")
+        stenSaxPaseRef.child(gameID).child("players").child(playerID!!).child("choice").setValue("null")
+        stenSaxPaseRef.child(gameID).child("players").child(opponentID!!).child("choice").setValue("null")
         resetUI()
     }
 
     fun resetUI() {
-        binding.sten.isClickable = true
-        binding.sax.isClickable = true
-        binding.pase.isClickable = true
+        if(currentPlayerID == playerID || currentPlayerID == opponentID) {
+            binding.sten.isClickable = true
+            binding.sax.isClickable = true
+            binding.pase.isClickable = true
 
-        binding.sten.visibility = View.VISIBLE
-        binding.sax.visibility = View.VISIBLE
-        binding.pase.visibility = View.VISIBLE
+            binding.sten.visibility = View.VISIBLE
+            binding.sax.visibility = View.VISIBLE
+            binding.pase.visibility = View.VISIBLE
+        } else {
+            binding.sten.isClickable = false
+            binding.sax.isClickable = false
+            binding.pase.isClickable = false
 
-        setActionText("Gör ett val")
+            binding.sten.visibility = View.INVISIBLE
+            binding.sax.visibility = View.INVISIBLE
+            binding.pase.visibility = View.INVISIBLE
+        }
     }
 
     fun checkForWin(player:String,score:Int) {
         if(score == 2) {
             println("player: $player wins")
             // apply logic for what should happen once a player wins
-            stenSaxPaseRef.child(gameID).setValue(null)
+            stenSaxPaseRef.child(gameID).child("status").setValue(false)
+            try {
+                database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
+                view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         else println("no win yet for player: $player")
     }

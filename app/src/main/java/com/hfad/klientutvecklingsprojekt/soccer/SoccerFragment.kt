@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -74,6 +75,9 @@ class SoccerFragment : Fragment() {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
 
+
+
+
         MeData.meModel.observe(this){
             meModel = it
             retrieveYourId()
@@ -93,7 +97,6 @@ class SoccerFragment : Fragment() {
         meModel?.apply {
             yourId = playerID.toString()
             localGameId = gameID.toString()
-            println("retrieve your id: yourid: " + yourId)
             myRef.child(localGameId).child("p1Choice").addValueEventListener(p1Listener)
             myRef.child(localGameId).child("p2Choice").addValueEventListener(p2Listener)
             myRef.child(localGameId).child("bothPlayerReady").addValueEventListener(bothReadyListener)
@@ -103,12 +106,9 @@ class SoccerFragment : Fragment() {
     private val p1Listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             myRef.child(localGameId).child("p1Choice").get().addOnSuccessListener { dataSnapshot ->
-                println("what p1Choice is: "+dataSnapshot.value.toString())
                 if(dataSnapshot.value.toString() != "" && !p1IsReady){
-                    println("p1Listener: p1 is ready")
                     p1Choice = dataSnapshot.value.toString()
                     p1IsReady = true
-                    println("player1 is ready: "+p1IsReady)
                     if(p2IsReady){
                         myRef.child(localGameId).child("bothPlayerReady").setValue(true)
                     }
@@ -122,10 +122,7 @@ class SoccerFragment : Fragment() {
     private val p2Listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             myRef.child(localGameId).child("p2Choice").get().addOnSuccessListener { dataSnapshot ->
-                println("what p2Choice is: "+dataSnapshot.value.toString())
-                println("player2 is ready: "+p2IsReady)
                 if(dataSnapshot.value.toString() != "" && !p2IsReady){
-                    println("p2listener: p2 is ready")
                     p2Choice = dataSnapshot.value.toString()
                     p2IsReady = true
                     if(p1IsReady){
@@ -141,7 +138,6 @@ class SoccerFragment : Fragment() {
         override fun onDataChange(snapshot: DataSnapshot) {
             myRef.child(localGameId).child("bothPlayerReady").get().addOnSuccessListener { dataSnapshot ->
                 if(dataSnapshot.value.toString().toBoolean()){
-                    println("Both player is ready")
                     bothIsReady = true
                     doMove()
 
@@ -156,9 +152,6 @@ class SoccerFragment : Fragment() {
         override fun onCancelled(error: DatabaseError) {
         }
     }
-
-
-
     //this retrieves the game data from last fragment
     fun setValues(){ //THIS DONT WORK
         myRef.child(localGameId).get()
@@ -169,6 +162,18 @@ class SoccerFragment : Fragment() {
                 localP1Id = dataSnapshot.child("p1Id").value.toString()
                 localP2Id = dataSnapshot.child("p2Id").value.toString()
                 setPlayerValues()
+
+                if(localP1Id.toInt() % 3 == 0){
+                    binding.background.setImageResource(R.drawable.aliencrowdfast)
+                }else if (localP1Id.toInt() % 3 == 1){
+                    binding.background.setImageResource(R.drawable.soccergame1)
+
+                    }else{
+                        binding.background.setImageResource(R.drawable.soccergame2)
+                }
+
+
+
                 var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
                 Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
                 binding.goalie.setImageResource(resourceId)
@@ -176,10 +181,6 @@ class SoccerFragment : Fragment() {
                 Log.d("shooterAnimation", "z" + shooterColor +"leftmiss")
                 binding.shooterMiss.setImageResource(resourceId2)
             }
-
-        println("setvalues: shootercolor: " + shooterColor + " goalieColor: " + goalieColor)
-        println("setvalues: p1Id: " + localP1Id + "p2Id: " + localP2Id)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -206,12 +207,14 @@ class SoccerFragment : Fragment() {
             sendChoiceOnline("mid")
             binding.bottomButtons.visibility = View.INVISIBLE
         }
-
-
-
     }
-
     fun doMove(){
+
+        println("Player1 choice: "+ p1Choice)
+        println("Player2 choice: "+ p2Choice)
+        println("Player1 id"+ localP1Id)
+        println("Player2 id"+ localP2Id)
+
         if (p1Choice == "left"){
             soccerViewModel.leftButtonClick(1)
         }
@@ -246,17 +249,9 @@ class SoccerFragment : Fragment() {
     }
 
     fun setPlayerValues(){
-        println("shooter: "+ shooterColor)
-        println("UNDER SHOULD BE YOUR COLOR")
-        println("your id: " + yourId)
-        println("goalie: "+ goalieColor)
-
         //sets player1 and 2 locally  (p1 starts as shooter)
         youArePlayerOne = yourId == localP1Id
         youArePlayerTwo = yourId == localP2Id
-
-        println("you are player one: " + youArePlayerOne)
-        println("you are player two: " + youArePlayerTwo)
         if(youArePlayerOne || youArePlayerTwo){
             binding.bottomButtons.visibility = View.VISIBLE
         }else{
@@ -283,32 +278,24 @@ class SoccerFragment : Fragment() {
                 if(soccerViewModel.p1Points == 3){
                     binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
                 }
+                database.getReference().child("Board Data").child(localGameId).child("randomVal").setValue(-1)
                 binding.finishedGameButton.setOnClickListener {
-                    findNavController().popBackStack()
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
                 }
             }
 
         }, 2000)
     }
-
-
-    fun checkOtherPlayerReady() {
-        soccerModel?.apply {
-            bothIsReady = bothPlayerReady.toString().toBoolean()
-        }
-        //TODO KAN HOPPA ÖVER OM DET ÄR THREADS
-    }
-
-
     fun sendChoiceOnline(choice: String){
-        println("Send choice online")
+        println("you are player one: " + youArePlayerOne + " and you choice: "+ choice)
         if (youArePlayerOne){
-                println("Send choice online as p1")
                 myRef.child(localGameId).child("p1Choice").setValue(choice)
+                p1Choice = choice
         }
         if(youArePlayerTwo){
-                println("Send choice online as p2")
                 myRef.child(localGameId).child("p2Choice").setValue(choice)
+                p2Choice = choice
         }
     }
 
@@ -328,8 +315,6 @@ class SoccerFragment : Fragment() {
                 currentImageView = binding.shooterMiss
                 hitStatus = "miss"
             }
-            Log.d("destination", "z" + soccerViewModel.shooterColor + soccerViewModel.shooterChoice + hitStatus)
-
             //set right animationresource here...
 
             val destination = "z" + soccerViewModel.shooterColor + soccerViewModel.shooterChoice + hitStatus
@@ -344,20 +329,14 @@ class SoccerFragment : Fragment() {
                goalDestination  = "z" + soccerViewModel.goalieColor + "goalleft"
                 val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
                 binding.goalie.setImageResource(resourceId)
-                Log.d("Goal if statement", "did click mid")
             }else{
-                Log.d("Goal if statement", "did not click mid")
                 goalDestination = "z" + soccerViewModel.goalieColor + "goal" + soccerViewModel.goalieChoice
                 val resourceId = resources.getIdentifier(goalDestination,"drawable","com.hfad.klientutvecklingsprojekt")
                 binding.goalie.setImageResource(resourceId)
                 var goalieAnimation  = binding.goalie.drawable as AnimationDrawable
                 goalieAnimation.start()
             }
-
-
             soccerViewModel.switchType()
-
-            val handler = Handler(Looper.getMainLooper())
 
             if(youArePlayerOne || youArePlayerTwo){
                 binding.bottomButtons.visibility = View.VISIBLE

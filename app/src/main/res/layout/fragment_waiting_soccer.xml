@@ -34,7 +34,4 @@
             android:src="@drawable/loadingframe"/>
 
     </LinearLayout>
-
-
-
 </FrameLayout>

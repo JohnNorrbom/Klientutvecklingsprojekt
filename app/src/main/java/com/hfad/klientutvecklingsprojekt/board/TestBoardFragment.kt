@@ -320,8 +320,8 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            //var randomInt = Random.nextInt(6) + 1
-            var randomInt = 5
+            var randomInt = Random.nextInt(6) + 1
+//            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,

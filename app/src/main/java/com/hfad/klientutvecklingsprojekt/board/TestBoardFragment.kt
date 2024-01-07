@@ -31,6 +31,10 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
+import android.R.attr.name
+
+
+
 
 
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
@@ -63,12 +67,17 @@ class TestBoardFragment : Fragment() {
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+    private val maxStreams = 5 // Number of simultaneous sounds
+    private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        SoundPool.Builder().setMaxStreams(maxStreams).build()
+    } else {
+        SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
+    }
 
     //  minigame
     private var localRandomVal = -1
 
     private var localCurrentPlayerTest = ""
-
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
     val leaderboardList = mutableListOf<Pair<String, Int>>()

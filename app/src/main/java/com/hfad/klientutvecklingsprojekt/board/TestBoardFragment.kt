@@ -247,7 +247,8 @@ class TestBoardFragment : Fragment() {
             try {
 //                val fragmentB = supportFragmentManager.findFragmentByTag("fragmentB") as? SecondFragment
 //                fragmentB?.updateText(newText)
-                view.findNavController().navigate(R.id.action_testBoardFragment_to_leaderBoardFragment)
+                val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(leaderboard[0].first,leaderboard[0].second)
+                view.findNavController().navigate(action)
             } catch(e: Exception) {
                 println(e.stackTrace)
             }

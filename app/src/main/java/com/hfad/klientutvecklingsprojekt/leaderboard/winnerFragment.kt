@@ -10,17 +10,18 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentWinnerBinding
 
 class winnerFragment : Fragment() {
     private var _binding: FragmentWinnerBinding? = null
-    private val binding get()  = _binding!!
+    private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentWinnerBinding.inflate(inflater,container,false)
+        _binding = FragmentWinnerBinding.inflate(inflater, container, false)
         val view = binding.root
         binding.root.rootView.setBackgroundResource(R.drawable.leaderboard)
         // referens till databasen
-
-
+        val winner = winnerFragmentArgs.fromBundle(requireArguments()).winnerName
+        val score = winnerFragmentArgs.fromBundle(requireArguments()).winnerScore
+        binding.textView4.text = "The winner is: " + winner + " with a score of: " + score + " points!!!"
         return view
     }
 }

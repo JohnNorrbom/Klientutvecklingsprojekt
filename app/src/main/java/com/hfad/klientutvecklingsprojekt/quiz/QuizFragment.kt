@@ -170,23 +170,23 @@ class QuizFragment : Fragment() {
     }
     private fun resetButtonColors() {
         binding.option1Button.apply {
-            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
             isEnabled = true
             setClickable(true)
 
         }
         binding.option2Button.apply {
-            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
             isEnabled = true
             setClickable(true)
         }
         binding.option3Button.apply {
-            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
             isEnabled = true
             setClickable(true)
         }
         binding.option4Button.apply {
-            setBackgroundColor(Color.BLACK)
+            setBackgroundColor(Color.WHITE)
             isEnabled = true
             setClickable(true)
         }

@@ -6,13 +6,12 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -31,11 +30,6 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
-import android.R.attr.name
-
-
-
-
 
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
@@ -78,6 +72,7 @@ class TestBoardFragment : Fragment() {
     private var localRandomVal = -1
 
     private var localCurrentPlayerTest = ""
+
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
     val leaderboardList = mutableListOf<Pair<String, Int>>()
@@ -325,13 +320,13 @@ class TestBoardFragment : Fragment() {
     }
 
     fun diceButton() {
+
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-//            var randomInt = Random.nextInt(6) + 1
-            var randomInt = 4
+            var randomInt = Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -405,7 +400,7 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
-//                localRandomVal = 2
+
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -469,7 +464,8 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 if (isAdded && view != null) {
-                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+                    database.getReference().child("Quiz").child(localGameID).child("seed").setValue(Random.nextInt(1000))
+                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
 
                 }
             } else if (randomVal == 3) {
@@ -589,7 +585,7 @@ class TestBoardFragment : Fragment() {
                             activity?.requestedOrientation =
                                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                             view?.findNavController()
-                                ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                                ?.navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
                         } else if (miniGameNmbr == 3) {
                             println("roulette vald")
                             Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")

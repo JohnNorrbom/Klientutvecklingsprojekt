@@ -25,22 +25,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/choose_your_name_and_character"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:textStyle="bold"
         android:textSize="28sp"
         android:textColor="#6AFF00"
         android:layout_margin="8dp"
         android:padding="8dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/nickname"
-        android:textStyle="bold"
-        android:layout_gravity="start"
-        android:textColor="#6AFF00"
-        android:textSize="20sp"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,13 +43,13 @@
         android:inputType="text"
         android:layout_margin="8dp"
         android:padding="8dp"
-        android:hint="@string/enter_user_name"/>
+        android:hint="@string/enter_user_name"
+        android:background="#3300FF00"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/choose_character"
         android:textStyle="bold"
-        android:layout_gravity="start"
         android:textColor="#6AFF00"
         android:textSize="20sp"
         android:layout_margin="8dp"

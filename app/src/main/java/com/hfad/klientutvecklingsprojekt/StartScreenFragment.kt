@@ -32,31 +32,10 @@ class StartScreenFragment : Fragment() {
         mediaPlayer?.isLooping = true // Disable built-in looping
         mediaPlayer?.start()
 
-        //  Changes view when button is clicked
-        //  board button
-        binding.startButton.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_testBoardFragment)
-        }
-        //  soccer button
-        binding.soccerMiniGameButton.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_soccerFragment)
-        }
-        //  stensaxpase button
-        binding.stensaxpaseMiniGameButton.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_stenSaxPaseChooseFragment)
-        }
-
+        //  spela
         binding.playerCreateButton.setOnClickListener {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             view.findNavController().navigate(R.id.action_startScreenFragment_to_gameStartFragment)
-        }
-        //  quiz button
-        binding.quizButton.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_startScreenFragment_to_quizFragment)
         }
         return view
     }

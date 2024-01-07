@@ -4,4 +4,10 @@
     <color name="white">#FFFFFFFF</color>
     <color name="darkgreen">#102C0A</color>
     <color name="green">#62FF00</color>
+    <color name="colorPrimary">#62FF00</color>
+    <color name="colorPrimaryDark">#102C0A</color>
+    <color name="buttonColor">#FF000000</color>
+    <color name="custom_button_background_color">#FF8B1089</color>
+    <color name="custom_button_text_color">#FF000000</color>
+    <color name="custom_button_border_color">#FF000000</color>
 </resources>

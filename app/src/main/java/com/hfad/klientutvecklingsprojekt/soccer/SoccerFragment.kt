@@ -109,7 +109,7 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString() != "" && !p1IsReady){
                     p1Choice = dataSnapshot.value.toString()
                     p1IsReady = true
-                    if(p2IsReady){
+                    if(p2IsReady  && youArePlayerTwo){
                         myRef.child(localGameId).child("bothPlayerReady").setValue(true)
                     }
                 }
@@ -125,7 +125,7 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString() != "" && !p2IsReady){
                     p2Choice = dataSnapshot.value.toString()
                     p2IsReady = true
-                    if(p1IsReady){
+                    if(p1IsReady  && youArePlayerOne){
                         myRef.child(localGameId).child("bothPlayerReady").setValue(true)
                     }
                 }
@@ -140,7 +140,6 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString().toBoolean()){
                     bothIsReady = true
                     doMove()
-
                 }else{
                     //RESETS THE "READINESS"
                     bothIsReady = false
@@ -238,7 +237,13 @@ class SoccerFragment : Fragment() {
         doAnimation(soccerViewModel)
 
         if(youArePlayerOne || youArePlayerTwo){
-            binding.bottomButtons.visibility = View.VISIBLE
+
+            val handler = Handler(Looper.getMainLooper())
+
+            handler.postDelayed({
+                binding.bottomButtons.visibility = View.VISIBLE
+            }, 2000)
+
             myRef.child(localGameId).child("bothPlayerReady").setValue(false)
             myRef.child(localGameId).child("p1Choice").setValue("")
             myRef.child(localGameId).child("p2Choice").setValue("")
@@ -337,10 +342,6 @@ class SoccerFragment : Fragment() {
                 goalieAnimation.start()
             }
             soccerViewModel.switchType()
-
-            if(youArePlayerOne || youArePlayerTwo){
-                binding.bottomButtons.visibility = View.VISIBLE
-            }
         }
     }
 

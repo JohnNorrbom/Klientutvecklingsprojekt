@@ -222,14 +222,11 @@ class TestBoardFragment : Fragment() {
             val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
 
             if (existingIndex != -1) {
-                // If the nickname already exists, update the score if the new score is higher
-                if (number > leaderboardList[existingIndex].second) {
+                // If the nickname already exists, update the score
                     leaderboardList[existingIndex] = nickname to number
-                }
             } else {
                 // Add the new pair to the list
                 leaderboardList.add(nickname to number)
-
             }
             Log.d("score", "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${getLeaderText(3)}, ${getLeaderText(4)}")
         }

@@ -7,6 +7,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
+import com.google.firebase.inject.Deferred
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
 
@@ -22,6 +23,7 @@ object RouletteData {
         _rouletteModel.postValue(model)
         myRef.child(id).setValue(model)
     }
+
 
     fun fetchGameModel(){
         rouletteModel.value?.apply {

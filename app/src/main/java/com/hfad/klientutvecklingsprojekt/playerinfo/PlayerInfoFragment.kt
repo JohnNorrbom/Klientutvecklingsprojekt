@@ -2,7 +2,11 @@ package com.hfad.klientutvecklingsprojekt.playerinfo
 
 import android.content.ContentValues.TAG
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -175,7 +179,15 @@ class PlayerInfoFragment : Fragment() {
     fun setUI() {
         gameModel?.apply {
             //  Changes text for TextView to the lobby gameID
-            binding.gameId.text = "${getText(R.string.game_ID)}${gameID}"
+            val text = "${getText(R.string.game_ID)}${gameID}"
+            val spannableString = SpannableString(text)
+            // Get the length of the text
+            val textLength = text.length
+            // Set the color for the first half of the text to green
+            spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#6AFF00")), 0, textLength - 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            // Set the color for the second half of the text to red
+            spannableString.setSpan(ForegroundColorSpan(Color.RED), textLength - 4, textLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            binding.gameId.text = spannableString
             //  Loops through all 5 character colors to see which of them are taken
             for (i in 0 until characterColors.size) {
                 // if a player color is taken

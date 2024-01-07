@@ -1,72 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:layout_margin="16dp"
-    android:orientation="vertical"
     tools:context=".gamestart.GameStartFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/game_name"
-        android:textStyle="bold"
-        android:textSize="28sp"
-        android:textColor="#6AFF00"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-    <Button
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/play_offline_btn"
-        android:text="@string/play_offline"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-    <TextView
+        android:layout_height="110dp"
+        android:layout_marginTop="32dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/space_party_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/or"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="#6AFF00"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/create_online_game_btn"
-        android:text="@string/create_game_oline"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/or"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="#6AFF00"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/game_id_input"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:inputType="number"
-        android:textColor="#6AFF00"
-        android:layout_margin="8dp"
-        android:padding="8dp"
-        android:hint="@string/enter_game_id"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/join_online_game_btn"
-        android:text="@string/join_online_game"
-        android:layout_margin="8dp"
-        android:padding="8dp"/>
-</LinearLayout>
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/create_online_game_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_game_oline" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:textColor="#6AFF00"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/game_id_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="#3300FF00"
+            android:hint="@string/enter_game_id"
+            android:inputType="number"
+            android:padding="8dp"
+            android:textColor="#6AFF00"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/join_online_game_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/join_online_game"
+            tools:layout_editor_absoluteX="130dp" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
 

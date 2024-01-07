@@ -375,10 +375,13 @@ class StenSaxPaseFragment : Fragment() {
     fun checkForWin(player:String,score:Int) {
         if(score == 2) {
             println("player: $player wins")
+            // Get 'score' of player who won
             playerDataRef.child(currentGameID).child("players").child(player).child("score").get().addOnSuccessListener {
+                // Save score and add 10
                 var boardScore = it.value.toString().toInt()
                 boardScore += 10
-                playerDataRef.child(currentGameID).child("players").child(player).child("score").setValue("$boardScore")
+                // Set new value
+                playerDataRef.child(currentGameID).child("players").child(player).child("score").setValue(boardScore)
 
                 stenSaxPaseRef.child(gameID).child("status").setValue(false)
                 try {

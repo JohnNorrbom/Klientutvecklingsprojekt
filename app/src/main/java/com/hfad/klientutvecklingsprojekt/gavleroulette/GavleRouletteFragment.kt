@@ -61,7 +61,7 @@ class GavleRouletteFragment : Fragment(){
             }
         }
 
-        myRef.child(localGameID).child("gameStatus").addValueEventListener(statusListner)
+        //myRef.child(localGameID).child("gameStatus").addValueEventListener(statusListner)
 
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -87,21 +87,6 @@ class GavleRouletteFragment : Fragment(){
         _binding = null
     }
 
-    val statusListner = object : ValueEventListener{
-        override fun onDataChange(snapshot: DataSnapshot) {
-            if (GameStatus.FINISHED == snapshot.value){
-                database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
-                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-            }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-        }
-
-    }
-
     fun setText(){
         //den här
         localGameID = meModel?.gameID?:""
@@ -114,6 +99,11 @@ class GavleRouletteFragment : Fragment(){
             playerRef.child(localGameID).child("players").get().addOnSuccessListener {
                 val snapshot = it
                 var text = ""
+                if (scoreUpploaded == true){
+                    database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                }
             binding.gameStatusText.text =
                 when (gameStatus) {
                     GameStatus.INPROGRESS -> {
@@ -221,17 +211,6 @@ class GavleRouletteFragment : Fragment(){
             binding.test1.text = "current attempts" + attempts.toString()
             binding.test2.text = "total laps " + laps.toString()
             updateGameData(this,localGameID)
-        }
-    }
-
-    fun startGame() {
-        rouletteModel?.apply {
-            updateGameData(
-                RouletteModel(
-                    gameStatus = GameStatus.INPROGRESS,
-                ),localGameID
-
-            )
         }
     }
 

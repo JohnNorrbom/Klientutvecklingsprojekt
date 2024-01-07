@@ -12,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -29,6 +30,9 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import org.jetbrains.annotations.Async
 import kotlin.random.Random
 
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
@@ -184,64 +188,10 @@ class TestBoardFragment : Fragment() {
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                if(localCurrentPlayerTest == localPlayerID){
-                                    playersRef.get().addOnSuccessListener {
-                                        val snapshot = it
-                                        var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
-                                        var scorePlayers: MutableMap<String, Int> = mutableMapOf()
-                                        for (player in snapshot.children) {
-                                            Log.d("player", "${player}")
-                                            gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
-                                            scorePlayers?.put(player.key.toString(), 0)
-                                            Log.d("players", "${gamePlayer}")
-                                        }
-
-                                        Log.d(
-                                            "currentPlayer",
-                                            "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
-                                        )
-
-                                        RouletteData.saveGameModel(
-                                                RouletteModel(
-                                                    gameId = localGameID,
-                                                    players = gamePlayer,
-                                                    gameStatus = GameStatus.INPROGRESS,
-                                                    attempts = 0,
-                                                    laps = 0,
-                                                    score = scorePlayers,
-                                                    nbrOfPlayers = gamePlayer.size,
-                                                    aliveCount = gamePlayer.size,
-                                                    luckyNumber = Random.nextInt(6) + 1,
-                                                    currentPlayer = gamePlayer.keys.elementAt(
-                                                        Random.nextInt(
-                                                            gamePlayer.size
-                                                        )
-                                                    ),
-                                                    scoreUpploaded = false
-                                                ), localGameID)
-                                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                        view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-
-                                    }
-                                }else{
-                                   // handler.postDelayed({
-                                        rouletteRef.child(localGameID).get().addOnSuccessListener {
-                                            val snapshot = it
-                                            Log.d("localGameID","${snapshot}")
-                                            val model = snapshot.getValue(RouletteModel::class.java)
-                                            Log.d("localGameID","${model}")
-                                            //  Create array of colors to compare them with the colors in the lobby to see
-                                            //  which of them are are taken
-                                            if (model!=null){
-                                                RouletteData.saveGameModel(model,localGameID)
-                                                Log.d("Om success","model: ${model}")
-                                                // btnPressed is true, navigate to the next fragment
-                                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-                                            }
-                                        }
-                                  //  }, 3000)
-                                }
+                                Log.d("localCurrentPlayerTest","${localCurrentPlayerTest}")
+                                Log.d("localPlayerID","${localPlayerID}")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
 
                             }
                         }
@@ -257,7 +207,9 @@ class TestBoardFragment : Fragment() {
             })
         }
     }
-
+    fun asyncRoulette(snapshot : DataSnapshot) : RouletteModel?{
+       return snapshot.getValue(RouletteModel::class.java)
+    }
     /*
     this also calls setplayeronrightposition. and is thought to be called everytime something happens
      */
@@ -372,7 +324,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
+            var randomInt = 5//Random.nextInt(6) + 1
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -397,7 +349,7 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = Random.nextInt(3)
+                localRandomVal = 3//Random.nextInt(3)
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -437,14 +389,7 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                    if(localCurrentPlayerTest == localPlayerID){
-                        view.findNavController()
-                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                    }else{
-                        view.findNavController()
-                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
-                    }
-
+                    view.findNavController().navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
@@ -468,8 +413,8 @@ class TestBoardFragment : Fragment() {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
-                    if(localCurrentPlayerTest == localPlayerID){
-                        playersRef.get().addOnSuccessListener {
+                        if(localCurrentPlayerTest == localPlayerID) {
+                            playersRef.get().addOnSuccessListener {
                             val snapshot = it
                             var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
                             var scorePlayers: MutableMap<String, Int> = mutableMapOf()
@@ -484,6 +429,8 @@ class TestBoardFragment : Fragment() {
                                 "currentPlayer",
                                 "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
                             )
+
+                            Log.d("game ID", "${localGameID}")
 
                             RouletteData.saveGameModel(
                                 RouletteModel(
@@ -502,30 +449,13 @@ class TestBoardFragment : Fragment() {
                                         )
                                     ),
                                     scoreUpploaded = false
-                                ), localGameID)
-                            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                                ), localGameID
+
+                            )
 
                         }
-                    }else{
-                        // handler.postDelayed({
-                        rouletteRef.child(localGameID).get().addOnSuccessListener {
-                            val snapshot = it
-                            Log.d("localGameID","${snapshot}")
-                            val model = snapshot.getValue(RouletteModel::class.java)
-                            Log.d("localGameID","${model}")
-                            //  Create array of colors to compare them with the colors in the lobby to see
-                            //  which of them are are taken
-                            if (model!=null){
-                                RouletteData.saveGameModel(model,localGameID)
-                                Log.d("Om success","model: ${model}")
-                                // btnPressed is true, navigate to the next fragment
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-                            }
-                        }
-                        //  }, 3000)
                     }
+                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                 }
             }
         } catch (e: Exception) {

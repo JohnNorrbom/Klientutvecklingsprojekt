@@ -356,8 +356,12 @@ class SoccerFragment : Fragment() {
                 }
 
                 binding.finishedGameButton.setOnClickListener {
-                    view?.findNavController()
-                        ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
+                    try {
+                        view?.findNavController()
+                            ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
+                    } catch (e: Exception) {
+                        println(e.stackTrace)
+                    }
                 }
             }
 

@@ -32,13 +32,14 @@ class SoccerChooseFragment : Fragment() {
     private val binding get() = _binding!!
 
     //meModel
-    private var meModel : MeModel?= null//den här
+    private var meModel: MeModel? = null//den här
 
-    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
 
     //Here you should get your color from meDataModel or boardModel
-    private var yourColor: String  = ""
+    private var yourColor: String = ""
     private var yourId: String = "-1"
 
     //Here you should get the other colors from boardModel
@@ -48,7 +49,7 @@ class SoccerChooseFragment : Fragment() {
     private var otherIds = arrayListOf("-1")
 
     //othermap is hashmap of otherids and othercolors
-    private var otherMap = hashMapOf<String,String>()
+    private var otherMap = hashMapOf<String, String>()
 
     //here you should get the id from boardModel
     private var gameId: String = Random.nextInt(1000..9999).toString()
@@ -61,7 +62,7 @@ class SoccerChooseFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentSoccerChooseBinding.inflate(inflater,container,false)
+        _binding = FragmentSoccerChooseBinding.inflate(inflater, container, false)
 
         binding.astroBlue.visibility = View.GONE
         binding.astroWhite.visibility = View.GONE
@@ -81,38 +82,47 @@ class SoccerChooseFragment : Fragment() {
         }
 
 
+        try {
+            binding.astroBlue.setOnClickListener {
+                if (yourColor != "blue") {
+                    createSoccerGame("blue", gameId)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
+                }
 
-        binding.astroBlue.setOnClickListener {
-            if(yourColor != "blue"){
-                createSoccerGame("blue", gameId)
-                view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
             }
+            binding.astroRed.setOnClickListener {
+                if (yourColor != "red") {
+                    createSoccerGame("red", gameId)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
+                }
+            }
+            binding.astroYellow.setOnClickListener {
+                if (yourColor != "yellow") {
+                    createSoccerGame("yellow", gameId)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
+                }
+            }
+            binding.astroGreen.setOnClickListener {
+                if (yourColor != "green") {
+                    createSoccerGame("green", gameId)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
+                }
+            }
+            binding.astroWhite.setOnClickListener {
+                if (yourColor != "white") {
+                    createSoccerGame("white", gameId)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
+                }
+            }
+        } catch (e: Exception) {
+            println(e.stackTrace)
+        }
 
-        }
-        binding.astroRed.setOnClickListener {
-            if(yourColor != "red"){
-            createSoccerGame("red" , gameId)
-            view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
-            }
-        }
-        binding.astroYellow.setOnClickListener {
-            if(yourColor != "yellow"){
-            createSoccerGame("yellow" , gameId)
-            view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
-            }
-        }
-        binding.astroGreen.setOnClickListener {
-            if(yourColor != "green"){
-            createSoccerGame("green" , gameId)
-            view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
-            }
-        }
-        binding.astroWhite.setOnClickListener {
-            if (yourColor != "white"){
-            createSoccerGame("white" , gameId)
-            view?.findNavController()?.navigate(R.id.action_soccerChooseFragment_to_soccerFragment)
-        }
-    }
 
         val view = binding.root
 
@@ -120,43 +130,55 @@ class SoccerChooseFragment : Fragment() {
         return view
     }
 
-//TODO MÅSTE ÄNDRAS
-    fun createSoccerGame(p2Color: String, gameId: String){
+    //TODO MÅSTE ÄNDRAS
+    fun createSoccerGame(p2Color: String, gameId: String) {
         SoccerData.saveSoccerModel(
-            SoccerModel(gameId,0,0,"","", yourColor,p2Color,false, yourId, otherMap.get(p2Color))
+            SoccerModel(
+                gameId,
+                0,
+                0,
+                "",
+                "",
+                yourColor,
+                p2Color,
+                false,
+                yourId,
+                otherMap.get(p2Color)
+            )
         )
     }
 
-    fun setColorButtonVisible(){
-        for (color in otherColors){
-            if(color == "blue" && yourColor != "blue"){
+    fun setColorButtonVisible() {
+        for (color in otherColors) {
+            if (color == "blue" && yourColor != "blue") {
                 binding.astroBlue.visibility = View.VISIBLE
             }
-            if(color == "white"&& yourColor != "white"){
+            if (color == "white" && yourColor != "white") {
                 binding.astroWhite.visibility = View.VISIBLE
             }
-            if(color == "green" && yourColor != "green"){
+            if (color == "green" && yourColor != "green") {
                 binding.astroGreen.visibility = View.VISIBLE
             }
-            if(color == "red"&& yourColor != "red"){
+            if (color == "red" && yourColor != "red") {
                 binding.astroRed.visibility = View.VISIBLE
             }
-            if(color == "yellow"&& yourColor != "yellow"){
+            if (color == "yellow" && yourColor != "yellow") {
                 binding.astroYellow.visibility = View.VISIBLE
             }
         }
     }
 
-    fun setValues(){
+    fun setValues() {
         meModel?.apply {
-            gameId = gameID?:""
-            yourId = playerID?:""
+            gameId = gameID ?: ""
+            yourId = playerID ?: ""
         }
     }
-    fun getYourData(){
+
+    fun getYourData() {
     }
 
-    fun otherColors(){
+    fun otherColors() {
         otherColors = arrayListOf()
         otherIds = arrayListOf()
         var colorArr = arrayListOf<String>()
@@ -165,12 +187,12 @@ class SoccerChooseFragment : Fragment() {
                 dataSnapshot.children.forEach { playerSnapshot ->
                     val playerId = playerSnapshot.child("playerID").value.toString()
                     val color = playerSnapshot.child("color").value.toString()
-                    if(playerId == yourId){
+                    if (playerId == yourId) {
                         yourColor = color
                     }
                     otherColors.add(color)
                     otherIds.add(playerId)
-                    otherMap.set(color,playerId)
+                    otherMap.set(color, playerId)
                 }
                 setColorButtonVisible()
             }

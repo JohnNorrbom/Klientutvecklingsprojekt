@@ -236,7 +236,8 @@ class TestBoardFragment : Fragment() {
                 // Extracting values from playerSnapshot
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()
-                    if (leaderboardList.isEmpty()) {
+
+                if (leaderboardList.isEmpty()) {
                         // Add the first pair to the list
                         leaderboardList.add(nickname1 to number1)
                         Log.d("score", "leaderboardList $nickname1 $number1")

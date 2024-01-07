@@ -117,6 +117,7 @@ class TestBoardFragment : Fragment() {
         boardRef.addValueEventListener(boardListener)
         diceButton()
         gameRef.addValueEventListener(positionListener)
+        boardRef.addValueEventListener(gameStatusListener)
 
         // Inflate the layout for this fragment
         return view

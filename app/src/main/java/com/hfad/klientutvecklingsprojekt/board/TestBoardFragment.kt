@@ -67,14 +67,6 @@ class TestBoardFragment : Fragment() {
 
     private var localCurrentPlayerTest = ""
 
-    //  DICE SOUND
-    private val maxStreams = 5 // Number of simultaneous sounds
-    private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        SoundPool.Builder().setMaxStreams(maxStreams).build()
-    } else {
-        SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
-    }
-
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
     val leaderboardList = mutableListOf<Pair<String, Int>>()
@@ -422,7 +414,7 @@ class TestBoardFragment : Fragment() {
                     view.findNavController().navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
 
                 }
-            } else {
+            } else if (randomVal == 3) {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
@@ -563,8 +555,6 @@ class TestBoardFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        soundPool?.release()
-        soundPool = null
         mediaPlayer?.release()
         mediaPlayer = null
     }

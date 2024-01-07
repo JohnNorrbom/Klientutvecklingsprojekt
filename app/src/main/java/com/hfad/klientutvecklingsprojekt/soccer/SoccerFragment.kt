@@ -54,6 +54,9 @@ class SoccerFragment : Fragment() {
     private var localP2Id = ""
     private var localGameId = ""
 
+    //for setting last point
+    private var hasGivenPoints: Boolean = false
+
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -98,7 +101,21 @@ class SoccerFragment : Fragment() {
             myRef.child(localGameId).child("p1Choice").addValueEventListener(p1Listener)
             myRef.child(localGameId).child("p2Choice").addValueEventListener(p2Listener)
             myRef.child(localGameId).child("bothPlayerReady").addValueEventListener(bothReadyListener)
+            myRef.child(localGameId).addValueEventListener(pointListener)
         }
+    }
+
+    private val pointListener = object : ValueEventListener{
+        override fun onDataChange(snapshot: DataSnapshot) {
+            myRef.child(localGameId).get().addOnSuccessListener { dataSnapshot ->
+                soccerViewModel.p1Points = dataSnapshot.child("p1Score").value.toString().toInt()
+                soccerViewModel.p2Points = dataSnapshot.child("p2Score").value.toString().toInt()
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+        }
+
     }
 
     private val p1Listener = object : ValueEventListener {
@@ -150,7 +167,7 @@ class SoccerFragment : Fragment() {
         }
     }
     //this retrieves the game data from last fragment
-    fun setValues(){ //THIS DONT WORK
+    fun setValues(){
         myRef.child(localGameId).get()
             .addOnSuccessListener { dataSnapshot ->
                 localGameId = dataSnapshot.child("gameID").value.toString()
@@ -167,8 +184,6 @@ class SoccerFragment : Fragment() {
                     }else{
                         binding.background.setImageResource(R.drawable.soccergame2)
                 }
-
-
 
                 var resourceId = resources.getIdentifier("z" + goalieColor+"goalleft", "drawable", "com.hfad.klientutvecklingsprojekt")
                 Log.d("goalieAnimation", "z" + goalieColor+"goalleft")
@@ -228,6 +243,12 @@ class SoccerFragment : Fragment() {
             soccerViewModel.rightButtonClick(2)
         }
         soccerViewModel.startRound()
+
+        if(youArePlayerOne){
+            myRef.child(localGameId).child("p1Score").setValue(soccerViewModel.p1Points)
+            myRef.child(localGameId).child("p2Score").setValue(soccerViewModel.p2Points)
+        }
+
 
         doAnimation(soccerViewModel)
 
@@ -320,7 +341,7 @@ class SoccerFragment : Fragment() {
             binding.scoreBoard.text = "" + soccerViewModel.p1Points + "-" + soccerViewModel.p2Points + " "
         }, 2000)
         handler.postDelayed({
-            if ((soccerViewModel.p2Points > 3 || soccerViewModel.p1Points > 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
+            if ((soccerViewModel.p2Points >= 3 || soccerViewModel.p1Points >= 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
                 binding.finalScorePoint.visibility = View.VISIBLE
                 binding.finishedGameButton.visibility = View.VISIBLE
                 binding.finishedGameScreen.visibility = View.VISIBLE
@@ -342,22 +363,29 @@ class SoccerFragment : Fragment() {
                         winPlayerId = localP2Id
                         losingPlayerId = localP1Id
                     }
-                    database.getReference("Player Data").child(localGameId).child("players").get().addOnSuccessListener {
-                        // Save score and add 10
-                        var boardScoreWin = it.child(winPlayerId).child("score").value.toString().toInt()
-                        boardScoreWin += 10
-                        var boardScoreLose = it.child(losingPlayerId).child("score").value.toString().toInt()
-                        boardScoreLose -= 10
-                        println("board score: " + boardScoreWin)
-                        // Set new value
-                        database.getReference("Player Data").child(localGameId).child("players").child(winPlayerId).child("score").setValue("$boardScoreWin")
-                        database.getReference("Player Data").child(localGameId).child("players").child(losingPlayerId).child("score").setValue("$boardScoreLose")
+                    if (hasGivenPoints){
+                        hasGivenPoints == true
+                        database.getReference("Player Data").child(localGameId).child("players").get().addOnSuccessListener {
+                            // Save score and add 10
+                            var boardScoreWin = it.child(winPlayerId).child("score").value.toString().toInt()
+                            boardScoreWin += 10
+                            var boardScoreLose = it.child(losingPlayerId).child("score").value.toString().toInt()
+                            boardScoreLose -= 5
+                            println("board score: " + boardScoreWin)
+                            // Set new value
+                            database.getReference("Player Data").child(localGameId).child("players").child(winPlayerId).child("score").setValue("$boardScoreWin")
+                            database.getReference("Player Data").child(localGameId).child("players").child(losingPlayerId).child("score").setValue("$boardScoreLose")
+                        }
                     }
                 }
 
                 binding.finishedGameButton.setOnClickListener {
-                    view?.findNavController()
-                        ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
+                    try {
+                        view?.findNavController()
+                            ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
+                    } catch (e: Exception) {
+                        println(e.stackTrace)
+                    }
                 }
             }
 
@@ -373,6 +401,7 @@ class SoccerFragment : Fragment() {
                 myRef.child(localGameId).child("p2Choice").setValue(choice)
                 p2Choice = choice
         }
+
     }
 
 
@@ -418,7 +447,6 @@ class SoccerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
         mediaPlayer?.release()
         mediaPlayer = null
     }

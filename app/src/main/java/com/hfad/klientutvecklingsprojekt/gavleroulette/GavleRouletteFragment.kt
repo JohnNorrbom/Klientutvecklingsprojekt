@@ -2,6 +2,7 @@ package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -39,6 +40,8 @@ class GavleRouletteFragment : Fragment(){
     var localPlayerID =""
     var localGameID = ""
     private val handler = Handler()
+    // BG MUSIC
+    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreateView(
@@ -49,6 +52,12 @@ class GavleRouletteFragment : Fragment(){
         _binding = FragmentGavleRouletteBinding.inflate(inflater, container, false)
         val view = binding.root
         RouletteData.fetchGameModel()
+
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song5_140bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
 
 
         RouletteData.rouletteModel.observe(viewLifecycleOwner) { rouletteModel ->
@@ -62,9 +71,9 @@ class GavleRouletteFragment : Fragment(){
                         setUi()
                         setPlayerInfo()
                     }, 500)
-                    if (it.gameStatus == GameStatus.FINISHED) {
+                    if (it.gameStatus == GameStatus.FINISHED || it.scoreUpploaded != true) {
+                        it.scoreUpploaded = true
                         handler.postDelayed({
-                            setScore()
                             database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
                             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                             try {
@@ -72,7 +81,7 @@ class GavleRouletteFragment : Fragment(){
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                        }, 12000)
+                        }, 6000)
                     }
                 }
             }
@@ -99,7 +108,8 @@ class GavleRouletteFragment : Fragment(){
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     fun setText(){
@@ -230,12 +240,10 @@ class GavleRouletteFragment : Fragment(){
     }
     //Changes to the next player
     fun changePlayer() {
-        rouletteModel?.apply {
-            myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
-                Log.d("snapshot", "${it.value}")
-                val currentPlayerIndex = players?.keys?.indexOf(it.value.toString()) ?: -1
+                rouletteModel?.apply {
+                val currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
                 Log.d("player keys", "${players?.keys}")
-                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(it.value.toString())}")
+                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(currentPlayer)}")
                 Log.d("currentPlayerIndex", "${currentPlayerIndex}")
 
                 if (currentPlayerIndex != -1) {
@@ -266,7 +274,6 @@ class GavleRouletteFragment : Fragment(){
                     }
                 }
             }
-        }
     }
 
     //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
@@ -298,14 +305,13 @@ class GavleRouletteFragment : Fragment(){
     }
 
     fun setScore() {
-        rouletteModel?.apply {
-            playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
-                     val currentScore = it.child("score").value.toString()
-                     Log.d("score", " ${currentScore}")
-                       val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt())
-                            ?: 0
-                     Log.d("score", " ${newScore}")
-                     playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
+        playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
+            rouletteModel?.apply {
+                val currentScore = it.child("score").value.toString()
+                Log.d("score", " ${currentScore}")
+                val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt()) ?: 0
+                Log.d("score", " ${newScore}")
+                playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
             }
         }
     }

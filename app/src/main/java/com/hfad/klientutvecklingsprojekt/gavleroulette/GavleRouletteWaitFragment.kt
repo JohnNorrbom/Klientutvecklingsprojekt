@@ -1,6 +1,9 @@
 package com.hfad.klientutvecklingsprojekt.gavleroulette
 
+import android.graphics.drawable.AnimationDrawable
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +28,9 @@ class GavleRouletteWaitFragment : Fragment() {
     val myRef = database.getReference("Roulette")
     var localPlayerID = ""
     var localGameID = ""
+    private val handler = Handler()
+    // BG MUSIC
+    private var mediaPlayer: MediaPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +39,14 @@ class GavleRouletteWaitFragment : Fragment() {
     ): View? {
         _binding = FragmentGavleRouletteWaitBinding.inflate(inflater, container, false)
         val view = binding.root
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song7_130bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
+
+        var loadingAnimation = binding.loadingSymbol.drawable as AnimationDrawable
+        loadingAnimation.start()
 
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -48,8 +62,18 @@ class GavleRouletteWaitFragment : Fragment() {
         binding.startGame.setOnClickListener{
             startGame()
         }
-
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        handler.postDelayed({binding.startGame.visibility = View.VISIBLE},2500)
+        super.onViewCreated(view, savedInstanceState)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     fun startGame(){

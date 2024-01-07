@@ -230,8 +230,8 @@ class GavleRouletteFragment : Fragment(){
     }
     //Changes to the next player
     fun changePlayer() {
-        rouletteModel?.apply {
             myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
+                rouletteModel?.apply {
                 Log.d("snapshot", "${it.value}")
                 val currentPlayerIndex = players?.keys?.indexOf(it.value.toString()) ?: -1
                 Log.d("player keys", "${players?.keys}")

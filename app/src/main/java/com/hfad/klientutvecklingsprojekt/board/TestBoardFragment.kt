@@ -165,10 +165,11 @@ class TestBoardFragment : Fragment() {
                                     ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
                                 if (localCurrentPlayerTest == localPlayerID) {
-                                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                                }
-                                else {
-                                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                } else {
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
                                 }
                             } else if (miniGameNmbr == 1) {
                                 println("soccer vald")
@@ -214,6 +215,7 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
+
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -236,34 +238,34 @@ class TestBoardFragment : Fragment() {
                 // Extracting values from playerSnapshot
                 val number1 = playerSnapshot.child("score").value.toString().toInt()
                 val nickname1 = playerSnapshot.child("nickname").value.toString()
-                    if (leaderboardList.isEmpty()) {
-                        // Add the first pair to the list
-                        leaderboardList.add(nickname1 to number1)
-                        Log.d("score", "leaderboardList $nickname1 $number1")
-                    } else {
-                        // Check if the nickname is already in the list
-                        val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
+                if (leaderboardList.isEmpty()) {
+                    // Add the first pair to the list
+                    leaderboardList.add(nickname1 to number1)
+                    Log.d("score", "leaderboardList $nickname1 $number1")
+                } else {
+                    // Check if the nickname is already in the list
+                    val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
 
-                        if (existingIndex != -1) {
-                            // If the nickname already exists, update the score if the new score is higher
-                            if (number1 > leaderboardList[existingIndex].second) {
-                                leaderboardList[existingIndex] = nickname1 to number1
-                            }
-                        } else {
-                            // Add the new pair to the list
-                            leaderboardList.add(nickname1 to number1)
-
-                            // Sort the list based on the 'number1' values in descending order
-                            leaderboardList.sortByDescending { it.second }
+                    if (existingIndex != -1) {
+                        // If the nickname already exists, update the score if the new score is higher
+                        if (number1 > leaderboardList[existingIndex].second) {
+                            leaderboardList[existingIndex] = nickname1 to number1
                         }
-                        Log.d("score", "after leaderboardList $nickname1 $number1")
-                    }
+                    } else {
+                        // Add the new pair to the list
+                        leaderboardList.add(nickname1 to number1)
 
-                    binding.textViewLeader1.text = getLeaderText(0)
-                    binding.textViewLeader2.text = getLeaderText(1)
-                    binding.textViewLeader3.text = getLeaderText(2)
-                    binding.textViewLeader4.text = getLeaderText(3)
-                    binding.textViewLeader5.text = getLeaderText(4)
+                        // Sort the list based on the 'number1' values in descending order
+                        leaderboardList.sortByDescending { it.second }
+                    }
+                    Log.d("score", "after leaderboardList $nickname1 $number1")
+                }
+
+                binding.textViewLeader1.text = getLeaderText(0)
+                binding.textViewLeader2.text = getLeaderText(1)
+                binding.textViewLeader3.text = getLeaderText(2)
+                binding.textViewLeader4.text = getLeaderText(3)
+                binding.textViewLeader5.text = getLeaderText(4)
 
                 imageView?.let { view ->
                     //make player imageView visible
@@ -382,10 +384,10 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                    if(localCurrentPlayerTest == localPlayerID){
+                    if (localCurrentPlayerTest == localPlayerID) {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                    }else{
+                    } else {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
                     }
@@ -394,10 +396,10 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
                     //means you are host
-                    if(localCurrentPlayerTest == localPlayerID){
+                    if (localCurrentPlayerTest == localPlayerID) {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-                    }else{
+                    } else {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
                     }
@@ -481,7 +483,7 @@ class TestBoardFragment : Fragment() {
                         binding.diceButton.isEnabled = true
                         binding.diceButton.visibility = View.VISIBLE
                         localCurrentPlayerTest = currentPlayerId.toString()
-                    }else{
+                    } else {
                         binding.diceButton.setImageResource(R.drawable.dice1grayed)
                         binding.diceButton.isEnabled = false
                     }

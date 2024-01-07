@@ -102,5 +102,6 @@ class StenSaxPaseWaitFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         gameIDRef.removeEventListener(gameStartListener)
+        println("WAITFRAG: JAG HAR PAUSAT")
     }
 }

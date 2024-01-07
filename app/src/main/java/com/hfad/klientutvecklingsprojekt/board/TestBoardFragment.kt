@@ -116,7 +116,7 @@ class TestBoardFragment : Fragment() {
 
         boardRef.addValueEventListener(boardListener)
         diceButton()
-        playerRef.addValueEventListener(positionListener)
+        gameRef.addValueEventListener(positionListener)
 
         // Inflate the layout for this fragment
         return view
@@ -574,7 +574,7 @@ class TestBoardFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         boardRef.removeEventListener(boardListener)
-        playerRef.removeEventListener(positionListener)
+        gameRef.removeEventListener(positionListener)
         boardRef.removeEventListener(gameStatusListener)
         println("GAMEBOARD: JAG HAR STOP")
     }

@@ -320,7 +320,7 @@ class SoccerFragment : Fragment() {
             binding.scoreBoard.text = "" + soccerViewModel.p1Points + "-" + soccerViewModel.p2Points + " "
         }, 2000)
         handler.postDelayed({
-            if ((soccerViewModel.p2Points > 3 || soccerViewModel.p1Points > 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
+            if ((soccerViewModel.p2Points >= 3 || soccerViewModel.p1Points >= 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
                 binding.finalScorePoint.visibility = View.VISIBLE
                 binding.finishedGameButton.visibility = View.VISIBLE
                 binding.finishedGameScreen.visibility = View.VISIBLE
@@ -347,7 +347,7 @@ class SoccerFragment : Fragment() {
                         var boardScoreWin = it.child(winPlayerId).child("score").value.toString().toInt()
                         boardScoreWin += 10
                         var boardScoreLose = it.child(losingPlayerId).child("score").value.toString().toInt()
-                        boardScoreLose -= 10
+                        boardScoreLose -= 5
                         println("board score: " + boardScoreWin)
                         // Set new value
                         database.getReference("Player Data").child(localGameId).child("players").child(winPlayerId).child("score").setValue("$boardScoreWin")

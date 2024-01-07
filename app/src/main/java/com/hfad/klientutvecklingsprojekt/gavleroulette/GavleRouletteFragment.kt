@@ -12,8 +12,12 @@ import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.NavUtils
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBinding
@@ -32,6 +36,7 @@ class GavleRouletteFragment : Fragment(){
     val playerRef = database.getReference("Player Data")
     var localPlayerID =""
     var localGameID = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +61,8 @@ class GavleRouletteFragment : Fragment(){
             }
         }
 
+        myRef.child(localGameID).child("gameStatus").addValueEventListener(statusListner)
+
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@GavleRouletteFragment.meModel = it
@@ -79,6 +86,22 @@ class GavleRouletteFragment : Fragment(){
         super.onDestroy()
         _binding = null
     }
+
+    val statusListner = object : ValueEventListener{
+        override fun onDataChange(snapshot: DataSnapshot) {
+            if (GameStatus.FINISHED == snapshot.value){
+                database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+
+    }
+
     fun setText(){
         //den här
         localGameID = meModel?.gameID?:""
@@ -95,7 +118,7 @@ class GavleRouletteFragment : Fragment(){
                 when (gameStatus) {
                     GameStatus.INPROGRESS -> {
                             setPlayerInfo()
-                            binding.test.text = luckyNumber?.get(0)
+                            binding.test.text = luckyNumber.toString()
                         when (localPlayerID) {
                             currentPlayer -> text = "Your turn"
                             else -> text = snapshot.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
@@ -113,15 +136,7 @@ class GavleRouletteFragment : Fragment(){
                     }
                     else -> {return@addOnSuccessListener}
                 }
-                when (gameStatus) {
-                    GameStatus.FINISHED ->{
-                        setScore()
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                        view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-                    }
 
-                    else -> {return@addOnSuccessListener}
-                }
             }
         }
     }
@@ -256,7 +271,7 @@ class GavleRouletteFragment : Fragment(){
     //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
     fun checksForKill() {
         rouletteModel?.apply {
-            if (luckyNumber?.contains(currentBullet.toString()) == true) {
+            if (luckyNumber==currentBullet) {
                 players?.put(currentPlayer?:"",PlayerStatus.DEAD)
                 score?.put(currentPlayer?:"",laps ?:0)
                 aliveCount = aliveCount?.minus(1)
@@ -274,6 +289,10 @@ class GavleRouletteFragment : Fragment(){
                         winner = players?.keys?.elementAt(i)
                         break
                     }
+                }
+                if (scoreUpploaded != true){
+                    setScore()
+                    scoreUpploaded = true
                 }
                 gameStatus = GameStatus.FINISHED
                 updateGameData(this,localGameID)

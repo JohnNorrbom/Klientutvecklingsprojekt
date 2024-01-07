@@ -14,8 +14,9 @@ data class RouletteModel (
     var score : MutableMap<String,Int> ?= null,
     val nbrOfPlayers : Int ? = null,
     var aliveCount : Int ? = null,
-    val luckyNumber : MutableList<String>? = null,
-    var currentBullet : Int ? = null
+    val luckyNumber : Int? = null,
+    var currentBullet : Int ? = null,
+    var scoreUpploaded : Boolean ? = null
     )
 
 enum class GameStatus{

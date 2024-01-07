@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -40,7 +41,7 @@ class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null
     private val binding get() = _binding!!
-    private lateinit var view: ConstraintLayout
+    private var view: ConstraintLayout ? = null
 
     //  DATABASE
     private val database =
@@ -48,6 +49,8 @@ class TestBoardFragment : Fragment() {
     private val myRef = database.getReference("Player Data")
     private var playerRef = database.getReference("Player Data").child(gameID)
     private var playersRef = playerRef.child("players")
+    private var rouletteRef = database.getReference("Roulette")
+    private val handler = Handler()
 
     //  meModel
     private var localGameID = ""
@@ -86,7 +89,6 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
-
         mediaPlayer = MediaPlayer.create(
             requireContext(),
             R.raw.android_song2_140bpm
@@ -165,9 +167,65 @@ class TestBoardFragment : Fragment() {
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                                if(localCurrentPlayerTest == localPlayerID){
+                                    playersRef.get().addOnSuccessListener {
+                                        val snapshot = it
+                                        var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                                        var scorePlayers: MutableMap<String, Int> = mutableMapOf()
+                                        for (player in snapshot.children) {
+                                            Log.d("player", "${player}")
+                                            gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
+                                            scorePlayers?.put(player.key.toString(), 0)
+                                            Log.d("players", "${gamePlayer}")
+                                        }
+
+                                        Log.d(
+                                            "currentPlayer",
+                                            "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
+                                        )
+
+                                        RouletteData.saveGameModel(
+                                                RouletteModel(
+                                                    gameId = localGameID,
+                                                    players = gamePlayer,
+                                                    gameStatus = GameStatus.INPROGRESS,
+                                                    attempts = 0,
+                                                    laps = 0,
+                                                    score = scorePlayers,
+                                                    nbrOfPlayers = gamePlayer.size,
+                                                    aliveCount = gamePlayer.size,
+                                                    luckyNumber = Random.nextInt(6) + 1,
+                                                    currentPlayer = gamePlayer.keys.elementAt(
+                                                        Random.nextInt(
+                                                            gamePlayer.size
+                                                        )
+                                                    ),
+                                                    scoreUpploaded = false
+                                                ), localGameID)
+                                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                        view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+
+                                    }
+                                }else{
+                                   // handler.postDelayed({
+                                        rouletteRef.child(localGameID).get().addOnSuccessListener {
+                                            val snapshot = it
+                                            Log.d("localGameID","${snapshot}")
+                                            val model = snapshot.getValue(RouletteModel::class.java)
+                                            Log.d("localGameID","${model}")
+                                            //  Create array of colors to compare them with the colors in the lobby to see
+                                            //  which of them are are taken
+                                            if (model!=null){
+                                                RouletteData.saveGameModel(model,localGameID)
+                                                Log.d("Om success","model: ${model}")
+                                                // btnPressed is true, navigate to the next fragment
+                                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                                            }
+                                        }
+                                  //  }, 3000)
+                                }
+
                             }
                         }
                     } catch (e: Exception) {
@@ -312,31 +370,31 @@ class TestBoardFragment : Fragment() {
             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             if (randomVal == 0) {
                 if (isAdded && view != null) {
-                        view.findNavController()
-                            .navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                        view?.findNavController()
+                            ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    view.findNavController()
-                        .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
 
                 }
                 println("SOCCER GAME FERDINAND")
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 if (isAdded && view != null) {
-                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_quizFragment)
 
                 }
             } else {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
-                    var i = 0
-                    if (i == 0) {
-                        var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
-                        var scorePlayers: MutableMap<String, Int> = mutableMapOf()
-                        myRef.child(localGameID).child("players").get().addOnSuccessListener {
+                    println("roulette vald")
+                    if(localCurrentPlayerTest == localPlayerID){
+                        playersRef.get().addOnSuccessListener {
                             val snapshot = it
+                            var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                            var scorePlayers: MutableMap<String, Int> = mutableMapOf()
                             for (player in snapshot.children) {
                                 Log.d("player", "${player}")
                                 gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
@@ -349,32 +407,47 @@ class TestBoardFragment : Fragment() {
                                 "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
                             )
 
-                            if (gamePlayer.size > 1) {
-                                RouletteData.saveGameModel(
-                                    RouletteModel(
-                                        gameId = localGameID,
-                                        players = gamePlayer,
-                                        gameStatus = GameStatus.INPROGRESS,
-                                        attempts = 0,
-                                        laps = 0,
-                                        score = scorePlayers,
-                                        nbrOfPlayers = gamePlayer.size,
-                                        aliveCount = gamePlayer.size,
-                                        luckyNumber = mutableListOf((Random.nextInt(6) + 1).toString()),
-                                        currentPlayer = gamePlayer.keys.elementAt(
-                                            Random.nextInt(
-                                                gamePlayer.size
-                                            )
+                            RouletteData.saveGameModel(
+                                RouletteModel(
+                                    gameId = localGameID,
+                                    players = gamePlayer,
+                                    gameStatus = GameStatus.INPROGRESS,
+                                    attempts = 0,
+                                    laps = 0,
+                                    score = scorePlayers,
+                                    nbrOfPlayers = gamePlayer.size,
+                                    aliveCount = gamePlayer.size,
+                                    luckyNumber = Random.nextInt(6) + 1,
+                                    currentPlayer = gamePlayer.keys.elementAt(
+                                        Random.nextInt(
+                                            gamePlayer.size
                                         )
-                                    ), localGameID
-                                )
-                            }
-                            // set the btnPressed to true if anny player presses it then every player goes to the same game
+                                    ),
+                                    scoreUpploaded = false
+                                ), localGameID)
+                            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+
                         }
-                        i++
+                    }else{
+                        // handler.postDelayed({
+                        rouletteRef.child(localGameID).get().addOnSuccessListener {
+                            val snapshot = it
+                            Log.d("localGameID","${snapshot}")
+                            val model = snapshot.getValue(RouletteModel::class.java)
+                            Log.d("localGameID","${model}")
+                            //  Create array of colors to compare them with the colors in the lobby to see
+                            //  which of them are are taken
+                            if (model!=null){
+                                RouletteData.saveGameModel(model,localGameID)
+                                Log.d("Om success","model: ${model}")
+                                // btnPressed is true, navigate to the next fragment
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                            }
+                        }
+                        //  }, 3000)
                     }
-                    view?.findNavController()
-                        ?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
                 }
             }
         } catch (e: Exception) {

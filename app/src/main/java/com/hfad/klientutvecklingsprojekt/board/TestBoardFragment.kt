@@ -42,8 +42,8 @@ class TestBoardFragment : Fragment() {
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
-    private var playerRef = database.getReference("Player Data").child(gameID)
-    private var playersRef = playerRef.child("players")
+    private var gameRef = database.getReference("Player Data").child(gameID)
+    private var playersRef = gameRef.child("players")
 
     //  meModel
     private var localGameID = ""
@@ -116,7 +116,7 @@ class TestBoardFragment : Fragment() {
 
         boardRef.addValueEventListener(boardListener)
         diceButton()
-        playerRef.addValueEventListener(positionListener)
+        gameRef.addValueEventListener(positionListener)
 
         // Inflate the layout for this fragment
         return view
@@ -126,8 +126,8 @@ class TestBoardFragment : Fragment() {
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
-            playerRef = database.getReference("Player Data").child(localGameID)
-            playersRef = playerRef.child("players")
+            gameRef = database.getReference("Player Data").child(localGameID)
+            playersRef = gameRef.child("players")
             binding.playerBlue.visibility = View.GONE
             binding.playerWhite.visibility = View.GONE
             binding.playerRed.visibility = View.GONE
@@ -207,7 +207,6 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
-
     private fun updateLeaderboard(nickname: String, number: Int) {
         // Sorterar leaderboarden
         // Extracting values from playerSnapshot
@@ -220,18 +219,16 @@ class TestBoardFragment : Fragment() {
             val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
 
             if (existingIndex != -1) {
-                // If the nickname already exists, update the score
-                leaderboardList[existingIndex] = nickname to number
+                // If the nickname already exists, update the score if the new score is higher
+                if (number > leaderboardList[existingIndex].second) {
+                    leaderboardList[existingIndex] = nickname to number
+                }
             } else {
                 // Add the new pair to the list
                 leaderboardList.add(nickname to number)
+
             }
-            Log.d(
-                "score",
-                "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${
-                    getLeaderText(3)
-                }, ${getLeaderText(4)}"
-            )
+            Log.d("score", "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${getLeaderText(3)}, ${getLeaderText(4)}")
         }
         // Sort the list based on the 'number1' values in descending order
         leaderboardList.sortByDescending { it.second }
@@ -240,8 +237,23 @@ class TestBoardFragment : Fragment() {
         binding.textViewLeader3.text = getLeaderText(2)
         binding.textViewLeader4.text = getLeaderText(3)
         binding.textViewLeader5.text = getLeaderText(4)
+        checkForWinner(leaderboardList)
     }
 
+    private fun checkForWinner(leaderboard: MutableList<Pair<String, Int>>) {
+        if (leaderboard[0].second > 29) {
+            try {
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(
+                    leaderboard[0].first,
+                    leaderboard[0].second
+                )
+                view.findNavController().navigate(action)
+            } catch (e: Exception) {
+                println(e.stackTrace)
+            }
+        }
+    }
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -316,7 +328,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5//Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
 //            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
@@ -342,8 +354,8 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = 3//Random.nextInt(3)
-//                localRandomVal = 0
+                localRandomVal = Random.nextInt(2) + 1
+//                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -414,8 +426,8 @@ class TestBoardFragment : Fragment() {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
-                    if (localCurrentPlayerTest == localPlayerID) {
-                        playersRef.get().addOnSuccessListener {
+                        if(localCurrentPlayerTest == localPlayerID) {
+                            playersRef.get().addOnSuccessListener {
                             val snapshot = it
                             var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
                             var scorePlayers: MutableMap<String, Int> = mutableMapOf()
@@ -440,7 +452,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
-                                    winner ="",
+                                    winner = "",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,

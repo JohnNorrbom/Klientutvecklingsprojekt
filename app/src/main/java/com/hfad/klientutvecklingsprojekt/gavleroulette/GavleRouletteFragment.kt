@@ -72,7 +72,7 @@ class GavleRouletteFragment : Fragment(){
                             } catch (e: Exception) {
                                 e.printStackTrace()
                             }
-                        }, 12000)
+                        }, 6000)
                     }
                 }
             }

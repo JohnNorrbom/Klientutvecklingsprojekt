@@ -93,7 +93,6 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
-
         mediaPlayer = MediaPlayer.create(
             requireContext(), R.raw.android_song2_140bpm
         )
@@ -185,10 +184,11 @@ class TestBoardFragment : Fragment() {
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                                Log.d("localCurrentPlayerTest","${localCurrentPlayerTest}")
+                                Log.d("localPlayerID","${localPlayerID}")
+                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+
                             }
                         }
                     } catch (e: Exception) {
@@ -415,12 +415,12 @@ class TestBoardFragment : Fragment() {
             } else {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
-                    var i = 0
-                    if (i == 0) {
-                        var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
-                        var scorePlayers: MutableMap<String, Int> = mutableMapOf()
-                        myRef.child(localGameID).child("players").get().addOnSuccessListener {
+                    println("roulette vald")
+                        if(localCurrentPlayerTest == localPlayerID) {
+                            playersRef.get().addOnSuccessListener {
                             val snapshot = it
+                            var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                            var scorePlayers: MutableMap<String, Int> = mutableMapOf()
                             for (player in snapshot.children) {
                                 Log.d("player", "${player}")
                                 gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
@@ -433,32 +433,32 @@ class TestBoardFragment : Fragment() {
                                 "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
                             )
 
-                            if (gamePlayer.size > 1) {
-                                RouletteData.saveGameModel(
-                                    RouletteModel(
-                                        gameId = localGameID,
-                                        players = gamePlayer,
-                                        gameStatus = GameStatus.INPROGRESS,
-                                        attempts = 0,
-                                        laps = 0,
-                                        score = scorePlayers,
-                                        nbrOfPlayers = gamePlayer.size,
-                                        aliveCount = gamePlayer.size,
-                                        luckyNumber = mutableListOf((Random.nextInt(6) + 1).toString()),
-                                        currentPlayer = gamePlayer.keys.elementAt(
-                                            Random.nextInt(
-                                                gamePlayer.size
-                                            )
+                            Log.d("game ID", "${localGameID}")
+
+                            RouletteData.saveGameModel(
+                                RouletteModel(
+                                    gameId = localGameID,
+                                    players = gamePlayer,
+                                    gameStatus = GameStatus.INPROGRESS,
+                                    attempts = 0,
+                                    laps = 0,
+                                    score = scorePlayers,
+                                    nbrOfPlayers = gamePlayer.size,
+                                    aliveCount = gamePlayer.size,
+                                    luckyNumber = Random.nextInt(6) + 1,
+                                    currentPlayer = gamePlayer.keys.elementAt(
+                                        Random.nextInt(
+                                            gamePlayer.size
                                         )
-                                    ), localGameID
-                                )
-                            }
-                            // set the btnPressed to true if anny player presses it then every player goes to the same game
+                                    ),
+                                    scoreUpploaded = false
+                                ), localGameID
+
+                            )
+
                         }
-                        i++
                     }
-                    view?.findNavController()
-                        ?.navigate(R.id.action_lobbyFragment_to_gavleRouletteFragment)
+                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                 }
             }
         } catch (e: Exception) {

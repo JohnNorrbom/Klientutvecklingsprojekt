@@ -224,7 +224,7 @@ class LobbyFragment : Fragment() {
                         score = scorePlayers,
                         nbrOfPlayers = gamePlayer.size,
                         aliveCount = gamePlayer.size,
-                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
+                        luckyNumber = Random.nextInt(6) + 1,
                         currentPlayer = gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))
                     ),localGameID
                 )

@@ -45,9 +45,6 @@
         android:label="fragment_gavle_roulette"
         tools:layout="@layout/fragment_gavle_roulette" >
         <action
-            android:id="@+id/action_gavleRouletteFragment_to_lobbyFragment"
-            app:destination="@id/lobbyFragment" />
-        <action
             android:id="@+id/action_gavleRouletteFragment_to_testBoardFragment"
             app:destination="@id/testBoardFragment" />
     </fragment>
@@ -131,9 +128,6 @@
             android:id="@+id/action_testBoardFragment_to_quizFragment"
             app:destination="@id/quizFragment" />
         <action
-            android:id="@+id/action_testBoardFragment_to_gavleRouletteFragment"
-            app:destination="@id/gavleRouletteFragment" />
-        <action
             android:id="@+id/action_testBoardFragment_to_soccerChooseFragment"
             app:destination="@id/soccerChooseFragment" />
         <action
@@ -148,6 +142,12 @@
         <action
             android:id="@+id/action_testBoardFragment_to_waitingSoccerFragment"
             app:destination="@id/waitingSoccerFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_gavleRouletteWaitFragment"
+            app:destination="@id/gavleRouletteWaitFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"
@@ -180,5 +180,14 @@
         <action
             android:id="@+id/action_stenSaxPaseWaitFragment_to_stensaxpaseFragment"
             app:destination="@id/stensaxpaseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gavleRouletteWaitFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.gavleroulette.GavleRouletteWaitFragment"
+        android:label="fragment_gavle_roulette_wait"
+        tools:layout="@layout/fragment_gavle_roulette_wait" >
+        <action
+            android:id="@+id/action_gavleRouletteWaitFragment_to_gavleRouletteFragment"
+            app:destination="@id/gavleRouletteFragment" />
     </fragment>
 </navigation>

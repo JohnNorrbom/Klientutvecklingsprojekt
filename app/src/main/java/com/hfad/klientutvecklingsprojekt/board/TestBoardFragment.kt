@@ -207,7 +207,6 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
-
     private fun updateLeaderboard(nickname: String, number: Int) {
         // Sorterar leaderboarden
         // Extracting values from playerSnapshot
@@ -220,18 +219,16 @@ class TestBoardFragment : Fragment() {
             val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
 
             if (existingIndex != -1) {
-                // If the nickname already exists, update the score
-                leaderboardList[existingIndex] = nickname to number
+                // If the nickname already exists, update the score if the new score is higher
+                if (number > leaderboardList[existingIndex].second) {
+                    leaderboardList[existingIndex] = nickname to number
+                }
             } else {
                 // Add the new pair to the list
                 leaderboardList.add(nickname to number)
+
             }
-            Log.d(
-                "score",
-                "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${
-                    getLeaderText(3)
-                }, ${getLeaderText(4)}"
-            )
+            Log.d("score", "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${getLeaderText(3)}, ${getLeaderText(4)}")
         }
         // Sort the list based on the 'number1' values in descending order
         leaderboardList.sortByDescending { it.second }
@@ -241,7 +238,6 @@ class TestBoardFragment : Fragment() {
         binding.textViewLeader4.text = getLeaderText(3)
         binding.textViewLeader5.text = getLeaderText(4)
     }
-
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -316,8 +312,8 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            //var randomInt = Random.nextInt(6) + 1
-            var randomInt = 5
+            var randomInt = Random.nextInt(6) + 1
+//            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -342,8 +338,8 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                //localRandomVal = Random.nextInt(3)
-                localRandomVal = 2
+                localRandomVal = Random.nextInt(2) + 1
+//                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -414,8 +410,8 @@ class TestBoardFragment : Fragment() {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
-                    if (localCurrentPlayerTest == localPlayerID) {
-                        playersRef.get().addOnSuccessListener {
+                        if(localCurrentPlayerTest == localPlayerID) {
+                            playersRef.get().addOnSuccessListener {
                             val snapshot = it
                             var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
                             var scorePlayers: MutableMap<String, Int> = mutableMapOf()
@@ -440,6 +436,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
+                                    winner ="",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,

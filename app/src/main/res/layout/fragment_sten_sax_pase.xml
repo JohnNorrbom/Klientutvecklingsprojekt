@@ -27,14 +27,12 @@
         android:id="@+id/pase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#000000"
         android:text="Påse" />
 
     <Button
         android:id="@+id/sten"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#000000"
         android:text="Sten"
         tools:layout_editor_absoluteX="188dp"
         tools:layout_editor_absoluteY="170dp" />
@@ -43,7 +41,6 @@
         android:id="@+id/sax"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#000000"
         android:text="Sax" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -59,7 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="63dp"
         android:text="Gör ett val"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/sten"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -73,7 +69,6 @@
         android:layout_marginEnd="177dp"
         android:layout_marginBottom="96dp"
         android:text="vsText"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/actionText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -83,7 +78,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sten Sax Påse BEST OF 3"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/vsText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +88,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="scorePlayerID"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/vsText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stenSaxPaseText" />
@@ -104,7 +97,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="scoreOpponentID"
-        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/vsText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/stenSaxPaseText" />

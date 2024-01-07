@@ -11,4 +11,5 @@
         <item name="fontFamily">@font/animematrix_mb_en</item>
     </style>
     <style name="Theme.Klientutvecklingsprojekt" parent="Base.Theme.Klientutvecklingsprojekt" />
+
 </resources>

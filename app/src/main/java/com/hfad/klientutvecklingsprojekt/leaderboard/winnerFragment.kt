@@ -6,19 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hfad.klientutvecklingsprojekt.R
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentLeaderBoardBinding
-import com.hfad.klientutvecklingsprojekt.databinding.FragmentLobbyBinding
+import com.hfad.klientutvecklingsprojekt.databinding.FragmentWinnerBinding
 
-class leaderBoardFragment : Fragment() {
-    private var _binding: FragmentLeaderBoardBinding? = null
+class winnerFragment : Fragment() {
+    private var _binding: FragmentWinnerBinding? = null
     private val binding get()  = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentLeaderBoardBinding.inflate(inflater,container,false)
+    ): View {
+        _binding = FragmentWinnerBinding.inflate(inflater,container,false)
         val view = binding.root
         binding.root.rootView.setBackgroundResource(R.drawable.leaderboard)
+        // referens till databasen
+
+
         return view
     }
 }

@@ -169,9 +169,9 @@
     </fragment>
     <fragment
         android:id="@+id/leaderBoardFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.leaderboard.leaderBoardFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.leaderboard.winnerFragment"
         android:label="fragment_leader_board"
-        tools:layout="@layout/fragment_leader_board" />
+        tools:layout="@layout/fragment_winner" />
     <fragment
         android:id="@+id/stenSaxPaseWaitFragment"
         android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseWaitFragment"

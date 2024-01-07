@@ -42,8 +42,8 @@ class TestBoardFragment : Fragment() {
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
-    private var playerRef = database.getReference("Player Data").child(gameID)
-    private var playersRef = playerRef.child("players")
+    private var gameRef = database.getReference("Player Data").child(gameID)
+    private var playersRef = gameRef.child("players")
 
     //  meModel
     private var localGameID = ""
@@ -116,7 +116,7 @@ class TestBoardFragment : Fragment() {
 
         boardRef.addValueEventListener(boardListener)
         diceButton()
-        playerRef.addValueEventListener(positionListener)
+        gameRef.addValueEventListener(positionListener)
 
         // Inflate the layout for this fragment
         return view
@@ -126,8 +126,8 @@ class TestBoardFragment : Fragment() {
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
-            playerRef = database.getReference("Player Data").child(localGameID)
-            playersRef = playerRef.child("players")
+            gameRef = database.getReference("Player Data").child(localGameID)
+            playersRef = gameRef.child("players")
             binding.playerBlue.visibility = View.GONE
             binding.playerWhite.visibility = View.GONE
             binding.playerRed.visibility = View.GONE
@@ -240,6 +240,18 @@ class TestBoardFragment : Fragment() {
         binding.textViewLeader3.text = getLeaderText(2)
         binding.textViewLeader4.text = getLeaderText(3)
         binding.textViewLeader5.text = getLeaderText(4)
+        checkForWinner(leaderboardList)
+    }
+    private fun checkForWinner(leaderboard: MutableList<Pair<String, Int>>) {
+        if(leaderboard[0].second > 29) {
+            try {
+//                val fragmentB = supportFragmentManager.findFragmentByTag("fragmentB") as? SecondFragment
+//                fragmentB?.updateText(newText)
+                view.findNavController().navigate(R.id.action_testBoardFragment_to_leaderBoardFragment)
+            } catch(e: Exception) {
+                println(e.stackTrace)
+            }
+        }
     }
 
     private fun paintPlayers() {

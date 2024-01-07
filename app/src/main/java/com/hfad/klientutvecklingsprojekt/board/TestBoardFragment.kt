@@ -235,11 +235,11 @@ class TestBoardFragment : Fragment() {
                 // Add the new pair to the list
                 leaderboardList.add(nickname to number)
 
-                // Sort the list based on the 'number1' values in descending order
-                leaderboardList.sortByDescending { it.second }
             }
-            Log.d("score", "after leaderboardList ${nickname} ${number}")
+            Log.d("score", "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${getLeaderText(3)}, ${getLeaderText(4)}")
         }
+        // Sort the list based on the 'number1' values in descending order
+        leaderboardList.sortByDescending { it.second }
         binding.textViewLeader1.text = getLeaderText(0)
         binding.textViewLeader2.text = getLeaderText(1)
         binding.textViewLeader3.text = getLeaderText(2)

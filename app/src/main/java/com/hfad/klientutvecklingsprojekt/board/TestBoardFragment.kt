@@ -77,16 +77,6 @@ class TestBoardFragment : Fragment() {
 
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
-    var number1 = -1
-    var number2 = -1
-    var number3 = -1
-    var number4 = -1
-    var number5 = -1
-    var nickname1 = ""
-    var nickname2 = ""
-    var nickname3 = ""
-    var nickname4 = ""
-    var nickname5 = ""
     val leaderboardList = mutableListOf<Pair<String, Int>>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -184,10 +174,12 @@ class TestBoardFragment : Fragment() {
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                Log.d("localCurrentPlayerTest","${localCurrentPlayerTest}")
-                                Log.d("localPlayerID","${localPlayerID}")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+                                Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
+                                Log.d("localPlayerID", "${localPlayerID}")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
 
                             }
                         }
@@ -215,6 +207,41 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
+
+    private fun updateLeaderboard(nickname: String, number: Int) {
+        // Sorterar leaderboarden
+        // Extracting values from playerSnapshot
+        if (leaderboardList.isEmpty()) {
+            // Add the first pair to the list
+            leaderboardList.add(nickname to number)
+            Log.d("score", "leaderboardList ${nickname} ${number}")
+        } else {
+            // Check if the nickname is already in the list
+            val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
+
+            if (existingIndex != -1) {
+                // If the nickname already exists, update the score
+                leaderboardList[existingIndex] = nickname to number
+            } else {
+                // Add the new pair to the list
+                leaderboardList.add(nickname to number)
+            }
+            Log.d(
+                "score",
+                "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${
+                    getLeaderText(3)
+                }, ${getLeaderText(4)}"
+            )
+        }
+        // Sort the list based on the 'number1' values in descending order
+        leaderboardList.sortByDescending { it.second }
+        binding.textViewLeader1.text = getLeaderText(0)
+        binding.textViewLeader2.text = getLeaderText(1)
+        binding.textViewLeader3.text = getLeaderText(2)
+        binding.textViewLeader4.text = getLeaderText(3)
+        binding.textViewLeader5.text = getLeaderText(4)
+    }
+
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -232,40 +259,11 @@ class TestBoardFragment : Fragment() {
                     "white" -> binding.playerWhite
                     else -> null // Handle any other colors if needed
                 }
-                Log.d("score", "testing: $number1")
-                // Sorterar leaderboarden
-                // Extracting values from playerSnapshot
-                val number1 = playerSnapshot.child("score").value.toString().toInt()
-                val nickname1 = playerSnapshot.child("nickname").value.toString()
-                if (leaderboardList.isEmpty()) {
-                    // Add the first pair to the list
-                    leaderboardList.add(nickname1 to number1)
-                    Log.d("score", "leaderboardList $nickname1 $number1")
-                } else {
-                    // Check if the nickname is already in the list
-                    val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
 
-                    if (existingIndex != -1) {
-                        // If the nickname already exists, update the score if the new score is higher
-                        if (number1 > leaderboardList[existingIndex].second) {
-                            leaderboardList[existingIndex] = nickname1 to number1
-                        }
-                    } else {
-                        // Add the new pair to the list
-                        leaderboardList.add(nickname1 to number1)
-
-                        // Sort the list based on the 'number1' values in descending order
-                        leaderboardList.sortByDescending { it.second }
-                    }
-                    Log.d("score", "after leaderboardList $nickname1 $number1")
-                }
-
-                binding.textViewLeader1.text = getLeaderText(0)
-                binding.textViewLeader2.text = getLeaderText(1)
-                binding.textViewLeader3.text = getLeaderText(2)
-                binding.textViewLeader4.text = getLeaderText(3)
-                binding.textViewLeader5.text = getLeaderText(4)
-
+                val nickname = playerSnapshot.child("nickname").value.toString()
+                val number = playerSnapshot.child("score").value.toString().toInt()
+                Log.d("score", "testing: $number")
+                updateLeaderboard(nickname, number)
                 imageView?.let { view ->
                     //make player imageView visible
                     view.visibility = View.VISIBLE
@@ -318,7 +316,8 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5//Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
+//            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -343,7 +342,8 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = 3//Random.nextInt(3)
+                localRandomVal = Random.nextInt(3)
+//                localRandomVal = 0
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -394,7 +394,7 @@ class TestBoardFragment : Fragment() {
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    //means you are host
+                    //means you are host    TODO SOCCER
                     if (localCurrentPlayerTest == localPlayerID) {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
@@ -414,8 +414,8 @@ class TestBoardFragment : Fragment() {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
-                        if(localCurrentPlayerTest == localPlayerID) {
-                            playersRef.get().addOnSuccessListener {
+                    if (localCurrentPlayerTest == localPlayerID) {
+                        playersRef.get().addOnSuccessListener {
                             val snapshot = it
                             var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
                             var scorePlayers: MutableMap<String, Int> = mutableMapOf()
@@ -457,7 +457,8 @@ class TestBoardFragment : Fragment() {
 
                         }
                     }
-                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                 }
             }
         } catch (e: Exception) {

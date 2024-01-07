@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:textSize="25dp"
             android:layout_gravity="center"
+            android:gravity="center"
             android:textColor="@color/green"
             android:text="waiting for minigame"/>
 

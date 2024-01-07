@@ -108,8 +108,12 @@ class SoccerFragment : Fragment() {
     private val pointListener = object : ValueEventListener{
         override fun onDataChange(snapshot: DataSnapshot) {
             myRef.child(localGameId).get().addOnSuccessListener { dataSnapshot ->
-                soccerViewModel.p1Points = dataSnapshot.child("p1Score").value.toString().toInt()
-                soccerViewModel.p2Points = dataSnapshot.child("p2Score").value.toString().toInt()
+                if (dataSnapshot.child("p1Score").value.toString().toInt() != null){
+                    soccerViewModel.p1Points = dataSnapshot.child("p1Score").value.toString().toInt()
+                }
+                if (dataSnapshot.child("p2Score").value.toString().toInt() != null){
+                    soccerViewModel.p2Points = dataSnapshot.child("p2Score").value.toString().toInt()
+                }
             }
         }
 

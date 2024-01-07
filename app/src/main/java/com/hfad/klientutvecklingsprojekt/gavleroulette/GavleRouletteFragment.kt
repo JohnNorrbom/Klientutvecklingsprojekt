@@ -231,29 +231,39 @@ class GavleRouletteFragment : Fragment(){
     //Changes to the next player
     fun changePlayer() {
         rouletteModel?.apply {
-            myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener { snapshot ->
-                Log.d("snapshot","${snapshot.value}")
-                val currentPlayerIndex = players?.keys?.indexOf(snapshot.value) ?: -1
-                Log.d("player keys","${players?.keys}")
-                Log.d("currentPlayerIndex","${players?.keys?.indexOf(snapshot.value)}")
-                Log.d("currentPlayerIndex","${currentPlayerIndex}")
+            myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
+                Log.d("snapshot", "${it.value}")
+                val currentPlayerIndex = players?.keys?.indexOf(it.value.toString()) ?: -1
+                Log.d("player keys", "${players?.keys}")
+                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(it.value.toString())}")
+                Log.d("currentPlayerIndex", "${currentPlayerIndex}")
 
                 if (currentPlayerIndex != -1) {
                     var newIndex = (currentPlayerIndex + 1) % players?.size!!
-                    Log.d("newIndex","${newIndex}")
+                    Log.d("newIndex", "${newIndex}")
 
                     // Find the next alive player
-                    while (players?.get(players?.keys?.elementAt(newIndex) ?: "") == PlayerStatus.DEAD) {
+                    while (players?.get(
+                            players?.keys?.elementAt(newIndex) ?: ""
+                        ) == PlayerStatus.DEAD
+                    ) {
                         newIndex = (newIndex + 1) % players?.size!!
+
+                        // Kontrollera om alla spelare är döda
+                        if (newIndex == currentPlayerIndex) {
+                            Log.d("changePlayer", "Inga levande spelare hittades.")
+                            break
+                        }
                     }
 
-                    Log.d("newIndex","${newIndex}")
-                    Log.d("currentPlayer","${currentPlayer}")
-                    currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
-                    Log.d("newcurrentPlayer","${currentPlayer}")
-                    Log.d("newcurrentPlayer","${this}")
-                    updateGameData(this, localGameID)
-                    setUi()  // Flytta setUi() hit för att säkerställa att den anropas efter att currentPlayer har uppdaterats.
+                    if (newIndex != currentPlayerIndex) {
+                        currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
+                        updateGameData(this, localGameID)
+                        setUi()
+                    } else {
+                        Log.d("changePlayer", "Alla spelare är döda.")
+                        // Eventuell ytterligare hantering här, t.ex. avsluta spelet eller vidta andra åtgärder.
+                    }
                 }
             }
         }

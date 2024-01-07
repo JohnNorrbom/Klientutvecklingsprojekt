@@ -422,7 +422,7 @@ class TestBoardFragment : Fragment() {
                     view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
 
                 }
-            } else {
+            } else if (randomVal == 3) {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")

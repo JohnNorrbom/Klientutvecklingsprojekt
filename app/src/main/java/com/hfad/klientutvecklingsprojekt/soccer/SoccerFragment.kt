@@ -109,7 +109,7 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString() != "" && !p1IsReady){
                     p1Choice = dataSnapshot.value.toString()
                     p1IsReady = true
-                    if(p2IsReady){
+                    if(p2IsReady  && youArePlayerTwo){
                         myRef.child(localGameId).child("bothPlayerReady").setValue(true)
                     }
                 }
@@ -125,7 +125,7 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString() != "" && !p2IsReady){
                     p2Choice = dataSnapshot.value.toString()
                     p2IsReady = true
-                    if(p1IsReady){
+                    if(p1IsReady  && youArePlayerOne){
                         myRef.child(localGameId).child("bothPlayerReady").setValue(true)
                     }
                 }
@@ -140,7 +140,6 @@ class SoccerFragment : Fragment() {
                 if(dataSnapshot.value.toString().toBoolean()){
                     bothIsReady = true
                     doMove()
-
                 }else{
                     //RESETS THE "READINESS"
                     bothIsReady = false

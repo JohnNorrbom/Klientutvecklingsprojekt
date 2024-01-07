@@ -7,5 +7,6 @@
     <color name="colorPrimary">#62FF00</color>
     <color name="colorPrimaryDark">#102C0A</color>
     <color name="buttonColor">#FF000000</color>
-
+    <color name="custom_button_background_color">#62FF00</color>
+    <color name="custom_button_text_color">#FF000000</color>
 </resources>

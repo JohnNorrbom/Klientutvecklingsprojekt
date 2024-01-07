@@ -9,7 +9,24 @@
         <item name="colorControlHighlight">@color/white</item>
         <item name="android:fontFamily">@font/animematrix_mb_en</item>
         <item name="fontFamily">@font/animematrix_mb_en</item>
+        <item name="android:buttonStyle">@style/CustomButton</item>
     </style>
+
     <style name="Theme.Klientutvecklingsprojekt" parent="Base.Theme.Klientutvecklingsprojekt" />
 
+    <style name="CustomButton" parent="Widget.Material3.Button">
+        <!-- Customize button attributes here -->
+        <item name="android:background">@drawable/custom_button_background</item>
+        <item name="android:textColor">@color/custom_button_text_color</item>
+    </style>
+
+    <!-- Define the shape drawable inside the style -->
+    <style name="CustomButtonShape">
+        <item name="android:shape">rectangle</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@color/custom_button_background_color</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/custom_button_text_color</item>
+    </style>
 </resources>

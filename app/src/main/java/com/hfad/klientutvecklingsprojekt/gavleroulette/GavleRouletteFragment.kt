@@ -62,7 +62,8 @@ class GavleRouletteFragment : Fragment(){
                         setUi()
                         setPlayerInfo()
                     }, 500)
-                    if (it.gameStatus == GameStatus.FINISHED) {
+                    if (it.gameStatus == GameStatus.FINISHED || it.scoreUpploaded != true) {
+                        it.scoreUpploaded = true
                         handler.postDelayed({
                             setScore()
                             database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
@@ -230,12 +231,10 @@ class GavleRouletteFragment : Fragment(){
     }
     //Changes to the next player
     fun changePlayer() {
-            myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
                 rouletteModel?.apply {
-                Log.d("snapshot", "${it.value}")
-                val currentPlayerIndex = players?.keys?.indexOf(it.value.toString()) ?: -1
+                val currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
                 Log.d("player keys", "${players?.keys}")
-                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(it.value.toString())}")
+                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(currentPlayer)}")
                 Log.d("currentPlayerIndex", "${currentPlayerIndex}")
 
                 if (currentPlayerIndex != -1) {
@@ -266,7 +265,6 @@ class GavleRouletteFragment : Fragment(){
                     }
                 }
             }
-        }
     }
 
     //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
@@ -298,9 +296,9 @@ class GavleRouletteFragment : Fragment(){
     }
 
     fun setScore() {
-        rouletteModel?.apply {
             playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
-                     val currentScore = it.child("score").value.toString()
+                rouletteModel?.apply {
+                val currentScore = it.child("score").value.toString()
                      Log.d("score", " ${currentScore}")
                        val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt())
                             ?: 0

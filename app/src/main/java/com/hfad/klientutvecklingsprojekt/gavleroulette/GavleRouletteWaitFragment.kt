@@ -21,7 +21,6 @@ class GavleRouletteWaitFragment : Fragment() {
     private var _binding: FragmentGavleRouletteWaitBinding? = null
     private val binding get() = _binding!!
     private var meModel: MeModel? = null
-    private var rouletteModel: RouletteModel? = null
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Roulette")
     var localPlayerID = ""
@@ -34,7 +33,6 @@ class GavleRouletteWaitFragment : Fragment() {
     ): View? {
         _binding = FragmentGavleRouletteWaitBinding.inflate(inflater, container, false)
         val view = binding.root
-        RouletteData.fetchGameModel()
 
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -57,7 +55,6 @@ class GavleRouletteWaitFragment : Fragment() {
     fun startGame(){
         myRef.child(localGameID).get().addOnSuccessListener {
             val model = it.getValue(RouletteModel::class.java)
-
             if (model != null){
                 RouletteData.saveGameModel(model,localGameID)
                 view?.findNavController()?.navigate(R.id.action_gavleRouletteWaitFragment_to_gavleRouletteFragment)

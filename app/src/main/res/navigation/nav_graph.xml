@@ -134,9 +134,6 @@
             android:id="@+id/action_testBoardFragment_to_stenSaxPaseChooseFragment"
             app:destination="@id/stenSaxPaseChooseFragment" />
         <action
-            android:id="@+id/action_testBoardFragment_to_leaderBoardFragment"
-            app:destination="@id/leaderBoardFragment" />
-        <action
             android:id="@+id/action_testBoardFragment_to_stenSaxPaseWaitFragment"
             app:destination="@id/stenSaxPaseWaitFragment" />
         <action
@@ -148,6 +145,9 @@
         <action
             android:id="@+id/action_testBoardFragment_to_gavleRouletteWaitFragment"
             app:destination="@id/gavleRouletteWaitFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_winnerFragment"
+            app:destination="@id/winnerFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"
@@ -168,11 +168,6 @@
             app:destination="@id/soccerFragment" />
     </fragment>
     <fragment
-        android:id="@+id/leaderBoardFragment"
-        android:name="com.hfad.klientutvecklingsprojekt.leaderboard.leaderBoardFragment"
-        android:label="fragment_leader_board"
-        tools:layout="@layout/fragment_leader_board" />
-    <fragment
         android:id="@+id/stenSaxPaseWaitFragment"
         android:name="com.hfad.klientutvecklingsprojekt.stensaxpase.StenSaxPaseWaitFragment"
         android:label="fragment_sten_sax_pase_wait"
@@ -189,5 +184,18 @@
         <action
             android:id="@+id/action_gavleRouletteWaitFragment_to_gavleRouletteFragment"
             app:destination="@id/gavleRouletteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/winnerFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.leaderboard.winnerFragment"
+        android:label="fragment_winner"
+        tools:layout="@layout/fragment_winner" >
+        <argument
+            android:name="winnerName"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="winnerScore"
+            app:argType="integer" />
     </fragment>
 </navigation>

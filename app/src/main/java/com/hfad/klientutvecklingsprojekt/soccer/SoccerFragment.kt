@@ -25,6 +25,7 @@ import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlinx.coroutines.delay
 import kotlin.concurrent.thread
+import kotlin.math.abs
 
 class SoccerFragment : Fragment() {
 
@@ -74,9 +75,6 @@ class SoccerFragment : Fragment() {
     ): View? {
         _binding = FragmentSoccerBinding.inflate(inflater, container, false)
         val view = binding.root
-
-
-
 
         MeData.meModel.observe(this){
             meModel = it
@@ -166,7 +164,6 @@ class SoccerFragment : Fragment() {
                     binding.background.setImageResource(R.drawable.aliencrowdfast)
                 }else if (localP1Id.toInt() % 3 == 1){
                     binding.background.setImageResource(R.drawable.soccergame1)
-
                     }else{
                         binding.background.setImageResource(R.drawable.soccergame2)
                 }
@@ -190,9 +187,7 @@ class SoccerFragment : Fragment() {
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song3_140bpm)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
-
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
-
 
         binding.leftButton.setOnClickListener {
             sendChoiceOnline("left")
@@ -236,11 +231,33 @@ class SoccerFragment : Fragment() {
 
         doAnimation(soccerViewModel)
 
+
         if(youArePlayerOne || youArePlayerTwo){
 
             val handler = Handler(Looper.getMainLooper())
 
             handler.postDelayed({
+                if(youArePlayerOne){
+                    if (soccerViewModel.player1 == "shooter"){
+                        binding.leftButton.setImageResource(R.drawable.shotleftbutton)
+                        binding.rightButton.setImageResource(R.drawable.shotrightbutton)
+                        binding.midButton.setImageResource(R.drawable.shotmidbutton)
+                    }else{
+                        binding.leftButton.setImageResource(R.drawable.goalleftbutton)
+                        binding.rightButton.setImageResource(R.drawable.goalrightbutton)
+                        binding.midButton.setImageResource(R.drawable.goalmidbutton)
+                    }
+                }else{
+                    if (soccerViewModel.player2 == "shooter"){
+                        binding.leftButton.setImageResource(R.drawable.shotleftbutton)
+                        binding.rightButton.setImageResource(R.drawable.shotrightbutton)
+                        binding.midButton.setImageResource(R.drawable.shotmidbutton)
+                    }else{
+                        binding.leftButton.setImageResource(R.drawable.goalleftbutton)
+                        binding.rightButton.setImageResource(R.drawable.goalrightbutton)
+                        binding.midButton.setImageResource(R.drawable.goalmidbutton)
+                    }
+                }
                 binding.bottomButtons.visibility = View.VISIBLE
             }, 2000)
 
@@ -253,11 +270,41 @@ class SoccerFragment : Fragment() {
         updateScoreBoard()
     }
 
+    override fun onStop() {
+        super.onStop()
+        myRef.child(localGameId).child("p1Choice").removeEventListener(p1Listener)
+        myRef.child(localGameId).child("p2Choice").removeEventListener(p2Listener)
+        myRef.child(localGameId).child("bothPlayerReady").removeEventListener(bothReadyListener)
+        myRef.child(localGameId).removeValue()
+    }
+
+
     fun setPlayerValues(){
         //sets player1 and 2 locally  (p1 starts as shooter)
         youArePlayerOne = yourId == localP1Id
         youArePlayerTwo = yourId == localP2Id
         if(youArePlayerOne || youArePlayerTwo){
+            if(youArePlayerOne){
+                if (soccerViewModel.player1 == "shooter"){
+                    binding.leftButton.setImageResource(R.drawable.shotleftbutton)
+                    binding.rightButton.setImageResource(R.drawable.shotrightbutton)
+                    binding.midButton.setImageResource(R.drawable.shotmidbutton)
+                }else{
+                    binding.leftButton.setImageResource(R.drawable.goalleftbutton)
+                    binding.rightButton.setImageResource(R.drawable.goalrightbutton)
+                    binding.midButton.setImageResource(R.drawable.goalmidbutton)
+                }
+            }else{
+                if (soccerViewModel.player2 == "shooter"){
+                    binding.leftButton.setImageResource(R.drawable.shotleftbutton)
+                    binding.rightButton.setImageResource(R.drawable.shotrightbutton)
+                    binding.midButton.setImageResource(R.drawable.shotmidbutton)
+                }else{
+                    binding.leftButton.setImageResource(R.drawable.goalleftbutton)
+                    binding.rightButton.setImageResource(R.drawable.goalrightbutton)
+                    binding.midButton.setImageResource(R.drawable.goalmidbutton)
+                }
+            }
             binding.bottomButtons.visibility = View.VISIBLE
         }else{
             binding.bottomButtons.visibility = View.INVISIBLE
@@ -273,17 +320,41 @@ class SoccerFragment : Fragment() {
             binding.scoreBoard.text = "" + soccerViewModel.p1Points + "-" + soccerViewModel.p2Points + " "
         }, 2000)
         handler.postDelayed({
-            if (soccerViewModel.p2Points == 3 || soccerViewModel.p1Points == 3){
+            if ((soccerViewModel.p2Points > 3 || soccerViewModel.p1Points > 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
                 binding.finalScorePoint.visibility = View.VISIBLE
                 binding.finishedGameButton.visibility = View.VISIBLE
                 binding.finishedGameScreen.visibility = View.VISIBLE
-                if(soccerViewModel.p2Points == 3){
+                if(soccerViewModel.p2Points > soccerViewModel.p1Points){
                     binding.finalScorePoint.text = "" + soccerViewModel.getEnemyColor() + " won!"
                 }
-                if(soccerViewModel.p1Points == 3){
+                if(soccerViewModel.p2Points < soccerViewModel.p1Points){
                     binding.finalScorePoint.text = "" + soccerViewModel.getColor() + " won!"
                 }
                 database.getReference().child("Board Data").child(localGameId).child("randomVal").setValue(-1)
+                if(youArePlayerOne){
+                    // Get 'score' of player who won
+                    var winPlayerId = ""
+                    var losingPlayerId = ""
+                    if(soccerViewModel.p2Points < soccerViewModel.p1Points){
+                        winPlayerId = localP1Id
+                        losingPlayerId = localP2Id
+                    }else{
+                        winPlayerId = localP2Id
+                        losingPlayerId = localP1Id
+                    }
+                    database.getReference("Player Data").child(localGameId).child("players").get().addOnSuccessListener {
+                        // Save score and add 10
+                        var boardScoreWin = it.child(winPlayerId).child("score").value.toString().toInt()
+                        boardScoreWin += 10
+                        var boardScoreLose = it.child(losingPlayerId).child("score").value.toString().toInt()
+                        boardScoreLose -= 10
+                        println("board score: " + boardScoreWin)
+                        // Set new value
+                        database.getReference("Player Data").child(localGameId).child("players").child(winPlayerId).child("score").setValue("$boardScoreWin")
+                        database.getReference("Player Data").child(localGameId).child("players").child(losingPlayerId).child("score").setValue("$boardScoreLose")
+                    }
+                }
+
                 binding.finishedGameButton.setOnClickListener {
                     view?.findNavController()
                         ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)

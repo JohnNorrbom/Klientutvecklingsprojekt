@@ -70,6 +70,12 @@ class GavleRouletteWaitFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
+    }
+
     fun startGame(){
         myRef.child(localGameID).get().addOnSuccessListener {
             val model = it.getValue(RouletteModel::class.java)

@@ -321,7 +321,6 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
-//            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -347,7 +346,7 @@ class TestBoardFragment : Fragment() {
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)
-//                localRandomVal = 2
+
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -411,7 +410,8 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 if (isAdded && view != null) {
-                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
+                    database.getReference().child("Quiz").child(localGameID).child("seed").setValue(Random.nextInt(1000))
+                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
 
                 }
             } else if (randomVal == 3) {
@@ -531,7 +531,7 @@ class TestBoardFragment : Fragment() {
                             activity?.requestedOrientation =
                                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                             view?.findNavController()
-                                ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                                ?.navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
                         } else if (miniGameNmbr == 3) {
                             println("roulette vald")
                             Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")

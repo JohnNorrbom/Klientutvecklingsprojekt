@@ -2,6 +2,7 @@ package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -39,6 +40,8 @@ class GavleRouletteFragment : Fragment(){
     var localPlayerID =""
     var localGameID = ""
     private val handler = Handler()
+    // BG MUSIC
+    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreateView(
@@ -49,6 +52,12 @@ class GavleRouletteFragment : Fragment(){
         _binding = FragmentGavleRouletteBinding.inflate(inflater, container, false)
         val view = binding.root
         RouletteData.fetchGameModel()
+
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song5_140bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
 
 
         RouletteData.rouletteModel.observe(viewLifecycleOwner) { rouletteModel ->
@@ -65,7 +74,6 @@ class GavleRouletteFragment : Fragment(){
                     if (it.gameStatus == GameStatus.FINISHED || it.scoreUpploaded != true) {
                         it.scoreUpploaded = true
                         handler.postDelayed({
-                            setScore()
                             database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
                             activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                             try {
@@ -100,7 +108,8 @@ class GavleRouletteFragment : Fragment(){
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 
     fun setText(){
@@ -296,14 +305,13 @@ class GavleRouletteFragment : Fragment(){
     }
 
     fun setScore() {
-            playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
-                rouletteModel?.apply {
+        playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
+            rouletteModel?.apply {
                 val currentScore = it.child("score").value.toString()
-                     Log.d("score", " ${currentScore}")
-                       val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt())
-                            ?: 0
-                     Log.d("score", " ${newScore}")
-                     playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
+                Log.d("score", " ${currentScore}")
+                val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt()) ?: 0
+                Log.d("score", " ${newScore}")
+                playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
             }
         }
     }

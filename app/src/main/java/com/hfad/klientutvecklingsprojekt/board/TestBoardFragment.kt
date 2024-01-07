@@ -6,12 +6,13 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
@@ -30,6 +31,7 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
+
 
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
@@ -322,14 +324,13 @@ class TestBoardFragment : Fragment() {
     }
 
     fun diceButton() {
-
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
-//            var randomInt = 5
+//            var randomInt = Random.nextInt(6) + 1
+            var randomInt = 4
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -341,17 +342,65 @@ class TestBoardFragment : Fragment() {
 
             if (currentImageViewIndex % 20 == 1 || currentImageViewIndex % 20 == 6 || currentImageViewIndex % 20 == 11 || currentImageViewIndex % 20 == 15) {
                 localScore += 1
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
             }
             if (currentImageViewIndex % 20 == 2 || currentImageViewIndex % 20 == 7 || currentImageViewIndex % 20 == 12 || currentImageViewIndex % 20 == 16) {
                 localScore += 2
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
             }
             if (currentImageViewIndex % 20 == 3 || currentImageViewIndex % 20 == 8 || currentImageViewIndex % 20 == 13 || currentImageViewIndex % 20 == 17) {
                 localScore += 3
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
             }
             if (currentImageViewIndex % 20 == 4 || currentImageViewIndex % 20 == 9 || currentImageViewIndex % 20 == 14 || currentImageViewIndex % 20 == 18) {
                 localScore += -5
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
+                soundPool.load(context, R.raw.android_blunder, 4)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
             }
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
                 //minigame
                 //  Pick random game
                 localRandomVal = Random.nextInt(4)

@@ -1,5 +1,6 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -35,6 +36,9 @@ class StenSaxPaseFragment : Fragment() {
     private val stenSaxPaseRef = database.getReference("Sten Sax Pase")
     private val playerDataRef = database.getReference("Player Data")
 
+    // BG MUSIC
+    private var mediaPlayer: MediaPlayer? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,6 +47,12 @@ class StenSaxPaseFragment : Fragment() {
         // establish binding
         _binding = FragmentStenSaxPaseBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song6_150bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
 
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
@@ -400,5 +410,10 @@ class StenSaxPaseFragment : Fragment() {
         stenSaxPaseRef.removeEventListener(gameStartListener)
         stenSaxPaseRef.removeEventListener(gameStatusListener)
         println("STENSAXPASE: JAG HAR STOP")
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

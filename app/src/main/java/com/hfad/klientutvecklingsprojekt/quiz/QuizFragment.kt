@@ -108,7 +108,7 @@ class QuizFragment : Fragment() {
     fun setText() {
         currentGameID = meModel?.gameID ?: ""
         currentPlayerID = meModel?.playerID ?: ""
-        Log.d("StenSaxPaseFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
+        Log.d("QuizFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null
@@ -156,6 +156,8 @@ class QuizFragment : Fragment() {
             startTimer()
         } else {
             //alla frågor är besvarade
+            stopTimer()
+            binding.timerTextView.visibility = View.GONE
             finishQuiz()
 
 
@@ -258,6 +260,9 @@ class QuizFragment : Fragment() {
         }
         countDownTimer?.start()
     }
+    private fun stopTimer(){
+        countDownTimer?.cancel()
+    }
     private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int): List<JSONObject> {
         val selectedQuestions = mutableListOf<JSONObject>()
         val totalQuestions = allQuestions.length()
@@ -292,8 +297,6 @@ class QuizFragment : Fragment() {
         // Ladda upp poäng på databasen
         myRef.child(currentGameID).child("Scores").child(currentPlayerID).setValue(score)
         binding.scoreTextView.text = "WAITING FOR ALL PLAYERS TO FINISH THE QUIZ"
-        //PLUSSA PÅ SPELARENS POÄNG I DATABASEN
-        increasePlayerScore(currentPlayerID, score)
         // Initiera processen för att visa leaderboard
         initiateLeaderboardDisplay()
     }
@@ -357,7 +360,9 @@ class QuizFragment : Fragment() {
                 }
 
                 binding.scoreTextView.text = allScores.toString()
-
+                //PLUSSA PÅ SPELARENS POÄNG I DATABASEN
+                println("Kallar på increasePlayerScore")
+                increasePlayerScore(currentPlayerID, score)
                 delay(10000)
                 if (isAdded && view != null) {
                     database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
@@ -400,6 +405,7 @@ class QuizFragment : Fragment() {
             }
         }
     }
+
 
 
 

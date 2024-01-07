@@ -42,8 +42,8 @@ class TestBoardFragment : Fragment() {
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
-    private var playerRef = database.getReference("Player Data").child(gameID)
-    private var playersRef = playerRef.child("players")
+    private var gameRef = database.getReference("Player Data").child(gameID)
+    private var playersRef = gameRef.child("players")
 
     //  meModel
     private var localGameID = ""
@@ -116,7 +116,7 @@ class TestBoardFragment : Fragment() {
 
         boardRef.addValueEventListener(boardListener)
         diceButton()
-        playerRef.addValueEventListener(positionListener)
+        gameRef.addValueEventListener(positionListener)
 
         // Inflate the layout for this fragment
         return view
@@ -126,8 +126,8 @@ class TestBoardFragment : Fragment() {
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
-            playerRef = database.getReference("Player Data").child(localGameID)
-            playersRef = playerRef.child("players")
+            gameRef = database.getReference("Player Data").child(localGameID)
+            playersRef = gameRef.child("players")
             binding.playerBlue.visibility = View.GONE
             binding.playerWhite.visibility = View.GONE
             binding.playerRed.visibility = View.GONE
@@ -140,7 +140,7 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
                 }
-
+/*
             val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -193,6 +193,8 @@ class TestBoardFragment : Fragment() {
                     Log.w("YourTag", "Failed to read board data.", databaseError.toException())
                 }
             })
+
+ */
         }
     }
 
@@ -237,6 +239,22 @@ class TestBoardFragment : Fragment() {
         binding.textViewLeader3.text = getLeaderText(2)
         binding.textViewLeader4.text = getLeaderText(3)
         binding.textViewLeader5.text = getLeaderText(4)
+        checkForWinner(leaderboardList)
+    }
+
+    private fun checkForWinner(leaderboard: MutableList<Pair<String, Int>>) {
+        if (leaderboard[0].second > 29) {
+            try {
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(
+                    leaderboard[0].first,
+                    leaderboard[0].second
+                )
+                view.findNavController().navigate(action)
+            } catch (e: Exception) {
+                println(e.stackTrace)
+            }
+        }
     }
     private fun paintPlayers() {
 
@@ -436,7 +454,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
-                                    winner ="",
+                                    winner = "",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,
@@ -494,12 +512,71 @@ class TestBoardFragment : Fragment() {
         }
     }
 
+    private val gameStatusListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            boardRef.child(localGameID).child("randomVal").get().addOnSuccessListener { dataSnapshot ->
+                try {
+                    if (dataSnapshot.exists() && localCurrentPlayerTest != localPlayerID) {
+                        val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                        if (miniGameNmbr == 0) {
+                            println("sten sax pase vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
+                            if (localCurrentPlayerTest == localPlayerID) {
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                            } else {
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                            }
+                        } else if (miniGameNmbr == 1) {
+                            println("soccer vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                        } else if (miniGameNmbr == 2) {
+                            println("quiz vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                        } else if (miniGameNmbr == 3) {
+                            println("roulette vald")
+                            Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
+                            Log.d("localPlayerID", "${localPlayerID}")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         soundPool?.release()
         soundPool = null
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        boardRef.removeEventListener(boardListener)
+        gameRef.removeEventListener(positionListener)
+        boardRef.removeEventListener(gameStatusListener)
+        println("GAMEBOARD: JAG HAR STOP")
     }
 
     fun assignNextCurrentPlayer() {

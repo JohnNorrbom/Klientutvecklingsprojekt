@@ -152,9 +152,6 @@ class SoccerChooseFragment : Fragment() {
             gameId = gameID?:""
             yourId = playerID?:""
         }
-
-
-
     }
     fun getYourData(){
     }
@@ -177,9 +174,5 @@ class SoccerChooseFragment : Fragment() {
                 }
                 setColorButtonVisible()
             }
-
-
     }
-
-
 }

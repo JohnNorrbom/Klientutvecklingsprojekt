@@ -215,7 +215,6 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
-
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->

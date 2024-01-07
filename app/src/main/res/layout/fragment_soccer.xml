@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/aliencrowdfast"
         tools:layout_editor_absoluteX="224dp"
         tools:layout_editor_absoluteY="56dp" />
 
@@ -24,22 +23,19 @@
         android:id="@+id/shooter_hit"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/zwhitelefthit"/>
+        android:scaleType="fitXY" />
     <!-- Goalie animations -->
     <ImageView
         android:id="@+id/goalie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/zbluegoalleft"/>
+        android:scaleType="fitXY" />
     <!-- shooter animations -->
     <ImageView
         android:id="@+id/shooter_miss"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@drawable/zwhiteleftmiss"/>
+        android:scaleType="fitXY" />
 
     <LinearLayout
         android:id="@+id/bottom_buttons"

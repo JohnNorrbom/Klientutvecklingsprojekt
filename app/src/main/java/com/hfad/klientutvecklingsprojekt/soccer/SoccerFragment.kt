@@ -238,7 +238,13 @@ class SoccerFragment : Fragment() {
         doAnimation(soccerViewModel)
 
         if(youArePlayerOne || youArePlayerTwo){
-            binding.bottomButtons.visibility = View.VISIBLE
+
+            val handler = Handler(Looper.getMainLooper())
+
+            handler.postDelayed({
+                binding.bottomButtons.visibility = View.VISIBLE
+            }, 2000)
+
             myRef.child(localGameId).child("bothPlayerReady").setValue(false)
             myRef.child(localGameId).child("p1Choice").setValue("")
             myRef.child(localGameId).child("p2Choice").setValue("")
@@ -337,10 +343,6 @@ class SoccerFragment : Fragment() {
                 goalieAnimation.start()
             }
             soccerViewModel.switchType()
-
-            if(youArePlayerOne || youArePlayerTwo){
-                binding.bottomButtons.visibility = View.VISIBLE
-            }
         }
     }
 

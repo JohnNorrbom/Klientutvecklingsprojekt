@@ -398,14 +398,14 @@ class TestBoardFragment : Fragment() {
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    //means you are host
-                    if (localCurrentPlayerTest == localPlayerID) {
-                        view.findNavController()
-                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
-                    } else {
-                        view.findNavController()
-                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
-                    }
+                    //means you are host    TODO SOCCER
+//                    if (localCurrentPlayerTest == localPlayerID) {
+//                        view.findNavController()
+//                            .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)
+//                    } else {
+//                        view.findNavController()
+//                            .navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+//                    }
                 }
                 println("SOCCER GAME FERDINAND")
             } else if (randomVal == 2) {

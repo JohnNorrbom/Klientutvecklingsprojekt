@@ -3,6 +3,7 @@ package com.hfad.klientutvecklingsprojekt.gavleroulette
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteBindin
 import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class GavleRouletteFragment : Fragment(){
@@ -36,6 +38,7 @@ class GavleRouletteFragment : Fragment(){
     val playerRef = database.getReference("Player Data")
     var localPlayerID =""
     var localGameID = ""
+    private val handler = Handler()
 
 
     override fun onCreateView(
@@ -48,20 +51,32 @@ class GavleRouletteFragment : Fragment(){
         RouletteData.fetchGameModel()
 
 
-        RouletteData.rouletteModel.observe(viewLifecycleOwner) {rouletteModel ->
-            Log.d("GavleRouletteFragment", "Observing rouletteModel: $rouletteModel")
+        RouletteData.rouletteModel.observe(viewLifecycleOwner) { rouletteModel ->
+            Log.d("GavleRouletteFragment", "Observerar rouletteModel: $rouletteModel")
             rouletteModel?.let {
-                if (it.gameId == null){
-                    Log.e("GavleRouletteFragment", "rouletteModel is null")
-                }else{
+                if (it.gameId == null) {
+                    Log.e("GavleRouletteFragment", "rouletteModel är null")
+                } else {
                     this@GavleRouletteFragment.rouletteModel = it
-                    setUi()
-                    setPlayerInfo()
+                    handler.postDelayed({
+                        setUi()
+                        setPlayerInfo()
+                    }, 500)
+                    if (it.gameStatus == GameStatus.FINISHED) {
+                        handler.postDelayed({
+                            setScore()
+                            database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
+                            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                            try {
+                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
+                        }, 12000)
+                    }
                 }
             }
         }
-
-        //myRef.child(localGameID).child("gameStatus").addValueEventListener(statusListner)
 
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
@@ -95,38 +110,35 @@ class GavleRouletteFragment : Fragment(){
     }
 
     fun setUi() {
-        rouletteModel?.apply {
-            playerRef.child(localGameID).child("players").get().addOnSuccessListener {
-                val snapshot = it
-                var text = ""
-                if (scoreUpploaded == true){
-                    database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
-                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                    view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-                }
-            binding.gameStatusText.text =
-                when (gameStatus) {
+        playerRef.child(localGameID).child("players").get().addOnSuccessListener { snapshot ->
+            rouletteModel?.apply {
+                binding.gameStatusText.text = when (gameStatus) {
                     GameStatus.INPROGRESS -> {
-                            setPlayerInfo()
-                            binding.test.text = luckyNumber.toString()
-                        when (localPlayerID) {
-                            currentPlayer -> text = "Your turn"
-                            else -> text = snapshot.child(currentPlayer ?: "").child("nickname").value.toString() + " turn"
+                        Log.d("localP","${localPlayerID}")
+                        Log.d("currentP","${currentPlayer}")
+                        val text = if (localPlayerID == currentPlayer) {
+                            "Your turn"
+                        } else {
+                            val currentPlayerNickname =
+                                snapshot.child(currentPlayer ?: "").child("nickname").value.toString()
+                            "$currentPlayerNickname turn"
                         }
                         text
                     }
 
                     GameStatus.FINISHED -> {
-                        when (localPlayerID) {
-                            winner -> text = "You won"
-                            else -> text = snapshot.child(winner ?: "").child("nickname").value.toString() + " won"
+                        val text = if (localPlayerID == winner) {
+                            "You won"
+                        } else {
+                            val winnerNickname =
+                                snapshot.child(winner ?: "").child("nickname").value.toString()
+                            "$winnerNickname won"
                         }
                         text
-
                     }
-                    else -> {return@addOnSuccessListener}
-                }
 
+                    else -> ""
+                }
             }
         }
     }
@@ -134,14 +146,14 @@ class GavleRouletteFragment : Fragment(){
         myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
             Log.d("localPlayerID","${localPlayerID}")
             Log.d("localPlayerID","${it.value}")
-            if(localPlayerID != it.value){
-                Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
-                return@addOnSuccessListener
-            }else{
-                changePlayer()
+            if(localPlayerID == it.value.toString()){
                 pullTheTrigger()
                 checksForKill()
+                changePlayer()
                 checkForWinner()
+            }else{
+                Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
+                return@addOnSuccessListener
             }
         }
     }
@@ -198,19 +210,17 @@ class GavleRouletteFragment : Fragment(){
     //adds a value to currentBullet and pluses on how many attempts and laps thier has been
     fun pullTheTrigger() {
         rouletteModel?.apply {
-            currentBullet = Random.nextInt(6) + 1
-            Log.d("currentBullet","${currentBullet}")
-            Log.d("attempts","${attempts}")
-            attempts = attempts?.plus(1)
-            Log.d("attempts","${attempts}")
-            Log.d("nbrOfPlayers","${this.nbrOfPlayers}")
-            if (attempts == aliveCount) {
-                attempts = 0
-                laps = laps?.plus(1)
-            }
-            binding.test1.text = "current attempts" + attempts.toString()
-            binding.test2.text = "total laps " + laps.toString()
-            updateGameData(this,localGameID)
+                currentBullet = Random.nextInt(6) + 1
+                Log.d("currentBullet", "${currentBullet}")
+                Log.d("attempts", "${attempts}")
+                attempts = attempts?.plus(1)
+                Log.d("attempts", "${attempts}")
+                Log.d("nbrOfPlayers", "${this.nbrOfPlayers}")
+                if (attempts == aliveCount) {
+                    attempts = 0
+                    laps = laps?.plus(1)
+                }
+                updateGameData(this, localGameID)
         }
     }
 
@@ -243,10 +253,12 @@ class GavleRouletteFragment : Fragment(){
                     Log.d("newcurrentPlayer","${currentPlayer}")
                     Log.d("newcurrentPlayer","${this}")
                     updateGameData(this, localGameID)
+                    setUi()  // Flytta setUi() hit för att säkerställa att den anropas efter att currentPlayer har uppdaterats.
                 }
             }
         }
     }
+
     //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
     fun checksForKill() {
         rouletteModel?.apply {
@@ -264,14 +276,10 @@ class GavleRouletteFragment : Fragment(){
             if (aliveCount == 1) {
                 for (i in 0 until nbrOfPlayers!!){
                     if (players?.get(players?.keys?.elementAt(i)) == PlayerStatus.ALIVE){
-                        score?.put(players?.keys?.elementAt(i)?:"",laps ?:0)
+                        score?.put(players?.keys?.elementAt(i)?:"",laps?.plus(5) ?:0)
                         winner = players?.keys?.elementAt(i)
                         break
                     }
-                }
-                if (scoreUpploaded != true){
-                    setScore()
-                    scoreUpploaded = true
                 }
                 gameStatus = GameStatus.FINISHED
                 updateGameData(this,localGameID)
@@ -280,19 +288,15 @@ class GavleRouletteFragment : Fragment(){
     }
 
     fun setScore() {
-        playerRef.child(localGameID).child("players").get().addOnSuccessListener {
-            val snapshot = it
-            rouletteModel?.apply {
-                for (player in snapshot.children) {
-                    val currentScore = player.child("score").value.toString()
-                    val newScore =
-                        rouletteModel?.score?.get(player.toString())?.plus(currentScore.toInt())
+        rouletteModel?.apply {
+            playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
+                     val currentScore = it.child("score").value.toString()
+                     Log.d("score", " ${currentScore}")
+                       val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt())
                             ?: 0
-                    playerRef.child(localGameID).child("players").child(player.toString()).child("score").setValue(newScore)
-                }
+                     Log.d("score", " ${newScore}")
+                     playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
             }
-
         }
     }
-
 }

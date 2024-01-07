@@ -77,16 +77,6 @@ class TestBoardFragment : Fragment() {
 
     //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
-    var number1 = -1
-    var number2 = -1
-    var number3 = -1
-    var number4 = -1
-    var number5 = -1
-    var nickname1 = ""
-    var nickname2 = ""
-    var nickname3 = ""
-    var nickname4 = ""
-    var nickname5 = ""
     val leaderboardList = mutableListOf<Pair<String, Int>>()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -184,10 +174,12 @@ class TestBoardFragment : Fragment() {
                                     ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
                             } else if (miniGameNmbr == 3) {
                                 println("roulette vald")
-                                Log.d("localCurrentPlayerTest","${localCurrentPlayerTest}")
-                                Log.d("localPlayerID","${localPlayerID}")
-                                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+                                Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
+                                Log.d("localPlayerID", "${localPlayerID}")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
 
                             }
                         }
@@ -321,7 +313,7 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
-            //var randomInt = 5
+//            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -346,8 +338,8 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = Random.nextInt(4)
-                  //localRandomVal = 1
+                localRandomVal = Random.nextInt(2) + 1
+//                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -444,6 +436,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
+                                    winner ="",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,
@@ -460,7 +453,8 @@ class TestBoardFragment : Fragment() {
 
                         }
                     }
-                    view?.findNavController()?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
                 }
             }
         } catch (e: Exception) {

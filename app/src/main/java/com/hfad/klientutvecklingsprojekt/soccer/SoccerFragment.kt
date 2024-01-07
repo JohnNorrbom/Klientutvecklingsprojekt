@@ -190,9 +190,7 @@ class SoccerFragment : Fragment() {
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song3_140bpm)
         mediaPlayer?.isLooping = true
         mediaPlayer?.start()
-
         soccerViewModel = ViewModelProvider(this).get(SoccerViewModel::class.java)
-
 
         binding.leftButton.setOnClickListener {
             sendChoiceOnline("left")

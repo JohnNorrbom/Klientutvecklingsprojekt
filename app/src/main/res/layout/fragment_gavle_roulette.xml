@@ -14,7 +14,7 @@
         android:textStyle="bold"
         android:textSize="28sp"
         android:layout_gravity="center"
-        android:layout_margin="8dp"
+        android:layout_marginTop="37dp"
         android:padding="8dp"
         android:textColor="#6AFF00"
         />

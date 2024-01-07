@@ -24,8 +24,12 @@ class winnerFragment : Fragment() {
         val score = winnerFragmentArgs.fromBundle(requireArguments()).winnerScore
         binding.textView4.text = "The winner is: " + winner + " with a score of: " + score + " points!!!"
         binding.goBack.setOnClickListener {
-            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            view.findNavController().navigate(R.id.action_winnerFragment_to_startScreenFragment)
+            try{
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                view.findNavController().navigate(R.id.action_winnerFragment_to_startScreenFragment)
+            } catch (e: Exception) {
+                println(e.stackTrace)
+            }
         }
         return view
     }

@@ -117,6 +117,7 @@ class TestBoardFragment : Fragment() {
         boardRef.addValueEventListener(boardListener)
         diceButton()
         playerRef.addValueEventListener(positionListener)
+        boardRef.addValueEventListener(gameStatusListener)
 
         // Inflate the layout for this fragment
         return view
@@ -140,7 +141,7 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
                 }
-
+/*
             val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
             boardMiniGameRef.addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -193,6 +194,8 @@ class TestBoardFragment : Fragment() {
                     Log.w("YourTag", "Failed to read board data.", databaseError.toException())
                 }
             })
+
+ */
         }
     }
 
@@ -497,12 +500,71 @@ class TestBoardFragment : Fragment() {
         }
     }
 
+    private val gameStatusListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            boardRef.child(localGameID).child("randomVal").get().addOnSuccessListener { dataSnapshot ->
+                try {
+                    if (dataSnapshot.exists() && localCurrentPlayerTest != localPlayerID) {
+                        val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                        if (miniGameNmbr == 0) {
+                            println("sten sax pase vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
+                            if (localCurrentPlayerTest == localPlayerID) {
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                            } else {
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                            }
+                        } else if (miniGameNmbr == 1) {
+                            println("soccer vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                        } else if (miniGameNmbr == 2) {
+                            println("quiz vald")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
+                        } else if (miniGameNmbr == 3) {
+                            println("roulette vald")
+                            Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
+                            Log.d("localPlayerID", "${localPlayerID}")
+                            activity?.requestedOrientation =
+                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            view?.findNavController()
+                                ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         soundPool?.release()
         soundPool = null
         mediaPlayer?.release()
         mediaPlayer = null
+    }
+
+    override fun onStop() {
+        super.onStop()
+        boardRef.removeEventListener(boardListener)
+        playerRef.removeEventListener(positionListener)
+        boardRef.removeEventListener(gameStatusListener)
+        println("GAMEBOARD: JAG HAR STOP")
     }
 
     fun assignNextCurrentPlayer() {

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- ... other styles ... -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textViewStyle">@style/MyTextView</item>
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+        <item name="android:editTextStyle">@style/MyEditText</item>
+        <item name="android:radioButtonStyle">@style/MyRadioButton</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <!-- Customize button attributes here -->
+        <item name="android:background">@drawable/custom_button_background</item>
+        <item name="android:textColor">@color/custom_button_text_color</item>
+        <!-- Add more attributes as needed -->
+    </style>
+
+    <style name="MyTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/green</item>
+    </style>
+    <style name="MyEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">#3300FF00</item>
+    </style>
+    <style name="MyRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/green</item>
+    </style>
+</resources>

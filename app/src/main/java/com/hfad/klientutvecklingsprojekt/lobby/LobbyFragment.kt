@@ -2,7 +2,11 @@ package com.hfad.klientutvecklingsprojekt.lobby
 
 import android.content.ContentValues
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -73,20 +77,20 @@ class LobbyFragment : Fragment() {
         binding.startButton.setOnClickListener {
             startGame()
         }
-        binding.rouletteButton.setOnClickListener{
-            startRoulette()
-        }
-        binding.joinButton.setOnClickListener{
-            changeScreen()
-        }
-
-        binding.hostSoccer.setOnClickListener {
-            startSoccer()
-        }
-
-        binding.joinSoccer.setOnClickListener {
-            joinSoccer()
-        }
+//        binding.rouletteButton.setOnClickListener{
+//            startRoulette()
+//        }
+//        binding.joinButton.setOnClickListener{
+//            changeScreen()
+//        }
+//
+//        binding.hostSoccer.setOnClickListener {
+//            startSoccer()
+//        }
+//
+//        binding.joinSoccer.setOnClickListener {
+//            joinSoccer()
+//        }
 
         LobbyData.lobbyModel.observe(this) { lobbyModel ->
             lobbyModel?.let {
@@ -123,7 +127,16 @@ class LobbyFragment : Fragment() {
         //den här
         localGameID= meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
-        binding.lobbyId.text = "Game ID: "+localGameID
+        //  Changes text for TextView to the lobby gameID
+        val text = "Game ID: ${localGameID}"
+        val spannableString = SpannableString(text)
+        // Get the length of the text
+        val textLength = text.length
+        // Set the color for the first half of the text to green
+        spannableString.setSpan(ForegroundColorSpan(Color.parseColor("#6AFF00")), 0, textLength - 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        // Set the color for the second half of the text to red
+        spannableString.setSpan(ForegroundColorSpan(Color.RED), textLength - 4, textLength, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        binding.lobbyId.text = spannableString
         binding.lobbyId.visibility = View.VISIBLE
         Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
         val lobbyRefbtn = lobbyRef.child(localGameID).child("btnPressed")
@@ -211,7 +224,7 @@ class LobbyFragment : Fragment() {
                         score = scorePlayers,
                         nbrOfPlayers = gamePlayer.size,
                         aliveCount = gamePlayer.size,
-                        luckyNumber = mutableListOf((Random.nextInt(6)+1).toString()),
+                        luckyNumber = Random.nextInt(6) + 1,
                         currentPlayer = gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))
                     ),localGameID
                 )

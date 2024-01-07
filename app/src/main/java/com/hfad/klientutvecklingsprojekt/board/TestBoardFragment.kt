@@ -215,6 +215,37 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
+    private fun updateLeaderboard(nickname: String, number: Int) {
+        // Sorterar leaderboarden
+        // Extracting values from playerSnapshot
+        if (leaderboardList.isEmpty()) {
+            // Add the first pair to the list
+            leaderboardList.add(nickname to number)
+            Log.d("score", "leaderboardList ${nickname} ${number}")
+        } else {
+            // Check if the nickname is already in the list
+            val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
+
+            if (existingIndex != -1) {
+                // If the nickname already exists, update the score if the new score is higher
+                if (number > leaderboardList[existingIndex].second) {
+                    leaderboardList[existingIndex] = nickname to number
+                }
+            } else {
+                // Add the new pair to the list
+                leaderboardList.add(nickname to number)
+
+                // Sort the list based on the 'number1' values in descending order
+                leaderboardList.sortByDescending { it.second }
+            }
+            Log.d("score", "after leaderboardList ${nickname} ${number}")
+        }
+        binding.textViewLeader1.text = getLeaderText(0)
+        binding.textViewLeader2.text = getLeaderText(1)
+        binding.textViewLeader3.text = getLeaderText(2)
+        binding.textViewLeader4.text = getLeaderText(3)
+        binding.textViewLeader5.text = getLeaderText(4)
+    }
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -232,40 +263,11 @@ class TestBoardFragment : Fragment() {
                     "white" -> binding.playerWhite
                     else -> null // Handle any other colors if needed
                 }
-                Log.d("score", "testing: $number1")
-                // Sorterar leaderboarden
-                // Extracting values from playerSnapshot
-                val number1 = playerSnapshot.child("score").value.toString().toInt()
-                val nickname1 = playerSnapshot.child("nickname").value.toString()
-                if (leaderboardList.isEmpty()) {
-                    // Add the first pair to the list
-                    leaderboardList.add(nickname1 to number1)
-                    Log.d("score", "leaderboardList $nickname1 $number1")
-                } else {
-                    // Check if the nickname is already in the list
-                    val existingIndex = leaderboardList.indexOfFirst { it.first == nickname1 }
 
-                    if (existingIndex != -1) {
-                        // If the nickname already exists, update the score if the new score is higher
-                        if (number1 > leaderboardList[existingIndex].second) {
-                            leaderboardList[existingIndex] = nickname1 to number1
-                        }
-                    } else {
-                        // Add the new pair to the list
-                        leaderboardList.add(nickname1 to number1)
-
-                        // Sort the list based on the 'number1' values in descending order
-                        leaderboardList.sortByDescending { it.second }
-                    }
-                    Log.d("score", "after leaderboardList $nickname1 $number1")
-                }
-
-                binding.textViewLeader1.text = getLeaderText(0)
-                binding.textViewLeader2.text = getLeaderText(1)
-                binding.textViewLeader3.text = getLeaderText(2)
-                binding.textViewLeader4.text = getLeaderText(3)
-                binding.textViewLeader5.text = getLeaderText(4)
-
+                val nickname = playerSnapshot.child("nickname").value.toString()
+                val number = playerSnapshot.child("score").value.toString().toInt()
+                Log.d("score", "testing: $number")
+                updateLeaderboard(nickname, number)
                 imageView?.let { view ->
                     //make player imageView visible
                     view.visibility = View.VISIBLE

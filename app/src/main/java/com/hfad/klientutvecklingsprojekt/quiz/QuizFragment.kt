@@ -57,13 +57,14 @@ class QuizFragment : Fragment() {
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Quiz")
     var totalPlayersCount: Int = 0
-    
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
+        val view = binding.root
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
                 this@QuizFragment.meModel = it
@@ -73,10 +74,15 @@ class QuizFragment : Fragment() {
                 Log.e("QuizFragment", "meModel is null")
             }
         }
-
+        println("NU ÄR VI HÄR....")
         //Berätta för databasen att du inte är klar med quizet
         myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz")
             .setValue(false)
+            println("KALLAR FETCH QUIZ SEED")
+            fetchQuizSeed()
+
+
+
         try {
             //  Läs in frågorna från JSON-filen
             val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
@@ -106,7 +112,35 @@ class QuizFragment : Fragment() {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return binding.root
+        println("Körs detta flera gånger??")
+        return view
+    }
+    private fun fetchQuizSeed() = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val seedRef = myRef.child(currentGameID).child("seed")
+            val dataSnapshot = seedRef.get().await()
+
+            if (dataSnapshot.exists()) {
+                // Använd den existerande seeden
+                val seed = dataSnapshot.getValue(Int::class.java)
+                if (seed != null) {
+                    withContext(Dispatchers.Main) {
+                        println("SEED ÄR: " + seed)
+                    }
+                } else {
+                    println( "Seed finns men är null")
+                    // Hantera fallet där seed-värdet är null
+                }
+            } else {
+                println( "Seed finns inte i databasen")
+                // Hantera fallet där seed inte finns
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
+               println("DE BLEV EXCEPTION!!!")
+                // Hantera eventuella fel här, t.ex. visa felmeddelande
+            }
+        }
     }
 
     fun setText() {

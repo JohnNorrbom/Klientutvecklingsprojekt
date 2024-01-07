@@ -328,8 +328,8 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
-//            var randomInt = 5
+            //var randomInt = Random.nextInt(6) + 1
+            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -354,8 +354,8 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = Random.nextInt(4)
-//                localRandomVal = 2
+                //localRandomVal = Random.nextInt(4)
+                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
                 // currentPlayer startar minigame
@@ -419,6 +419,7 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 if (isAdded && view != null) {
+                    database.getReference().child("Quiz").child(localGameID).child("seed").setValue(Random.nextInt(1000))
                     view.findNavController().navigate(R.id.action_testBoardFragment_to_quizFragment)
 
                 }

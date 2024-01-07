@@ -149,7 +149,12 @@ class LobbyFragment : Fragment() {
                     println("VÄRDET PÅ LOBBYDATA " + lobbyData)
                     println(lobbyData == "true")
                     if(lobbyData == true){
-                        view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
+                        try {
+                            view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
+
+                        }catch (e: Exception){
+                            println(e.stackTrace)
+                        }
                     }
                 }
             }

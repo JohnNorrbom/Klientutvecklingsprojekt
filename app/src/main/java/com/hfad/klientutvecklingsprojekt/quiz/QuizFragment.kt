@@ -57,6 +57,7 @@ class QuizFragment : Fragment() {
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Quiz")
     var totalPlayersCount: Int = 0
+    
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -389,7 +389,7 @@ class StenSaxPaseFragment : Fragment() {
             playerDataRef.child(currentGameID).child("players").child(player).child("score").get().addOnSuccessListener {
                 // Save score and add 10
                 var boardScore = it.value.toString().toInt()
-                boardScore += 10
+                boardScore += 5
                 // Set new value
                 println("STENSAXPASE: JAG GAV $player + $boardScore poäng")
                 playerDataRef.child(currentGameID).child("players").child(player).child("score").setValue(boardScore)

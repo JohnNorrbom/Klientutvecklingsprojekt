@@ -453,6 +453,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
+                                    winner ="",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
                                     aliveCount = gamePlayer.size,

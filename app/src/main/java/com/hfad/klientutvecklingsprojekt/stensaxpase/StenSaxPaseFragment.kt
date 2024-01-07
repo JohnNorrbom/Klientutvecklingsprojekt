@@ -169,10 +169,17 @@ class StenSaxPaseFragment : Fragment() {
                     if(elem.key == "opponentID") playerID = elem.value.toString()
                 }
                 println("!!PLAYERID WAS NULL!! Currently in game: $gameID , using playerID: $playerID")
+                resetUI()
                 loadPlayersFromGameID()
             }
-        } else loadPlayersFromGameID()
+        } else {
+            resetUI()
+            loadPlayersFromGameID()
+        }
     }
+
+    var player1:String? = null
+    var player2:String? = null
 
     fun loadPlayersFromGameID() {
         playerDataRef.child(gameID).get().addOnSuccessListener {
@@ -181,6 +188,8 @@ class StenSaxPaseFragment : Fragment() {
             val players : MutableMap<String,MutableMap<String,String>> = mutableMapOf()
             // Loop through all players and add to local 'players' Map
             for(player in it.child("players").children) {
+                if(player.key == playerID) player1 = player.child("nickname").value.toString()
+                else if(player.key == opponentID) player2 = player.child("nickname").value.toString()
                 players.put("${player.child("playerID").value}", mutableMapOf(
                     "nickname" to "${player.child("nickname").value}",
                     "color" to "${player.child("color").value}",
@@ -205,14 +214,9 @@ class StenSaxPaseFragment : Fragment() {
 
     // Maybe remove this whole setPlayers thing and instead use solution where a player chooses who to compete with
 
-    var player1:String? = null
-    var player2:String? = null
+
 
     fun setPlayers() {
-
-        player1 = playerID
-        player2 = opponentID
-
         println("player1_id: $player1 -vs- player2_id: $player2")
         setVsText("$player1 -vs- $player2")
     }
@@ -286,14 +290,14 @@ class StenSaxPaseFragment : Fragment() {
         }
         println("-outcome: $outcome")
         if(outcome == playerID) {
-            setActionText("$playerID won with $player1choice beating $player2choice")
+            setActionText("$player1 won with $player1choice beating $player2choice")
             // Fördröjning
             handler.postDelayed({
                 setScoreInDatabase(playerID!!)
             }, 4000)
         }
         else if(outcome == opponentID) {
-            setActionText("$opponentID won with $player2choice beating $player1choice")
+            setActionText("$player2 won with $player2choice beating $player1choice")
             // Fördröjning
             handler.postDelayed({
                 setScoreInDatabase(opponentID!!)
@@ -328,13 +332,23 @@ class StenSaxPaseFragment : Fragment() {
     }
 
     fun resetUI() {
-        binding.sten.isClickable = true
-        binding.sax.isClickable = true
-        binding.pase.isClickable = true
+        if(currentPlayerID == playerID || currentPlayerID == opponentID) {
+            binding.sten.isClickable = true
+            binding.sax.isClickable = true
+            binding.pase.isClickable = true
 
-        binding.sten.visibility = View.VISIBLE
-        binding.sax.visibility = View.VISIBLE
-        binding.pase.visibility = View.VISIBLE
+            binding.sten.visibility = View.VISIBLE
+            binding.sax.visibility = View.VISIBLE
+            binding.pase.visibility = View.VISIBLE
+        } else {
+            binding.sten.isClickable = false
+            binding.sax.isClickable = false
+            binding.pase.isClickable = false
+
+            binding.sten.visibility = View.INVISIBLE
+            binding.sax.visibility = View.INVISIBLE
+            binding.pase.visibility = View.INVISIBLE
+        }
     }
 
     fun checkForWin(player:String,score:Int) {

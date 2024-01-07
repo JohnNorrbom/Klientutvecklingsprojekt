@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- button_background.xml -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed state -->
+    <item android:state_pressed="true">
+        <bitmap android:src="@drawable/standard_button" />
+        <!-- Add any additional attributes for pressed state -->
+    </item>
+
+    <!-- Focused state -->
+    <item android:state_focused="true">
+        <bitmap android:src="@drawable/standard_button" />
+        <!-- Add any additional attributes for focused state -->
+    </item>
+
+    <!-- Default state -->
+    <item>
+        <bitmap android:src="@drawable/standard_button" />
+        <!-- Add any additional attributes for default state -->
+    </item>
+
+</selector>

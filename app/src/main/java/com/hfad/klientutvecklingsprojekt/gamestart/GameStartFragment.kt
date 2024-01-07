@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.findNavController
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
@@ -21,7 +22,7 @@ import kotlin.random.nextInt
 class GameStartFragment : Fragment() {
     private var _binding: FragmentGameStartBinding? = null
     private val binding get()  = _binding!!
-    private lateinit var view : LinearLayout
+    private lateinit var view : ConstraintLayout
     private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Game Data")
 
@@ -32,10 +33,6 @@ class GameStartFragment : Fragment() {
     ): View? {
         _binding = FragmentGameStartBinding.inflate(inflater, container, false)
         view = binding.root
-
-        binding.playOfflineBtn.setOnClickListener {
-            createOfflinGame()
-        }
 
         binding.createOnlineGameBtn.setOnClickListener {
             createOnlineGame()

@@ -3,10 +3,12 @@
     <style name="Base.Theme.Klientutvecklingsprojekt" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorButtonNormal">@color/buttonColor</item>
+        <item name="colorControlHighlight">@color/white</item>
         <item name="android:fontFamily">@font/animematrix_mb_en</item>
-        <item name="fontFamily">@font/animematrix_mb_en</item> <!-- target android sdk versions < 26 and > 14 if theme other than AppCompat -->
+        <item name="fontFamily">@font/animematrix_mb_en</item>
     </style>
-
     <style name="Theme.Klientutvecklingsprojekt" parent="Base.Theme.Klientutvecklingsprojekt" />
-
 </resources>

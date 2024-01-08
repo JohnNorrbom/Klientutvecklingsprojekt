@@ -11,7 +11,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
-
+/**
+ *
+ * Objekt som hämtar data från databasen och sparar daata
+ *
+ */
 object BoardData {
     private var _boardModel : MutableLiveData<BoardModel?> = MutableLiveData()
     var boardModel : MutableLiveData<BoardModel?> = _boardModel

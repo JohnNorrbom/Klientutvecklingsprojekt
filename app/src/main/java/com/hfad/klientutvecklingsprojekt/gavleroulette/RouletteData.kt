@@ -33,8 +33,12 @@ object RouletteData {
 
     val rouletteListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val model = snapshot.getValue(RouletteModel::class.java)
-            _rouletteModel.postValue(model)
+            try {
+                val model = snapshot.getValue(RouletteModel::class.java)
+                _rouletteModel.postValue(model)
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
         }
 
         override fun onCancelled(error: DatabaseError) {

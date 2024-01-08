@@ -13,6 +13,8 @@ import com.google.firebase.database.database
 
 /**
  *
+ * @author John
+ *
  * Objekt som hämtar data från databasen och sparar daata
  *
  */

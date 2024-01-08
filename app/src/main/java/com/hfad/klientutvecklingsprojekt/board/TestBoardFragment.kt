@@ -34,6 +34,8 @@ import kotlin.random.Random
 
 /**
  *
+ * @author John, Simon, Pontus, William & Ferdinand
+ *
  * TestBoardFragment:
  *
  * målar spelplanen

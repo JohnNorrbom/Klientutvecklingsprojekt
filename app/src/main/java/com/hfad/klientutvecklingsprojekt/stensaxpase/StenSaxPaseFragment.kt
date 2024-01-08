@@ -250,6 +250,7 @@ class StenSaxPaseFragment : Fragment() {
                     if (dataSnapshot.exists()) {
                         println("CHECK IF STATUS IS FALSE FOR: ${dataSnapshot.getValue()} , ${dataSnapshot.getValue() == false}")
                         if(dataSnapshot.getValue() == false) {
+                            handler.removeCallbacksAndMessages(null)
                             stenSaxPaseRef.child(gameID).removeValue()
                             view?.findNavController()?.navigate(R.id.action_stensaxpaseFragment_to_testBoardFragment)
                         }
@@ -401,14 +402,16 @@ class StenSaxPaseFragment : Fragment() {
 
     fun checkForWin(player:String,score:Int) {
         if(score == 2) {
+            handler.removeCallbacksAndMessages(null)
             println("player: $player wins")
             // Get 'score' of player who won
             playerDataRef.child(currentGameID).child("players").child(player).child("score").get().addOnSuccessListener {
                 // Save score and add 10
                 var boardScore = it.value.toString().toInt()
+                var oldVal = boardScore
                 boardScore += 5
                 // Set new value
-                println("STENSAXPASE: $currentPlayerID GAV $player + $boardScore poäng")
+                println("STENSAXPASE: $currentPlayerID GAV NYTT VÄRDE I PLAYER DATA FÖR $player : NYTT VÄRDE: $boardScore : GAMMALT VÄRDE: $oldVal")
                 playerDataRef.child(currentGameID).child("players").child(player).child("score").setValue(boardScore)
 
                 stenSaxPaseRef.child(gameID).child("status").setValue(false)

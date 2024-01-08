@@ -14,21 +14,6 @@
         <action
             android:id="@+id/action_startScreenFragment_to_gameStartFragment"
             app:destination="@id/gameStartFragment" />
-        <action
-            android:id="@+id/action_startScreenFragment_to_soccerFragment"
-            app:destination="@id/soccerChooseFragment" />
-        <action
-            android:id="@+id/action_startScreenFragment_to_gavleRouletteFragment"
-            app:destination="@id/gavleRouletteFragment" />
-        <action
-            android:id="@+id/action_startScreenFragment_to_quizFragment"
-            app:destination="@id/quizFragment" />
-        <action
-            android:id="@+id/action_startScreenFragment_to_testBoardFragment"
-            app:destination="@id/testBoardFragment" />
-        <action
-            android:id="@+id/action_startScreenFragment_to_stenSaxPaseChooseFragment"
-            app:destination="@id/stenSaxPaseChooseFragment" />
     </fragment>
     <fragment
         android:id="@+id/soccerFragment"
@@ -82,15 +67,6 @@
         <action
             android:id="@+id/action_lobbyFragment_to_testBoardFragment"
             app:destination="@id/testBoardFragment" />
-        <action
-            android:id="@+id/action_lobbyFragment_to_gavleRouletteFragment"
-            app:destination="@id/gavleRouletteFragment" />
-        <action
-            android:id="@+id/action_lobbyFragment_to_soccerChooseFragment"
-            app:destination="@id/soccerChooseFragment" />
-        <action
-            android:id="@+id/action_lobbyFragment_to_waitingSoccerFragment"
-            app:destination="@id/waitingSoccerFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameStartFragment"

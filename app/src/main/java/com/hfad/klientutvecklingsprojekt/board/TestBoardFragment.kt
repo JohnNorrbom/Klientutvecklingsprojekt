@@ -6,6 +6,7 @@ import android.media.MediaPlayer
 import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -36,7 +37,7 @@ class TestBoardFragment : Fragment() {
     private var _binding: FragmentTestBoardBinding? = null
     private val binding get() = _binding!!
     private lateinit var view: ConstraintLayout
-
+    private var handler = Handler()
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -283,7 +284,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
+            var randomInt = 5//Random.nextInt(6) + 1
 //            var randomInt = 10
 
             var destination = "dice" + randomInt
@@ -441,51 +442,55 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 3) {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
-                    println("roulette vald")
-                    if (localCurrentPlayerTest == localPlayerID) {
-                        playersRef.get().addOnSuccessListener {
-                            val snapshot = it
-                            var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
-                            var scorePlayers: MutableMap<String, Int> = mutableMapOf()
-                            for (player in snapshot.children) {
-                                Log.d("player", "${player}")
-                                gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
-                                scorePlayers?.put(player.key.toString(), 0)
-                                Log.d("players", "${gamePlayer}")
-                            }
-                            Log.d(
-                                "currentPlayer",
-                                "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
-                            )
-
-                            Log.d("game ID", "${localGameID}")
-
-                            RouletteData.saveGameModel(
-                                RouletteModel(
-                                    gameId = localGameID,
-                                    players = gamePlayer,
-                                    gameStatus = GameStatus.INPROGRESS,
-                                    attempts = 0,
-                                    laps = 0,
-                                    currentBullet = 0,
-                                    winner = "",
-                                    score = scorePlayers,
-                                    nbrOfPlayers = gamePlayer.size,
-                                    aliveCount = gamePlayer.size,
-                                    luckyNumber = Random.nextInt(6) + 1,
-                                    currentPlayer = gamePlayer.keys.elementAt(
-                                        Random.nextInt(
-                                            gamePlayer.size
-                                        )
+                    handler.postDelayed({
+                        try {
+                            println("roulette vald")
+                            if (localCurrentPlayerTest == localPlayerID) {
+                                playersRef.get().addOnSuccessListener {
+                                    val snapshot = it
+                                    var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                                    var scorePlayers: MutableMap<String, Int> = mutableMapOf()
+                                    for (player in snapshot.children) {
+                                        Log.d("player", "${player}")
+                                        gamePlayer?.put(player.key.toString(), PlayerStatus.ALIVE)
+                                        scorePlayers?.put(player.key.toString(), 0)
+                                        Log.d("players", "${gamePlayer}")
+                                    }
+                                    Log.d(
+                                        "currentPlayer",
+                                        "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
                                     )
-                                ), localGameID
 
-                            )
+                                    Log.d("game ID", "${localGameID}")
 
+                                    RouletteData.saveGameModel(
+                                        RouletteModel(
+                                            gameId = localGameID,
+                                            players = gamePlayer,
+                                            gameStatus = GameStatus.INPROGRESS,
+                                            attempts = 0,
+                                            laps = 0,
+                                            currentBullet = 0,
+                                            winner = "",
+                                            score = scorePlayers,
+                                            nbrOfPlayers = gamePlayer.size,
+                                            aliveCount = gamePlayer.size,
+                                            luckyNumber = Random.nextInt(6) + 1,
+                                            currentPlayer = gamePlayer.keys.elementAt(
+                                                Random.nextInt(
+                                                    gamePlayer.size
+                                                )
+                                            )
+                                        ), localGameID
+
+                                    )
+
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    }
-                    view?.findNavController()
-                        ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteFragment)
+                    }, 3000)
                 }
             }
         } catch (e: Exception) {

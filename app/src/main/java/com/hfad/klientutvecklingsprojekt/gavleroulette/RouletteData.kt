@@ -46,4 +46,10 @@ object RouletteData {
         }
 
     }
+
+    fun removeListner(){
+        rouletteModel.value?.apply {
+             myRef.child(gameId?:"").removeEventListener(rouletteListener)
+        }
+    }
 }

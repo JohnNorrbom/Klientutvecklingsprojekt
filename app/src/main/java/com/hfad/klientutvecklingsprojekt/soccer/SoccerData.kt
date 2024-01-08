@@ -19,11 +19,18 @@ object SoccerData {
     var soccerModel : MutableLiveData<SoccerModel?> = _soccerModel
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     val myRef = database.getReference("Soccer")
+    /**
+     * Saves the SoccerModel to the Firebase Realtime Database.
+     * @param model: The SoccerModel to be saved
+     */
     fun saveSoccerModel(model: SoccerModel){
         _soccerModel.postValue(model)
         myRef.child(model.gameID?:"").setValue(model)
     }
-
+    /**
+     * Fetches the SoccerModel from the Firebase Realtime Database.
+     * Listens for changes and updates the LiveData soccerModel accordingly.
+     */
     fun fetchSoccerModel(){
         soccerModel.value?.apply {
             myRef.addValueEventListener(soccerListener)
@@ -42,8 +49,4 @@ object SoccerData {
             TODO("Not yet implemented")
         }
     }
-    fun updateSoccerData(model: SoccerModel){
-        SoccerData.saveSoccerModel(model)
-    }
-
 }

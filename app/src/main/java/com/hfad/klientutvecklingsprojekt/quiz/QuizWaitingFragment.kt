@@ -20,6 +20,14 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentQuizWaitingBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 
+
+/** @author Pontus Lindholm : lindholmpontus@outlook.com
+ * Denna klass är väldigt liten och är som en kort "waiting screen" innan man slussas in till quizet.
+ * Tanken är att låta användaren förbereda sig, säkerställa att ett seed genererats (som används för att slumpa frågor)
+ * samt att det ska se coolt ut.
+ *
+ */
+
 class QuizWaitingFragment : Fragment() {
     private var _binding: FragmentQuizWaitingBinding? = null
     private val binding get() = _binding!!
@@ -37,6 +45,7 @@ class QuizWaitingFragment : Fragment() {
     ): View? {
         _binding = FragmentQuizWaitingBinding.inflate(inflater, container, false)
         val view = binding.root
+        //Laddar cool animation.
         var loadingAnimation = binding.loadingSymbol.drawable as AnimationDrawable
         loadingAnimation.start()
 
@@ -50,13 +59,14 @@ class QuizWaitingFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
-
+        //Väntar fem sekunder innan quizet startar
         handler.postDelayed({
             startGame()
         }, 5000)
         return view
     }
 
+    //Startar quizet
     fun startGame(){
         myRef.child(localGameID).get().addOnSuccessListener {
 

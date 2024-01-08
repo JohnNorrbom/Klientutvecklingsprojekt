@@ -1,14 +1,18 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
-import com.hfad.klientutvecklingsprojekt.gamestart.GameModel
+
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * syfte är att spara till lokala modellen
+ */
 
 object StenSaxPaseData {
     private var _sspModel : MutableLiveData<StenSaxPaseModel?> = MutableLiveData()

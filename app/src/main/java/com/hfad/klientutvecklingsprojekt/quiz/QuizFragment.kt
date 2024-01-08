@@ -39,7 +39,12 @@ import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
 import java.util.Random
-
+/**
+ * @author Pontus Lindholm : lindholmpontus@outlook.com
+ * Detta klass motsvarar minigamet som kör quizet. XML Filen består av en fråge text och fyra alternativ
+ * som sedan ändras beroende på vilken fråga som läses in från JSON fil. Frågorna är alltid samma för alla spelare
+ * i sammma GameID då seeden som genererar frågorna är samma för alla i samma lobby.
+ */
 
 class QuizFragment : Fragment() {
 
@@ -60,6 +65,7 @@ class QuizFragment : Fragment() {
     private val myRef = database.getReference("Quiz")
     var totalPlayersCount: Int = 0
     private var mediaPlayer: MediaPlayer? = null
+
 
 
     override fun onCreateView(
@@ -84,29 +90,30 @@ class QuizFragment : Fragment() {
         // Anropa metoden för att hämta seed och ladda frågor
         fetchQuizSeed()
 
-
+        //Skapa lyssnare för de fyra alternativen. När en knapp körs kollar man att de är rätt svar.
             binding.option1Button.setOnClickListener {
                 checkAnswer(binding.option1Button.text.toString(), binding.option1Button)
             }
-            //  TOP RIGHT BUTTON
+
             binding.option2Button.setOnClickListener {
                 checkAnswer(binding.option2Button.text.toString(), binding.option2Button)
             }
-            //  BOTTOM LEFT BUTTON
+
             binding.option3Button.setOnClickListener {
                 checkAnswer(binding.option3Button.text.toString(), binding.option3Button)
             }
-            // BOTTOM RIGHT BUTTON
+
             binding.option4Button.setOnClickListener {
                 checkAnswer(binding.option4Button.text.toString(), binding.option4Button)
             }
 
-            // Hitta referensen till textvyen för poäng
+            // Skapa referens till texten som visar ens poäng.
             scoreTextView = binding.scoreTextView
+        //Starta musik
         mediaPlayer = MediaPlayer.create(
             requireContext(), R.raw.android_song5_long_140bpm
         )
-        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.isLooping = true
         mediaPlayer?.start()
 
         return view
@@ -116,12 +123,13 @@ class QuizFragment : Fragment() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+    //Personen som slår tärningen och gör att detta minigame startar genererar ett seed och det hämtas nu.
     private fun fetchQuizSeed() = CoroutineScope(Dispatchers.IO).launch {
         try {
             val seedRef = myRef.child(currentGameID).child("seed")
             val dataSnapshot = seedRef.get().await()
             if (dataSnapshot.exists()) {
-                val seed = dataSnapshot.getValue(Int::class.java)
+                val seed = dataSnapshot.getValue(Int::class.java) //Seed hämtas från Firebase
                 seed?.let {
                     withContext(Dispatchers.Main) {
                         loadQuestions(it)
@@ -134,21 +142,23 @@ class QuizFragment : Fragment() {
     }
     private fun loadQuestions(seed: Int) {
         try {
-            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
-            val allQuestions = JSONArray(jsonQuestions)
-            questions = JSONArray(selectRandomQuestions(allQuestions, 10, seed.toLong()).toString())
-            displayQuestion()
+            val jsonQuestions = loadJsonFromRawResource(R.raw.questions) //Hämtar JSON Filen
+            val allQuestions = JSONArray(jsonQuestions) //SPARAR ALLA FRÅGOR I EN ARRAY
+            questions = JSONArray(selectRandomQuestions(allQuestions, 10, seed.toLong()).toString()) //Slumpar 10 frågor
+            displayQuestion() //Visar första frågan
         } catch (e: JSONException) {
             e.printStackTrace()
         }
     }
 
+    //Hämtar gameID och playerID
     fun setText() {
         currentGameID = meModel?.gameID ?: ""
         currentPlayerID = meModel?.playerID ?: ""
         Log.d("QuizFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
 
+    //Laddar in JSON filen som ligger under res/raw/questions.json
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null
         try {
@@ -169,7 +179,7 @@ class QuizFragment : Fragment() {
         return json ?: ""
 
     }
-
+//Ersätter texten i frågevyn och alternativen med de som finns i JSON filen.
     private fun displayQuestion() {
         resetButtonColors()
         if (currentQuestionIndex < questions.length()) {
@@ -205,6 +215,7 @@ class QuizFragment : Fragment() {
 
     }
 
+    //När man valt svar på en fråga resettas de
     private fun resetButtonColors() {
         binding.option1Button.apply {
             setBackgroundColor(Color.WHITE)
@@ -229,8 +240,8 @@ class QuizFragment : Fragment() {
         }
     }
 
-    //
-//
+
+    //Kolla om svaret är rätt. Markera de rätta svaret grönt och om du svarar fel markera svaret rött
     private fun checkAnswer(selectedOption: String, selectedButton: View) {
         val correctAnswer = questions.getJSONObject(currentQuestionIndex).getString("correctAnswer")
 
@@ -315,6 +326,7 @@ class QuizFragment : Fragment() {
         countDownTimer?.cancel()
     }
 
+    //Denna fråga slumpar 10 frågor utifrån JSON arrayen som fanns tidigare.
     private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int, seed: Long): List<JSONObject> {
         val random = Random(seed)
         val totalQuestions = allQuestions.length()
@@ -345,6 +357,7 @@ class QuizFragment : Fragment() {
         initiateLeaderboardDisplay()
     }
 
+    //Håller koll ifall alla är klara med quiz. Isåfall visas leaderboard
     private fun initiateLeaderboardDisplay() {
         val playersCountRef = myRef.child(currentGameID).child("Players")
         playersCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -382,7 +395,7 @@ class QuizFragment : Fragment() {
     }
 
     data class PlayerScore(val nickname: String?, val score: Int)
-
+    //Visar leaderboard och sorterar så att den med högst poäng är längst upp
     private fun showLeaderboard() = CoroutineScope(Dispatchers.Main).launch {
         try {
             val scoresRef = myRef.child(currentGameID).child("Scores")
@@ -428,6 +441,7 @@ class QuizFragment : Fragment() {
         }
     }
 
+    //Öka spelarens poäng i databasen
     private fun increasePlayerScore(playerId: String, increment: Int) =
         CoroutineScope(Dispatchers.IO).launch {
             val scoreRef = database.getReference("Player Data")

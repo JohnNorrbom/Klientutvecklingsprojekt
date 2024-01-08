@@ -69,7 +69,7 @@ class TestBoardFragment : Fragment() {
     }
 
     //  minigame
-    private var localRandomVal = 0
+    private var localRandomVal = -1
 
     private var localCurrentPlayerTest = ""
 

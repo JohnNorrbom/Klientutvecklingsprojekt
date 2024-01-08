@@ -65,26 +65,34 @@ class StenSaxPaseWaitFragment : Fragment() {
     private val gameStartListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
             gameIDRef.child(localGameId).get().addOnSuccessListener { dataSnapshot ->
-                if(dataSnapshot.exists()){
-                    println("datasnapshot returned: $dataSnapshot")
-                    println("entering game with id: $localGameId")
-                    // här behöver vi skicka med 'playerID' och 'opponentID' som safearg argument
-                    // gör en call till databasen, och hämta dessa värden, när hämtning är klar..
-                    gameIDRef.child(localGameId).get().addOnSuccessListener {
-                        // skicka dem och låt användarna navigera vidare till sten sax pase mini-game
-                        var playerID = ""
-                        var opponentID = ""
+                try {
+                    if (dataSnapshot.exists()) {
+                        println("datasnapshot returned: $dataSnapshot")
+                        println("entering game with id: $localGameId")
+                        // här behöver vi skicka med 'playerID' och 'opponentID' som safearg argument
+                        // gör en call till databasen, och hämta dessa värden, när hämtning är klar..
+                        gameIDRef.child(localGameId).get().addOnSuccessListener {
+                            // skicka dem och låt användarna navigera vidare till sten sax pase mini-game
+                            var playerID = ""
+                            var opponentID = ""
 
-                        for(elem in it.children) {
-                            println(elem)
-                            playerID = elem.child("playerID").value.toString()
-                            opponentID = elem.child("opponentID").value.toString()
+                            for (elem in it.children) {
+                                println(elem)
+                                playerID = elem.child("playerID").value.toString()
+                                opponentID = elem.child("opponentID").value.toString()
+                            }
+
+                            println("wait fragment got playerID: $playerID and opponentID: $opponentID")
+                            val action =
+                                StenSaxPaseWaitFragmentDirections.actionStenSaxPaseWaitFragmentToStensaxpaseFragment(
+                                    playerID,
+                                    opponentID
+                                )
+                            view?.findNavController()?.navigate(action)
                         }
-
-                        println("wait fragment got playerID: $playerID and opponentID: $opponentID")
-                        val action = StenSaxPaseWaitFragmentDirections.actionStenSaxPaseWaitFragmentToStensaxpaseFragment(playerID,opponentID)
-                        view?.findNavController()?.navigate(action)
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }

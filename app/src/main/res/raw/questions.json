@@ -525,5 +525,10 @@
     "question": "In what country would you find Mount Kilimanjaro??",
     "options": ["Thailand", "Switzerland", "Tanzania", "Norway"],
     "correctAnswer": "Tanzania"
+  },
+  {
+    "question": "How many dots appear on a pair of dice?",
+    "options": ["36", "62", "54", "42"],
+    "correctAnswer": "42"
   }
 ]

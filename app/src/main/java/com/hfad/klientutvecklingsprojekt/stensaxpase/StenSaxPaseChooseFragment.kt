@@ -157,9 +157,13 @@ class StenSaxPaseChooseFragment : Fragment() {
     }
 
     fun createStenSaxPaseGame(playerID:String,opponentID:String,view:ConstraintLayout) {
-        println("__$playerID and __$opponentID")
-        val action = StenSaxPaseChooseFragmentDirections.actionStenSaxPaseChooseFragmentToStensaxpaseFragment(playerID,opponentID)
-        view?.findNavController()?.navigate(action)
+        try {
+            println("__$playerID and __$opponentID")
+            val action = StenSaxPaseChooseFragmentDirections.actionStenSaxPaseChooseFragmentToStensaxpaseFragment(playerID, opponentID)
+            view?.findNavController()?.navigate(action)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
     /*
     override fun onDestroyView() {

@@ -37,12 +37,6 @@ class WaitingSoccerFragment : Fragment() {
     //gameId
     private var localGameId: String = ""
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,7 +51,6 @@ class WaitingSoccerFragment : Fragment() {
             meModel?.let {
                 this@WaitingSoccerFragment.meModel = it
                 getGameId()
-                joinSoccerGame()
 
             } ?: run {
                 Log.e("LobbyFragment", "meModel is null")
@@ -84,16 +77,7 @@ class WaitingSoccerFragment : Fragment() {
                     view?.findNavController()?.navigate(R.id.action_waitingSoccerFragment_to_soccerFragment)
                 }
             }
-        }
-
-        override fun onCancelled(error: DatabaseError) {
+        }override fun onCancelled(error: DatabaseError) {
         }
     }
-
-    fun joinSoccerGame(){
-
-
-
-    }
-
 }

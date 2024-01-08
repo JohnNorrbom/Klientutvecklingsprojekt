@@ -139,61 +139,6 @@ class TestBoardFragment : Fragment() {
                 .addOnSuccessListener { dataSnapshot ->
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
                 }
-/*
-            val boardMiniGameRef = boardRef.child(localGameID).child("randomVal")
-            boardMiniGameRef.addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    println(dataSnapshot.getValue())
-                    try {
-                        if (dataSnapshot.exists() && localCurrentPlayerTest != playerID) {
-                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-                            if (miniGameNmbr == 0) {
-                                println("sten sax pase vald")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
-                                if (localCurrentPlayerTest == localPlayerID) {
-                                    view?.findNavController()
-                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                                } else {
-                                    view?.findNavController()
-                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
-                                }
-                            } else if (miniGameNmbr == 1) {
-                                println("soccer vald")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
-                            } else if (miniGameNmbr == 2) {
-                                println("quiz vald")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_quizFragment)
-                            } else if (miniGameNmbr == 3) {
-                                println("roulette vald")
-                                Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
-                                Log.d("localPlayerID", "${localPlayerID}")
-                                activity?.requestedOrientation =
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
-
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Failed to read value
-                    Log.w("YourTag", "Failed to read board data.", databaseError.toException())
-                }
-            })
-
- */
         }
     }
 
@@ -208,6 +153,7 @@ class TestBoardFragment : Fragment() {
             "N/A" // Provide a default value or handle the empty list scenario
         }
     }
+
     private fun updateLeaderboard(nickname: String, number: Int) {
         // Sorterar leaderboarden
         // Extracting values from playerSnapshot
@@ -221,12 +167,17 @@ class TestBoardFragment : Fragment() {
 
             if (existingIndex != -1) {
                 // If the nickname already exists, update the score
-                    leaderboardList[existingIndex] = nickname to number
+                leaderboardList[existingIndex] = nickname to number
             } else {
                 // Add the new pair to the list
                 leaderboardList.add(nickname to number)
             }
-            Log.d("score", "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${getLeaderText(3)}, ${getLeaderText(4)}")
+            Log.d(
+                "score",
+                "leaderboard: ${getLeaderText(0)}, ${getLeaderText(1)}, ${getLeaderText(2)}, ${
+                    getLeaderText(3)
+                }, ${getLeaderText(4)}"
+            )
         }
         // Sort the list based on the 'number1' values in descending order
         leaderboardList.sortByDescending { it.second }
@@ -252,6 +203,7 @@ class TestBoardFragment : Fragment() {
             }
         }
     }
+
     private fun paintPlayers() {
 
         myRef.child(localGameID).child("players").get().addOnSuccessListener { dataSnapshot ->
@@ -327,6 +279,8 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
+//            var randomInt = 10
+
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -335,7 +289,16 @@ class TestBoardFragment : Fragment() {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
-
+            if (currentImageViewIndex % 20 == 0) {
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
+            }
             if (currentImageViewIndex % 20 == 1 || currentImageViewIndex % 20 == 6 || currentImageViewIndex % 20 == 11 || currentImageViewIndex % 20 == 15) {
                 localScore += 1
                 soundPool.load(context, R.raw.dice_sound, 5)
@@ -464,16 +427,18 @@ class TestBoardFragment : Fragment() {
             } else if (randomVal == 2) {
                 println("QUIZ GAME PONTUS")
                 if (isAdded && view != null) {
-                    database.getReference().child("Quiz").child(localGameID).child("seed").setValue(Random.nextInt(1000))
-                    view.findNavController().navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
+                    database.getReference().child("Quiz").child(localGameID).child("seed")
+                        .setValue(Random.nextInt(1000))
+                    view.findNavController()
+                        .navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
 
                 }
             } else if (randomVal == 3) {
                 println("ROULETTE WILLIAM")
                 if (isAdded && view != null) {
                     println("roulette vald")
-                        if(localCurrentPlayerTest == localPlayerID) {
-                            playersRef.get().addOnSuccessListener {
+                    if (localCurrentPlayerTest == localPlayerID) {
+                        playersRef.get().addOnSuccessListener {
                             val snapshot = it
                             var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
                             var scorePlayers: MutableMap<String, Int> = mutableMapOf()
@@ -483,7 +448,6 @@ class TestBoardFragment : Fragment() {
                                 scorePlayers?.put(player.key.toString(), 0)
                                 Log.d("players", "${gamePlayer}")
                             }
-
                             Log.d(
                                 "currentPlayer",
                                 "${gamePlayer.keys.elementAt(Random.nextInt(gamePlayer.size))}"
@@ -498,6 +462,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
+                                    currentBullet = 0,
                                     winner = "",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
@@ -507,8 +472,7 @@ class TestBoardFragment : Fragment() {
                                         Random.nextInt(
                                             gamePlayer.size
                                         )
-                                    ),
-                                    scoreUpploaded = false
+                                    )
                                 ), localGameID
 
                             )
@@ -558,49 +522,50 @@ class TestBoardFragment : Fragment() {
 
     private val gameStatusListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            boardRef.child(localGameID).child("randomVal").get().addOnSuccessListener { dataSnapshot ->
-                try {
-                    if (dataSnapshot.exists() && localCurrentPlayerTest != localPlayerID) {
-                        val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
-                        if (miniGameNmbr == 0) {
-                            println("sten sax pase vald")
-                            activity?.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
-                            if (localCurrentPlayerTest == localPlayerID) {
+            boardRef.child(localGameID).child("randomVal").get()
+                .addOnSuccessListener { dataSnapshot ->
+                    try {
+                        if (dataSnapshot.exists() && localCurrentPlayerTest != localPlayerID) {
+                            val miniGameNmbr = dataSnapshot.getValue().toString().toInt()
+                            if (miniGameNmbr == 0) {
+                                println("sten sax pase vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                println("currentPlayer: $localCurrentPlayerTest , localPlayerID: $localPlayerID")
+                                if (localCurrentPlayerTest == localPlayerID) {
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
+                                } else {
+                                    view?.findNavController()
+                                        ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
+                                }
+                            } else if (miniGameNmbr == 1) {
+                                println("soccer vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseChooseFragment)
-                            } else {
+                                    ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
+                            } else if (miniGameNmbr == 2) {
+                                println("quiz vald")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                                 view?.findNavController()
-                                    ?.navigate(R.id.action_testBoardFragment_to_stenSaxPaseWaitFragment)
-                            }
-                        } else if (miniGameNmbr == 1) {
-                            println("soccer vald")
-                            activity?.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            view?.findNavController()
-                                ?.navigate(R.id.action_testBoardFragment_to_waitingSoccerFragment)
-                        } else if (miniGameNmbr == 2) {
-                            println("quiz vald")
-                            activity?.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            view?.findNavController()
-                                ?.navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
-                        } else if (miniGameNmbr == 3) {
-                            println("roulette vald")
-                            Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
-                            Log.d("localPlayerID", "${localPlayerID}")
-                            activity?.requestedOrientation =
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            view?.findNavController()
-                                ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
+                                    ?.navigate(R.id.action_testBoardFragment_to_quizWaitingFragment)
+                            } else if (miniGameNmbr == 3) {
+                                println("roulette vald")
+                                Log.d("localCurrentPlayerTest", "${localCurrentPlayerTest}")
+                                Log.d("localPlayerID", "${localPlayerID}")
+                                activity?.requestedOrientation =
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                view?.findNavController()
+                                    ?.navigate(R.id.action_testBoardFragment_to_gavleRouletteWaitFragment)
 
+                            }
                         }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
-            }
         }
 
         override fun onCancelled(error: DatabaseError) {

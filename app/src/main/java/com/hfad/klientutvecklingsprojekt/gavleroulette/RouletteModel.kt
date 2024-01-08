@@ -16,7 +16,6 @@ data class RouletteModel (
     var aliveCount : Int ? = null,
     val luckyNumber : Int? = null,
     var currentBullet : Int ? = null,
-    var scoreUpploaded : Boolean ? = null
     )
 
 enum class GameStatus{

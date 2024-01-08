@@ -56,6 +56,7 @@ class TestBoardFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var view: ConstraintLayout
     private var handler = Handler()
+
     //  DATABASE
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -79,6 +80,7 @@ class TestBoardFragment : Fragment() {
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+
     // Misc sounds
     private val maxStreams = 5 // Number of simultaneous sounds
     private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -89,6 +91,7 @@ class TestBoardFragment : Fragment() {
 
     // bestämmer minigame
     private var localRandomVal = -1
+
     // håller koll på vems tur det är
     private var localCurrentPlayerTest = ""
 
@@ -143,7 +146,6 @@ class TestBoardFragment : Fragment() {
     private fun setText() {
 
 
-
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
@@ -164,6 +166,15 @@ class TestBoardFragment : Fragment() {
                 }
         }
     }
+    private fun updateScore() {
+        playersRef.child(localPlayerID).get()
+            .addOnSuccessListener { dataSnapshot ->
+                this.localScore += dataSnapshot.child("score").value.toString().toInt()
+                playersRef.child(localPlayerID).child("score").setValue(this.localScore)
+                this.localScore = 0
+            }
+    }
+
     // returnerar spelaren och dess poäng som en sträng
     fun getLeaderText(index: Int): String {
         return if (index in 0 until leaderboardList.size) {
@@ -172,6 +183,7 @@ class TestBoardFragment : Fragment() {
             "N/A" // Värde för tom plats i leaderboarden
         }
     }
+
     private fun updateLeaderboard(nickname: String, number: Int) {
         if (leaderboardList.isEmpty()) {
             // lägger till första paret i listan
@@ -197,6 +209,7 @@ class TestBoardFragment : Fragment() {
         }
         // Sorterar leaderboarden
         leaderboardList.sortByDescending { it.second }
+        // Sätter text på leaderboarden
         binding.textViewLeader1.text = getLeaderText(0)
         binding.textViewLeader2.text = getLeaderText(1)
         binding.textViewLeader3.text = getLeaderText(2)
@@ -241,13 +254,11 @@ class TestBoardFragment : Fragment() {
 
                 val nickname = playerSnapshot.child("nickname").value.toString()
                 val number = playerSnapshot.child("score").value.toString().toInt()
-                localScore = number
                 Log.d("score", "testing: $number")
                 updateLeaderboard(nickname, number)
                 imageView?.let { view ->
                     //make player imageView visible
                     view.visibility = View.VISIBLE
-
                     //take player imageView same pos as corresponding tile
                     val tileId = position % 20 + 1
                     val tileName = "tile$tileId"
@@ -290,7 +301,6 @@ class TestBoardFragment : Fragment() {
     }
 
     fun diceButton() {
-
         //  DICE BUTTON
         val dice = binding.diceButton
         //  DICE BUTTON LISTENER
@@ -393,7 +403,7 @@ class TestBoardFragment : Fragment() {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
                 println("Uppdaterar databasen med följande poäng:" + localScore)
-                playersRef.child(localPlayerID).child("score").setValue(localScore)
+                updateScore()
             }
             paintPlayers()
             assignNextCurrentPlayer()
@@ -460,7 +470,8 @@ class TestBoardFragment : Fragment() {
                             if (localCurrentPlayerTest == localPlayerID) {
                                 playersRef.get().addOnSuccessListener {
                                     val snapshot = it
-                                    var gamePlayer: MutableMap<String, PlayerStatus> = mutableMapOf()
+                                    var gamePlayer: MutableMap<String, PlayerStatus> =
+                                        mutableMapOf()
                                     var scorePlayers: MutableMap<String, Int> = mutableMapOf()
                                     for (player in snapshot.children) {
                                         Log.d("player", "${player}")

@@ -368,7 +368,7 @@ class TestBoardFragment : Fragment() {
                 }
                 //minigame
                 //  Pick random game
-                localRandomVal = -1
+                localRandomVal = 0
                     //Random.nextInt(3)
 
                 //laddauppminigamesiffra,

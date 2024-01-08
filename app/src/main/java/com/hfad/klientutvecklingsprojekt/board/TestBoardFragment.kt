@@ -69,7 +69,7 @@ class TestBoardFragment : Fragment() {
     }
 
     //  minigame
-    private var localRandomVal = -1
+    private var localRandomVal = 0
 
     private var localCurrentPlayerTest = ""
 
@@ -397,6 +397,7 @@ class TestBoardFragment : Fragment() {
         super.onResume()
         // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        setText()
     }
 
     private fun setMiniGame(randomVal: Int) {

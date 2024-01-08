@@ -362,8 +362,7 @@ class TestBoardFragment : Fragment() {
                 }
                 //minigame
                 //  Pick random game
-                localRandomVal = 0
-                    //Random.nextInt(3)
+                localRandomVal = Random.nextInt(4)
 
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
@@ -397,7 +396,6 @@ class TestBoardFragment : Fragment() {
         super.onResume()
         // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        paintPlayers()
     }
 
     private fun setMiniGame(randomVal: Int) {

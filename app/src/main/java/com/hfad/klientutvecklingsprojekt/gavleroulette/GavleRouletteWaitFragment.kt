@@ -59,15 +59,10 @@ class GavleRouletteWaitFragment : Fragment() {
             }
         }
 
-        binding.startGame.setOnClickListener{
+        handler.postDelayed({
             startGame()
-        }
+        }, 5000)
         return view
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        handler.postDelayed({binding.startGame.visibility = View.VISIBLE},2500)
-        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun onDestroy() {
@@ -80,8 +75,12 @@ class GavleRouletteWaitFragment : Fragment() {
         myRef.child(localGameID).get().addOnSuccessListener {
             val model = it.getValue(RouletteModel::class.java)
             if (model != null){
-                RouletteData.saveGameModel(model,localGameID)
-                view?.findNavController()?.navigate(R.id.action_gavleRouletteWaitFragment_to_gavleRouletteFragment)
+                try {
+                    RouletteData.saveGameModel(model,localGameID)
+                    view?.findNavController()?.navigate(R.id.action_gavleRouletteWaitFragment_to_gavleRouletteFragment)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }

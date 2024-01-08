@@ -6,14 +6,10 @@
   },
   {
     "question": "What is Vantablack?",
-    "options": ["An extremely black color", "A new type of battery", "An exoplanet", "A dish"],
+    "options": ["A new type of battery", "An exoplanet", "An extremely black color","A dish"],
     "correctAnswer": "An extremely black color"
   },
-  {
-    "question": "What is Heisenberg's uncertainty principle?",
-    "options": ["The ability to predict a particle's position and motion simultaneously", "The law of conservation of energy", "A cooking concept", "Theory of relativity"],
-    "correctAnswer": "The ability to predict a particle's position and motion simultaneously"
-  },
+
   {
     "question": "The album 'Abbey Road' by The Beatles opens with which track?",
     "options": ["Something", "Come Together", "Here Comes the Sun", "Hey Jude"],
@@ -23,11 +19,6 @@
     "question": "Who formulated E=mc²?",
     "options": ["Niels Bohr", "Max Planck", "Albert Einstein", "Werner Heisenberg"],
     "correctAnswer": "Albert Einstein"
-  },
-  {
-    "question": "What is the Turing test?",
-    "options": ["A method to determine artificial intelligence", "A test of physical strength", "A music competition", "A cooking competition"],
-    "correctAnswer": "A method to determine artificial intelligence"
   },
   {
     "question": "What is the world's largest island?",
@@ -40,7 +31,7 @@
     "correctAnswer": "Fusion"
   },
   {
-    "question": "Which planet is sometimes called the 'Evening Star' or 'Morning Star'?",
+    "question": "Which planet is sometimes called the Evening Star?",
     "options": ["Mars", "Venus", "Jupiter", "Saturn"],
     "correctAnswer": "Venus"
   },
@@ -70,16 +61,6 @@
     "correctAnswer": "3.141"
   },
   {
-    "question": "What is the time it takes for the Earth to rotate once on its axis called?",
-    "options": ["Day", "Week", "Month", "Year"],
-    "correctAnswer": "Day"
-  },
-  {
-    "question": "What is the Hubble Space Telescope?",
-    "options": ["A satellite", "A car model", "A space station", "A telescope"],
-    "correctAnswer": "A telescope"
-  },
-  {
     "question": "What is quantum mechanics?",
     "options": ["The study of small particles", "The study of large galaxies", "The study of ecosystems", "The study of the universe itself"],
     "correctAnswer": "The study of small particles"
@@ -100,29 +81,9 @@
     "correctAnswer": "A shape with seven sides"
   },
   {
-    "question": "Which element has the chemical symbol 'O'?",
-    "options": ["Oxygen", "Carbon", "Gold", "Sodium"],
-    "correctAnswer": "Oxygen"
-  },
-  {
     "question": "What is the acceleration due to gravity on Earth?",
     "options": ["9.8 m/s²", "5.0 m/s²", "12.3 m/s²", "7.2 m/s²"],
     "correctAnswer": "9.8 m/s²"
-  },
-  {
-    "question": "Who discovered penicillin?",
-    "options": ["Alexander Fleming", "Marie Curie", "Louis Pasteur", "Jonas Salk"],
-    "correctAnswer": "Alexander Fleming"
-  },
-  {
-    "question": "Which is the world's largest desert?",
-    "options": ["Sahara Desert", "Antarctica", "Gobi Desert", "Karakum Desert"],
-    "correctAnswer": "Antarctica"
-  },
-  {
-    "question": "What is the ratio of a circle's circumference to its diameter known as?",
-    "options": ["Pi (π)", "Epsilon (ε)", "Theta (θ)", "Sigma (σ)"],
-    "correctAnswer": "Pi (π)"
   },
   {
     "question": "What is chlorophyll?",
@@ -150,7 +111,7 @@
     "correctAnswer": "A particle"
   },
   {
-    "question": "Who wrote 'Romeo and Juliet'?",
+    "question": "Who wrote Romeo and Juliet?",
     "options": ["Charles Dickens", "Jane Austen", "William Shakespeare", "Leo Tolstoy"],
     "correctAnswer": "William Shakespeare"
   },
@@ -180,7 +141,7 @@
     "correctAnswer": "Tokyo"
   },
   {
-    "question": "Which country is known as the 'Land of the Rising Sun'?",
+    "question": "Which country is known as the Land of the Rising Sun?",
     "options": ["Spain", "Italy", "Greece", "Japan"],
     "correctAnswer": "Japan"
   },
@@ -265,7 +226,7 @@
     "correctAnswer": "Nitrogen"
   },
   {
-    "question": "Who wrote 'To Kill a Mockingbird'?",
+    "question": "Who wrote To Kill a Mockingbird?",
     "options": ["F. Scott Fitzgerald", "J.K. Rowling", "Harper Lee", "Ernest Hemingway"],
     "correctAnswer": "Harper Lee"
   },
@@ -298,11 +259,6 @@
     "question": "What is the speed of light in a vacuum?",
     "options": ["300,000 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s"],
     "correctAnswer": "300,000 km/s"
-  },
-  {
-    "question": "Which planet is known as the 'Morning Star'?",
-    "options": ["Mars", "Venus", "Jupiter", "Mercury"],
-    "correctAnswer": "Venus"
   },
   {
     "question": "Who discovered penicillin?",
@@ -345,7 +301,7 @@
     "correctAnswer": "Brasília"
   },
   {
-    "question": "Who wrote '1984'?",
+    "question": "Who wrote the book 1984?",
     "options": ["Aldous Huxley", "George Orwell", "Ray Bradbury", "H.G. Wells"],
     "correctAnswer": "George Orwell"
   },
@@ -416,17 +372,17 @@
       "correctAnswer": "Robert Plant"
     },
     {
-      "question": "In which year did Michael Jackson release his album 'Thriller'?",
+      "question": "In which year did Michael Jackson release his album Thriller?",
       "options": ["1982", "1984", "1986", "1988"],
       "correctAnswer": "1982"
     },
     {
-      "question": "Who is often credited as the 'Godfather of Soul'?",
+      "question": "Who is often credited as the Godfather of Soul?",
       "options": ["Ray Charles", "Marvin Gaye", "James Brown", "Otis Redding"],
       "correctAnswer": "James Brown"
     },
     {
-      "question": "Which rock band released the album 'Dark Side of the Moon'?",
+      "question": "Which rock band released the album Dark Side of the Moon?",
       "options": ["The Rolling Stones", "The Who", "Pink Floyd", "The Eagles"],
       "correctAnswer": "Pink Floyd"
     },
@@ -436,7 +392,7 @@
       "correctAnswer": "Guns N' Roses"
     },
     {
-      "question": "Who is often called the 'Queen of Pop'?",
+      "question": "Who is often called the Queen of Pop?",
       "options": ["Whitney Houston", "Madonna", "Celine Dion", "Beyoncé"],
       "correctAnswer": "Madonna"
     },
@@ -451,7 +407,7 @@
       "correctAnswer": "1977"
     },
   {
-    "question": "The incredible album 'Are You Experienced' by Jimi Hendrix opens with which track?",
+    "question": "The incredible album Are You Experienced by Jimi Hendrix opens with which track?",
     "options": ["All Along the Watchtower", "Little Wing", "Purple Haze", "Hey Joe"],
     "correctAnswer": "Purple Haze"
   },
@@ -564,5 +520,10 @@
     "question": "Who severed Anakin Skywalker's arm with his light sabre?",
     "options": ["Darth Maul", "General Grievous", "Count Dooku", "Palpatine"],
     "correctAnswer": "Count Dooku"
+  },
+  {
+    "question": "In what country would you find Mount Kilimanjaro??",
+    "options": ["Thailand", "Switzerland", "Tanzania", "Norway"],
+    "correctAnswer": "Tanzania"
   }
 ]

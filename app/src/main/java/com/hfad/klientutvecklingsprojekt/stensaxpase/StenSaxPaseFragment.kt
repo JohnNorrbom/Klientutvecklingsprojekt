@@ -98,16 +98,16 @@ class StenSaxPaseFragment : Fragment() {
             sten.isClickable = false
             setChoice("rock", currentPlayerID)
         }
-        pase.setOnClickListener {
-            sten.visibility = View.INVISIBLE
-            sax.visibility = View.INVISIBLE
-            pase.isClickable = false
-            setChoice("scissors", currentPlayerID)
-        }
         sax.setOnClickListener {
             sten.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
             sax.isClickable = false
+            setChoice("scissors", currentPlayerID)
+        }
+        pase.setOnClickListener {
+            sten.visibility = View.INVISIBLE
+            sax.visibility = View.INVISIBLE
+            pase.isClickable = false
             setChoice("paper", currentPlayerID)
         }
 
@@ -299,9 +299,9 @@ class StenSaxPaseFragment : Fragment() {
         println("$player1choice mot $player2choice")
         if(player1choice != "null" && player2choice != "null") {
             if(player1choice == player2choice) outcome = "even"
-            else if(player1choice == "sten" && player2choice == "sax") outcome = playerID!!
-            else if(player1choice == "sax" && player2choice == "pase") outcome = playerID!!
-            else if(player1choice == "pase" && player2choice == "sten") outcome = playerID!!
+            else if(player1choice == "rock" && player2choice == "scissors") outcome = playerID!!
+            else if(player1choice == "scissors" && player2choice == "paper") outcome = playerID!!
+            else if(player1choice == "paper" && player2choice == "rock") outcome = playerID!!
             else outcome = opponentID!!
         }
         println("-outcome: $outcome")

@@ -65,7 +65,7 @@
 
     <Button
         android:id="@+id/pase"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="Paper"
         app:layout_constraintEnd_toStartOf="@+id/sax"
@@ -74,7 +74,7 @@
 
     <Button
         android:id="@+id/sax"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="Scissors"
         app:layout_constraintEnd_toEndOf="parent"
@@ -83,9 +83,8 @@
 
     <Button
         android:id="@+id/sten"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="37dp"
         android:text="Rock"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/pase"

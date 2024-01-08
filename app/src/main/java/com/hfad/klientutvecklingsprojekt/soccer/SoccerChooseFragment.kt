@@ -23,7 +23,10 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
-
+/**
+ * A fragment that allows users to choose a player to challange in the soccer minigame
+ * It handles team color selection and game initiation.
+ */
 class SoccerChooseFragment : Fragment() {
 
     private var mediaPlayer: MediaPlayer? = null
@@ -31,33 +34,33 @@ class SoccerChooseFragment : Fragment() {
     private var _binding: FragmentSoccerChooseBinding? = null
     private val binding get() = _binding!!
 
-    //meModel
-    private var meModel: MeModel? = null//den här
+
+    private var meModel: MeModel? = null
 
     private val database =
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Player Data")
 
-    //Here you should get your color from meDataModel or boardModel
     private var yourColor: String = ""
     private var yourId: String = "-1"
 
-    //Here you should get the other colors from boardModel
+
     private var otherColors = arrayListOf("")
 
-    //id for other players
+
     private var otherIds = arrayListOf("-1")
 
-    //othermap is hashmap of otherids and othercolors
+
     private var otherMap = hashMapOf<String, String>()
 
-    //here you should get the id from boardModel
+
     private var gameId: String = Random.nextInt(1000..9999).toString()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
+    /**
+     * Fragment lifecycle method called to create the fragment's view hierarchy.
+     * Sets up UI elements and handles color selection logic.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,7 +72,6 @@ class SoccerChooseFragment : Fragment() {
         binding.astroGreen.visibility = View.GONE
         binding.astroRed.visibility = View.GONE
         binding.astroYellow.visibility = View.GONE
-//den här
         MeData.meModel.observe(this) { meModel ->
             meModel?.let {
                 this@SoccerChooseFragment.meModel = it
@@ -129,8 +131,11 @@ class SoccerChooseFragment : Fragment() {
 
         return view
     }
-
-    //TODO MÅSTE ÄNDRAS
+    /**
+     * Creates a soccer game instance with the selected color and game ID.
+     * @param p2Color The color chosen by the second player.
+     * @param gameId The ID of the soccer game.
+     */
     fun createSoccerGame(p2Color: String, gameId: String) {
         SoccerData.saveSoccerModel(
             SoccerModel(
@@ -147,7 +152,9 @@ class SoccerChooseFragment : Fragment() {
             )
         )
     }
-
+    /**
+     * Sets visibility for color selection buttons based on available colors.
+     */
     fun setColorButtonVisible() {
         for (color in otherColors) {
             if (color == "blue" && yourColor != "blue") {
@@ -167,7 +174,9 @@ class SoccerChooseFragment : Fragment() {
             }
         }
     }
-
+    /**
+     * Sets initial values required for the soccer game.
+     */
     fun setValues() {
         meModel?.apply {
             gameId = gameID ?: ""
@@ -175,9 +184,10 @@ class SoccerChooseFragment : Fragment() {
         }
     }
 
-    fun getYourData() {
-    }
-
+    /**
+     * Fetches colors chosen by other players.
+     * Updates UI to display available color options for selection.
+     */
     fun otherColors() {
         otherColors = arrayListOf()
         otherIds = arrayListOf()

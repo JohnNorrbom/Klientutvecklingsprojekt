@@ -1,7 +1,15 @@
 package com.hfad.klientutvecklingsprojekt.gavleroulette
 
 import com.google.firebase.database.IgnoreExtraProperties
-import kotlin.random.Random
+/**
+ *
+ * RouletteModel:
+ *
+ * Lokal model för roulette spelet
+ * Alltså all information som behövs för att kunnna spela
+ * @author William
+ *
+ */
 @IgnoreExtraProperties
 data class RouletteModel (
     var gameId : String? = null,

@@ -18,7 +18,15 @@ import com.hfad.klientutvecklingsprojekt.board.BoardModel
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGameStartBinding
 import kotlin.random.Random
 import kotlin.random.nextInt
-
+/**
+ *
+ * GameStartFragment:
+ *
+ * används för att skapa och gå med i online spel
+ *
+ * @author William
+ *
+ */
 class GameStartFragment : Fragment() {
     private var _binding: FragmentGameStartBinding? = null
     private val binding get()  = _binding!!
@@ -43,23 +51,7 @@ class GameStartFragment : Fragment() {
         }
         return view;
     }
-    //  THIS WILL NOT BE INCLUDED IN THE FINAL PRODUCT. FOCUS ON ONLINE PLEASE
-    fun createOfflinGame(){
-        GameData.saveGameModel(
-            GameModel(
-                gameID = "-1",
-                status = Progress.INPROGRESS,
-                takenPosition = mutableMapOf(
-                    "white" to CharacterStatus.FREE,
-                    "red" to CharacterStatus.FREE,
-                    "blue" to CharacterStatus.FREE,
-                    "green" to CharacterStatus.FREE,
-                    "yellow" to CharacterStatus.FREE
-                )
-            )
-        )
-        joinLobby()
-    }
+    //Skapar speldatan för hela spelet
     fun createOnlineGame(){
         var gameId = (Random.nextInt(1000..9999)).toString()
         GameData.saveGameModel(
@@ -85,7 +77,7 @@ class GameStartFragment : Fragment() {
         )
         joinLobby()
     }
-
+    //Går med i spel om spelet existerar
     fun joinOnlineGame() {
         var gameID = binding.gameIdInput.text.toString()
         //  Checks if the user wrote anything
@@ -94,19 +86,13 @@ class GameStartFragment : Fragment() {
             return
         }
         println("CHECKING DIFSN GAME ID " + gameID + " " + myRef.child(gameID).get().toString())
-        //  I guess we are talking with the database here?
         myRef.child(gameID).get().addOnSuccessListener {
             val model = it?.getValue(GameModel::class.java)
-            //  Checks if the server has that gameID
+            //  Ser om spelet existerar
             if (model == null) {
-                Log.d("Om null", "den är null")
                 binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
             } else {
-                //  Create array of colors to compare them with the colors in the lobby to see
-                //  which of them are are taken
-                val color = listOf("white", "red", "blue", "green", "yellow")
                 GameData.saveGameModel(model)
-                Log.d("Om success","model: ${model}")
                 model?.apply {
                     //  Should not check status, because that only check the current player not the
                     //  game/lobby.
@@ -121,7 +107,7 @@ class GameStartFragment : Fragment() {
             binding.gameIdInput.error = (getText(R.string.please_enter_valid_game_id))
         }
     }
-    //  Joins the lobby/Goes to PlayerInfoFragment/Character creation
+    //navigerar till skapandet av karaktärer
     fun joinLobby() {
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         view.findNavController().navigate(R.id.action_gameStartFragment_to_playerInfoFragment)

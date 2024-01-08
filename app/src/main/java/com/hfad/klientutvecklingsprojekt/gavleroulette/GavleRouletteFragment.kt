@@ -29,7 +29,15 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlinx.coroutines.delay
 import kotlin.math.log
 import kotlin.random.Random
-
+/**
+ *
+ * GavleRouletteFragment:
+ *
+ * Roulette spelet med olika funktioner för spelets logik
+ *
+ * @author William
+ *
+ */
 class GavleRouletteFragment : Fragment(){
     private var _binding: FragmentGavleRouletteBinding? = null
     private val binding get() = _binding!!
@@ -62,7 +70,6 @@ class GavleRouletteFragment : Fragment(){
 
 
         RouletteData.rouletteModel.observe(viewLifecycleOwner) { rouletteModel ->
-            Log.d("GavleRouletteFragment", "Observerar rouletteModel: $rouletteModel")
             rouletteModel?.let {
                 if (rouletteModel.gameId == null) {
                     Log.e("GavleRouletteFragment", "rouletteModel är null")
@@ -91,12 +98,11 @@ class GavleRouletteFragment : Fragment(){
         }
         super.onViewCreated(view, savedInstanceState)
     }
-
+    //Anrops via observeraren på rouletteModel har i syfte att anropa efter händelser i modelen
     fun doWhenObserv(){
         setUi()
         setPlayerInfo()
         if (rouletteModel?.gameStatus == GameStatus.FINISHED) {
-            Log.d("inne","inne")
             handler.postDelayed({
                 try {
                     RouletteData.removeListner()
@@ -115,25 +121,23 @@ class GavleRouletteFragment : Fragment(){
         mediaPlayer?.release()
         mediaPlayer = null
     }
-
+    //används för att hämta lokala spel och spelar id
     fun setText(){
-        //den här
         localGameID = meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
-        Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
     }
-
+    //Ändrar spelare interface beroende på vad olika variabler har för värde
     fun setUi() {
         handler.postDelayed({
+            //hämtar koppling till spelare från databasen för att få tag i nickname
             playerRef.child(localGameID).child("players").get().addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val snapshot = task.result
 
                     rouletteModel?.apply {
                         binding.gameStatusText.text = when (gameStatus) {
+                            //Händer när statusen är INPROGRESS
                             GameStatus.INPROGRESS -> {
-                                Log.d("localP", "${localPlayerID}")
-                                Log.d("currentP", "${currentPlayer}")
                                 val text = if (localPlayerID == currentPlayer) {
                                     "Your turn"
                                 } else {
@@ -144,6 +148,7 @@ class GavleRouletteFragment : Fragment(){
                                 text
                             }
 
+                            //Händer när statusen är FINISHED
                             GameStatus.FINISHED -> {
                                 val text = if (localPlayerID == winner) {
                                     "You won"
@@ -165,10 +170,10 @@ class GavleRouletteFragment : Fragment(){
         }, 500)
     }
 
+    //Anroppas när knappen för try your luck
     fun onTriggerPulled(){
         myRef.child(localGameID).child("currentPlayer").get().addOnSuccessListener {
-            Log.d("localPlayerID","${localPlayerID}")
-            Log.d("localPlayerID","${it.value}")
+            //kör om det lokala spelar id är lika med id för currentPlayer
             if(localPlayerID == it.value.toString()){
                 rouletteModel?.apply {
                     pullTheTrigger()
@@ -178,17 +183,19 @@ class GavleRouletteFragment : Fragment(){
                     updateGameData(this,localGameID)
                 }
             }else{
+                //annars ger den feedback att det inte är ens tur
                 Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                 return@addOnSuccessListener
             }
         }
     }
 
-    //sets the correct info for each player
+    //sätter gubbare och namn för spelare beronde på statusen i spelet
     fun setPlayerInfo() {
         rouletteModel?.apply {
-            val currentContext = context ?: return  // Null check for context
+            val currentContext = context ?: return
 
+            // Går igenom alla spelare och tar ut vad de har för namn och spelar färg
             playerRef.child(localGameID).child("players").get().addOnSuccessListener {
                 players?.onEachIndexed { index, entry ->
                     val snapshot = it
@@ -196,32 +203,30 @@ class GavleRouletteFragment : Fragment(){
                     val status = players?.get(playerId) ?: PlayerStatus.DEAD // Default to DEAD if status is not available
 
                     val resId = if (status == PlayerStatus.ALIVE) {
-                        Log.d("alive","${status}")
-                        // Alive player image
+                        // spelar bild om statusen är ALIVE
                         currentContext.resources.getIdentifier(
                             "astro_${snapshot.child(playerId).child("color").value.toString()}",
                             "drawable",
                             currentContext.packageName
                         )
                     } else {
-                        // Dead player image
-                        Log.d("dead","${status}")
+                        // spelar bild om statusen är DEAD
                         currentContext.resources.getIdentifier("sceleton", "drawable", currentContext.packageName)
                     }
 
-                    // Get id for ImageView
+                    // Hämtar id för rätt imageview
                     val astroId = currentContext.resources.getIdentifier(
                         "player_${index + 1}",
                         "id",
                         currentContext.packageName
                     )
 
-                    // Change ImageView
+                    // ändra bilde i korrekt ImageView
                     val characterImageView = binding.root.findViewById<ImageView>(astroId)
                     characterImageView.setImageResource(resId)
                     characterImageView.visibility = View.VISIBLE
 
-                    // Get id for radio button and make it visible
+                    // hämtar id för textview ändrar till rätt nickname och gör dem synlig
                     val textId = currentContext.resources.getIdentifier(
                         "player_${index + 1}_text",
                         "id",
@@ -235,15 +240,12 @@ class GavleRouletteFragment : Fragment(){
         }
     }
 
-    //adds a value to currentBullet and pluses on how many attempts and laps thier has been
+    //får en position på en kulla som man sen jämför med kula i vapnet
+    // håller även koll på hur många försök och varv som har gjorts då det är antalet varv som ger en poäng
     fun pullTheTrigger() {
         rouletteModel?.apply {
                 currentBullet = Random.nextInt(6) + 1
-                Log.d("currentBullet", "${currentBullet}")
-                Log.d("attempts", "${attempts}")
                 attempts = attempts?.plus(1)
-                Log.d("attempts", "${attempts}")
-                Log.d("nbrOfPlayers", "${this.nbrOfPlayers}")
                 if (attempts == aliveCount) {
                     attempts = 0
                     laps = laps?.plus(1)
@@ -252,51 +254,41 @@ class GavleRouletteFragment : Fragment(){
         }
     }
 
-//saves the model
+    //anropar funktionen i RouletteData som spara modellen lokalt och till datbasen
     fun updateGameData(model: RouletteModel,id : String) {
         RouletteData.saveGameModel(model,id)
     }
-    //Changes to the next player
+    //Ändra till nästa spelare som lever
     fun changePlayer() {
-                rouletteModel?.apply {
-                var currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
-                Log.d("player keys", "${players?.keys}")
-                Log.d("currentPlayerIndex", "${players?.keys?.indexOf(currentPlayer)}")
-                Log.d("currentPlayerIndex", "${currentPlayerIndex}")
+        rouletteModel?.apply {
+            //Hämtar indexet för spelare som har samma id som currentPlayer
+            var currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
 
-                if (currentPlayerIndex != -1) {
-                    var newIndex = (currentPlayerIndex + 1) % players?.size!!
-                    Log.d("newIndex", "${newIndex}")
+            if (currentPlayerIndex != -1) {
+                var newIndex = (currentPlayerIndex + 1) % players?.size!!
 
-                    // Find the next alive player
-                    while (players?.get(
-                            players?.keys?.elementAt(newIndex) ?: ""
-                        ) == PlayerStatus.DEAD
-                    ) {
-                        newIndex = (newIndex + 1) % players?.size!!
-
-                        // Kontrollera om alla spelare är döda
-                        if (newIndex == currentPlayerIndex) {
-                            currentPlayerIndex = 2
-                            Log.d("changePlayer", "Inga levande spelare hittades.")
+                // Hittar nästa spelare som lever
+                while (players?.get(players?.keys?.elementAt(newIndex) ?: "") == PlayerStatus.DEAD) {
+                    newIndex = (newIndex + 1) % players?.size!!
+                    // Kontrollera om alla spelare är döda
+                    if (newIndex == currentPlayerIndex) {
+                        currentPlayerIndex = 10
                             break
-                        }
                     }
-
+                }
+                    // spara den nya currentPlayer
                     if (newIndex != currentPlayerIndex) {
                         currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
                         myRef.child(localGameID).child("currentPlayer").setValue(currentPlayer)
                         updateGameData(this, localGameID)
-                    } else {
-                        Log.d("changePlayer", "Alla spelare är döda.")
-                        // Eventuell ytterligare hantering här, t.ex. avsluta spelet eller vidta andra åtgärder.
                     }
-
                 }
-            }
+        }
     }
 
-    //Looks if anny of the bullets is equal to the current bullet if it is equal it changes the status for currentPlayer
+    //Avgör om LuckyNumber och currentBullet är samma
+    //Om de är det som ändras spelarens status till Dead
+    //Samt spara deras poäng
     fun checksForKill() {
         rouletteModel?.apply {
             if (luckyNumber==currentBullet) {
@@ -307,7 +299,7 @@ class GavleRouletteFragment : Fragment(){
             }
         }
     }
-    //if only one player is alive then it means that we have a winner
+    //Om endast en spelare har statusen ALIVE, skriver spelaren med statusen som ALIVE till vinanre och sparar den poäng
     fun checkForWinner(){
         rouletteModel?.apply {
             if (aliveCount == 1) {
@@ -324,7 +316,7 @@ class GavleRouletteFragment : Fragment(){
             }
         }
     }
-
+    //Sparar poäng för spelare till databasen, varje spelare anropar den när spelet är klart
     fun setScore() {
         playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
             rouletteModel?.apply {

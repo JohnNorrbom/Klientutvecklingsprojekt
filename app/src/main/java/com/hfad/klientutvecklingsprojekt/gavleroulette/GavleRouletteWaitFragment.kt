@@ -19,7 +19,15 @@ import com.hfad.klientutvecklingsprojekt.R
 import com.hfad.klientutvecklingsprojekt.databinding.FragmentGavleRouletteWaitBinding
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
-
+/**
+ *
+ * GavleRouletteWaitFragment:
+ *
+ * Ett fragment som används som vänt rum medans spelet laddas in
+ *
+ * @author William
+ *
+ */
 class GavleRouletteWaitFragment : Fragment() {
     private var _binding: FragmentGavleRouletteWaitBinding? = null
     private val binding get() = _binding!!
@@ -77,7 +85,8 @@ class GavleRouletteWaitFragment : Fragment() {
         mediaPlayer = null
     }
 
-
+    //hämtar modelen från databasen och sparar till den lokala modelen,
+    //sedan navigerar den till Roulette spelet
     fun startGame(){
         myRef.child(localGameID).get().addOnSuccessListener {
             val model = it.getValue(RouletteModel::class.java)
@@ -92,9 +101,9 @@ class GavleRouletteWaitFragment : Fragment() {
         }
     }
 
+    //används för att hämta lokala spel och spelar id
     fun setText() {
         localGameID = meModel?.gameID ?: ""
         localPlayerID = meModel?.playerID ?: ""
-        Log.d("meModel", "player $localGameID Game $localPlayerID")
     }
 }

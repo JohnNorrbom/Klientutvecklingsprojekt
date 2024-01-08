@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.board
 
 /**
+ * @author John
  *
  * Tabell med:
  * gameID som håller koll så alla spelare är i samma lobby/game

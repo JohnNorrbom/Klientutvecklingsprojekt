@@ -12,6 +12,17 @@ import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 
+/**
+ *
+ * LobbyData:
+ *
+ * Ett object som används för att:
+ * Spara till modelen och databasen
+ * Hämta från databasen och spara till modelen
+ *
+ * @author William
+ *
+ */
 object LobbyData {
     private var _lobbyModel : MutableLiveData<LobbyModel?> = MutableLiveData()
     var lobbyModel : MutableLiveData<LobbyModel?> = _lobbyModel

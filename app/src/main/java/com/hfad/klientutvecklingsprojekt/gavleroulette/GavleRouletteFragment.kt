@@ -281,7 +281,6 @@ class GavleRouletteFragment : Fragment(){
                     }
 
                 }
-                    setUi()
             }
     }
 

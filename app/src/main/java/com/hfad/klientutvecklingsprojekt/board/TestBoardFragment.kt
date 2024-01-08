@@ -320,7 +320,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = Random.nextInt(6) + 1
+            var randomInt = 5//Random.nextInt(6) + 1
 //            var randomInt = 5
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
@@ -346,7 +346,7 @@ class TestBoardFragment : Fragment() {
             if (currentImageViewIndex % 20 == 5 || currentImageViewIndex % 20 == 10 || currentImageViewIndex % 20 == 19) {
                 //minigame
                 //  Pick random game
-                localRandomVal = Random.nextInt(4)
+                localRandomVal = 3//Random.nextInt(4)
 //                localRandomVal = 2
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
@@ -444,6 +444,7 @@ class TestBoardFragment : Fragment() {
                                     gameStatus = GameStatus.INPROGRESS,
                                     attempts = 0,
                                     laps = 0,
+                                    currentBullet = 0,
                                     winner = "",
                                     score = scorePlayers,
                                     nbrOfPlayers = gamePlayer.size,
@@ -453,8 +454,7 @@ class TestBoardFragment : Fragment() {
                                         Random.nextInt(
                                             gamePlayer.size
                                         )
-                                    ),
-                                    scoreUpploaded = false
+                                    )
                                 ), localGameID
 
                             )

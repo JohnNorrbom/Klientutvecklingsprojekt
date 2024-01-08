@@ -15,6 +15,17 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseChooseBi
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * den spelare som startar mini gamet sten sax pase hamnar här
+ *
+ * ett anrop till databasen "Player Data" hämtar de spelare som tillhör samma gameID
+ *
+ * spelaren som hamnar här väljer då den spelare den vill utmana i mini gamet
+ *
+ */
+
 class StenSaxPaseChooseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseChooseBinding? = null
@@ -56,41 +67,26 @@ class StenSaxPaseChooseFragment : Fragment() {
                 Log.e("StenSaxPaseFragment", "meModel is null")
             }
         }
-        /*
-        // Remove this once testing done
-        if(gameID == "") {
-            gameID = "5369"
-            playerID = "1986"
-            println("$gameID--$playerID")
-            loadPlayersFromGameID()
-        }
-        // End of test section
-         */
+
         binding.astroBlue.setOnClickListener {
             setOpponentID("blue")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
-            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
-
         }
         binding.astroRed.setOnClickListener {
             setOpponentID("red")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
-            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroYellow.setOnClickListener {
             setOpponentID("yellow")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
-            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroGreen.setOnClickListener {
             setOpponentID("green")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
-            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
         binding.astroWhite.setOnClickListener {
             setOpponentID("white")
             createStenSaxPaseGame(playerID!!,opponentID!!,view)
-            //view?.findNavController()?.navigate(R.id.action_stenSaxPaseChooseFragment_to_stensaxpaseFragment)
         }
 
         return view

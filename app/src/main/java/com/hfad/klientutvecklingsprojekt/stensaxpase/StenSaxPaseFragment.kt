@@ -20,6 +20,23 @@ import android.os.Handler
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.R
 
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * hanterar mini-game Sten Sax Påse
+ *
+ * tar in 2 safe arg argument från TestBoardFragment, currentPlayerID och currentGameID
+ *
+ * skapar en databas folder som hanterar lobbyn
+ *
+ * två spelare spelar mot varandra, resten observerar
+ *
+ * de två spelarna lyssnar på databasen efter förändring av attributet "choice"
+ *
+ * då båda spelare har gjort sitt val så hanterar alla spelare ändringar lokalt och visar dem
+ *
+ */
+
 class StenSaxPaseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseBinding? = null
@@ -79,19 +96,19 @@ class StenSaxPaseFragment : Fragment() {
             sax.visibility = View.INVISIBLE
             pase.visibility = View.INVISIBLE
             sten.isClickable = false
-            setChoice("sten", currentPlayerID)
-        }
-        sax.setOnClickListener {
-            sten.visibility = View.INVISIBLE
-            pase.visibility = View.INVISIBLE
-            sax.isClickable = false
-            setChoice("sax", currentPlayerID)
+            setChoice("rock", currentPlayerID)
         }
         pase.setOnClickListener {
             sten.visibility = View.INVISIBLE
             sax.visibility = View.INVISIBLE
             pase.isClickable = false
-            setChoice("pase", currentPlayerID)
+            setChoice("scissors", currentPlayerID)
+        }
+        sax.setOnClickListener {
+            sten.visibility = View.INVISIBLE
+            pase.visibility = View.INVISIBLE
+            sax.isClickable = false
+            setChoice("paper", currentPlayerID)
         }
 
         stenSaxPaseRef.addValueEventListener(gameStartListener)
@@ -293,7 +310,7 @@ class StenSaxPaseFragment : Fragment() {
             player1Score = player1Score!! + 1
 
             if(player1Score == 2) {
-                setActionText("$player1 WON THE WHOLE GAME WITH $player1choice BEATING $player2choice")
+                setActionText("$player1 WON THE GAME WITH $player1choice BEATING $player2choice")
                 setVsText("$player1 WON :D")
                 setPlayerScore("")
                 setOpponentScore("")
@@ -313,7 +330,7 @@ class StenSaxPaseFragment : Fragment() {
             player2Score = player2Score!! + 1
 
             if(player2Score == 2) {
-                setActionText("$player2 WON THE WHOLE GAME WITH $player2choice BEATING $player1choice")
+                setActionText("$player2 WON THE GAME WITH $player2choice BEATING $player1choice")
                 setVsText("$player2 WON :D")
                 setOpponentScore("")
                 setPlayerScore("")
@@ -391,7 +408,7 @@ class StenSaxPaseFragment : Fragment() {
                 var boardScore = it.value.toString().toInt()
                 boardScore += 5
                 // Set new value
-                println("STENSAXPASE: JAG GAV $player + $boardScore poäng")
+                println("STENSAXPASE: $currentPlayerID GAV $player + $boardScore poäng")
                 playerDataRef.child(currentGameID).child("players").child(player).child("score").setValue(boardScore)
 
                 stenSaxPaseRef.child(gameID).child("status").setValue(false)

@@ -12,7 +12,7 @@
         android:id="@+id/stenSaxPaseText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sten Sax Påse BEST OF 3"
+        android:text="Rock Paper Scissors - BEST OF 3"
         app:layout_constraintBottom_toTopOf="@+id/vsText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -35,7 +35,7 @@
         android:id="@+id/actionText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gör ett val"
+        android:text="Make a choice"
         app:layout_constraintBottom_toTopOf="@+id/scorePlayerID"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -65,32 +65,29 @@
 
     <Button
         android:id="@+id/pase"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Påse"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/sax"
-        app:layout_constraintTop_toTopOf="@+id/sten" />
-
-    <Button
-        android:id="@+id/sax"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Sax"
-        app:layout_constraintEnd_toStartOf="@+id/pase"
-        app:layout_constraintHorizontal_bias="0.5"
+        android:text="Paper"
+        app:layout_constraintEnd_toStartOf="@+id/sax"
         app:layout_constraintStart_toEndOf="@+id/sten"
         app:layout_constraintTop_toTopOf="@+id/sten" />
 
     <Button
-        android:id="@+id/sten"
-        android:layout_width="100dp"
+        android:id="@+id/sax"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:text="Sten"
+        android:text="Scissors"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pase"
+        app:layout_constraintTop_toTopOf="@+id/pase" />
+
+    <Button
+        android:id="@+id/sten"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:text="Rock"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/sax"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintEnd_toStartOf="@+id/pase"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/scorePlayerID" />
 </androidx.constraintlayout.widget.ConstraintLayout>

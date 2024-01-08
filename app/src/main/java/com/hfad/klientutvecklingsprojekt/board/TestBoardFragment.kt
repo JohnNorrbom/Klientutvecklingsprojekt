@@ -34,6 +34,8 @@ import kotlin.random.Random
 
 /**
  *
+ * @author John, Simon, Pontus, William & Ferdinand
+ *
  * TestBoardFragment:
  *
  * målar spelplanen
@@ -61,12 +63,12 @@ class TestBoardFragment : Fragment() {
     private var gameRef = database.getReference("Player Data").child(gameID)
     private var playersRef = gameRef.child("players")
 
-    //  meModel
+    //  meModel den lokala spelaren, alltså du
     private var localGameID = ""
     private var localPlayerID = ""
     private var meModel: MeModel? = null
 
-    //boardModel
+    // boardModel
     private var boardModel: BoardModel? = null
     private val boardRef = database.getReference("Board Data")
 
@@ -77,6 +79,7 @@ class TestBoardFragment : Fragment() {
 
     // BG MUSIC
     private var mediaPlayer: MediaPlayer? = null
+    // Misc sounds
     private val maxStreams = 5 // Number of simultaneous sounds
     private var soundPool = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         SoundPool.Builder().setMaxStreams(maxStreams).build()
@@ -84,9 +87,9 @@ class TestBoardFragment : Fragment() {
         SoundPool(maxStreams, AudioManager.STREAM_MUSIC, 0)
     }
 
-    //  minigame
+    // bestämmer minigame
     private var localRandomVal = -1
-
+    // håller koll på vems tur det är
     private var localCurrentPlayerTest = ""
 
     // LEADERBOARD
@@ -96,10 +99,11 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
+        // startar bg musiken
         mediaPlayer = MediaPlayer.create(
             requireContext(), R.raw.android_song2_140bpm
         )
-        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.isLooping = true
         mediaPlayer?.start()
 
         MeData.meModel.observe(this) { meModel ->
@@ -108,7 +112,6 @@ class TestBoardFragment : Fragment() {
                 setText()
                 diceButton()
             } ?: run {
-                // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
@@ -124,7 +127,6 @@ class TestBoardFragment : Fragment() {
             playerModel?.let {
                 this@TestBoardFragment.playerModel = it
             } ?: run {
-                // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
@@ -162,35 +164,28 @@ class TestBoardFragment : Fragment() {
                 }
         }
     }
-
-    /*
-    this also calls setplayeronrightposition. and is thought to be called everytime something happens
-     */
-    // Function to get text for a leaderboard entry
+    // returnerar spelaren och dess poäng som en sträng
     fun getLeaderText(index: Int): String {
         return if (index in 0 until leaderboardList.size) {
             "${leaderboardList[index].first} ${leaderboardList[index].second}"
         } else {
-            "N/A" // Provide a default value or handle the empty list scenario
+            "N/A" // Värde för tom plats i leaderboarden
         }
     }
-
     private fun updateLeaderboard(nickname: String, number: Int) {
-        // Sorterar leaderboarden
-        // Extracting values from playerSnapshot
         if (leaderboardList.isEmpty()) {
-            // Add the first pair to the list
+            // lägger till första paret i listan
             leaderboardList.add(nickname to number)
             Log.d("score", "leaderboardList ${nickname} ${number}")
         } else {
-            // Check if the nickname is already in the list
+            // kollar om spelaren finns med i listan
             val existingIndex = leaderboardList.indexOfFirst { it.first == nickname }
 
             if (existingIndex != -1) {
-                // If the nickname already exists, update the score
+                // uppdaterar spelarens poäng
                 leaderboardList[existingIndex] = nickname to number
             } else {
-                // Add the new pair to the list
+                // lägger till ett nytt par i listan
                 leaderboardList.add(nickname to number)
             }
             Log.d(
@@ -200,7 +195,7 @@ class TestBoardFragment : Fragment() {
                 }, ${getLeaderText(4)}"
             )
         }
-        // Sort the list based on the 'number1' values in descending order
+        // Sorterar leaderboarden
         leaderboardList.sortByDescending { it.second }
         binding.textViewLeader1.text = getLeaderText(0)
         binding.textViewLeader2.text = getLeaderText(1)
@@ -214,6 +209,7 @@ class TestBoardFragment : Fragment() {
         if (leaderboard[0].second > 29) {
             try {
                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                // skickar vinnar namn och poäng till nästa fragment med safeArgs
                 val action = TestBoardFragmentDirections.actionTestBoardFragmentToWinnerFragment(
                     leaderboard[0].first,
                     leaderboard[0].second
@@ -419,7 +415,6 @@ class TestBoardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        setText()
     }
 
     private fun setMiniGame(randomVal: Int) {

@@ -18,6 +18,17 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentStenSaxPaseWaitBind
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * hanterar spelare som inte gick på mini-game rutan som generar mini-game StenSaxPaseFragment
+ *
+ * lyssnar på databas mappen "Sten Sax Pase" för att avgöra ifall ett spel har skapats med det GameID spelaren tillhör
+ *
+ * då mappen skapas så navigeras spelarna vidare in till mini game fragmentet
+ *
+ */
+
 class StenSaxPaseWaitFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseWaitBinding? = null

@@ -27,6 +27,9 @@ import kotlinx.coroutines.delay
 import kotlin.concurrent.thread
 import kotlin.math.abs
 
+/**
+ * Fragment responsible for creating the main soccergame visuals
+ */
 class SoccerFragment : Fragment() {
 
     private lateinit var soccerViewModel: SoccerViewModel
@@ -72,7 +75,10 @@ class SoccerFragment : Fragment() {
     //variables to see if both player are ready
     private var p1IsReady: Boolean = false
     private var p2IsReady: Boolean = false
-
+    /**
+     * Fragment lifecycle method called to create the fragment's view hierarchy.
+     * Sets up UI elements and handles logic.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
@@ -93,7 +99,9 @@ class SoccerFragment : Fragment() {
 
         return view
     }
-
+    /**
+     * Function to retrieve your ID and set up Firebase listeners for game data.
+     */
     fun retrieveYourId(){
         meModel?.apply {
             yourId = playerID.toString()
@@ -170,7 +178,9 @@ class SoccerFragment : Fragment() {
         override fun onCancelled(error: DatabaseError) {
         }
     }
-    //this retrieves the game data from last fragment
+    /**
+     * Sets values retrieved from Firebase database and updates UI elements accordingly.
+     */
     fun setValues(){
         myRef.child(localGameId).get()
             .addOnSuccessListener { dataSnapshot ->
@@ -197,7 +207,9 @@ class SoccerFragment : Fragment() {
                 binding.shooterMiss.setImageResource(resourceId2)
             }
     }
-
+    /**
+     * Called when the fragment's view has been created. Initializes UI elements and handles button click listeners.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.finalScorePoint.visibility = View.INVISIBLE
@@ -220,6 +232,9 @@ class SoccerFragment : Fragment() {
             binding.bottomButtons.visibility = View.INVISIBLE
         }
     }
+    /**
+     * Perform game moves based on player choices, update scores, and handle UI updates.
+     */
     fun doMove(){
 
         if (p1Choice == "left"){
@@ -288,7 +303,9 @@ class SoccerFragment : Fragment() {
         }
         updateScoreBoard()
     }
-
+    /**
+     * Executes necessary operations when the fragment is stopped, such as removing Firebase event listeners and deleting certain values from the database.
+     */
     override fun onStop() {
         super.onStop()
         myRef.child(localGameId).child("p1Choice").removeEventListener(p1Listener)
@@ -297,7 +314,9 @@ class SoccerFragment : Fragment() {
         myRef.child(localGameId).removeValue()
     }
 
-
+    /**
+     * Sets local player values based on IDs and adjusts UI elements accordingly.
+     */
     fun setPlayerValues(){
         //sets player1 and 2 locally  (p1 starts as shooter)
         youArePlayerOne = yourId == localP1Id
@@ -331,7 +350,9 @@ class SoccerFragment : Fragment() {
 
         soccerViewModel.setColors(shooterColor,goalieColor, 1)
     }
-
+    /**
+     * Updates the scoreboard UI based on the current game state and delays the scoreboard update.
+     */
     fun updateScoreBoard(){
         val handler = Handler(Looper.getMainLooper())
 
@@ -389,6 +410,9 @@ class SoccerFragment : Fragment() {
 
         }, 2000)
     }
+    /**
+     * Sends the chosen move of the player to the Firebase Realtime Database.
+     */
     fun sendChoiceOnline(choice: String){
         if (youArePlayerOne){
                 myRef.child(localGameId).child("p1Choice").setValue(choice)
@@ -401,7 +425,9 @@ class SoccerFragment : Fragment() {
 
     }
 
-
+    /**
+     * Performs animations based on the game state and updates UI elements accordingly.
+     */
     fun doAnimation(soccerViewModel: SoccerViewModel){
         if (bothIsReady){
             var currentImageView: ImageView
@@ -441,7 +467,9 @@ class SoccerFragment : Fragment() {
             soccerViewModel.switchType()
         }
     }
-
+    /**
+     * Executes necessary cleanup operations when the fragment's view is destroyed, such as releasing media player resources.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         mediaPlayer?.release()

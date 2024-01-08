@@ -397,7 +397,7 @@ class TestBoardFragment : Fragment() {
         super.onResume()
         // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        setText()
+        paintPlayers()
     }
 
     private fun setMiniGame(randomVal: Int) {

@@ -300,7 +300,7 @@ class TestBoardFragment : Fragment() {
         //  DICE BUTTON LISTENER
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
-            var randomInt = 5//Random.nextInt(6) + 1
+            var randomInt = Random.nextInt(6) + 1
 //            var randomInt = 10
 
             var destination = "dice" + randomInt
@@ -385,8 +385,7 @@ class TestBoardFragment : Fragment() {
                 }
                 //minigame
                 //  Pick random game
-                localRandomVal = 0
-                    //Random.nextInt(3)
+                localRandomVal = Random.nextInt(4)
 
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame

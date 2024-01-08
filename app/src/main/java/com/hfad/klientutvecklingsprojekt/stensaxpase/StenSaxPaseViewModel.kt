@@ -9,6 +9,12 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import kotlin.random.Random
 
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * denna klass används inte
+ */
+
 class StenSaxPaseViewModel() : ViewModel() {
 
     val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")

@@ -1,9 +1,12 @@
 package com.hfad.klientutvecklingsprojekt.stensaxpase
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.database.IgnoreExtraProperties
-import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
+
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * denna klass används som mall för att spara i databsen
+ */
 
 @IgnoreExtraProperties
 data class StenSaxPaseModel

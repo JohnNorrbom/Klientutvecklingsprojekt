@@ -280,6 +280,7 @@ class TestBoardFragment : Fragment() {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
 //            var randomInt = 10
+
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,

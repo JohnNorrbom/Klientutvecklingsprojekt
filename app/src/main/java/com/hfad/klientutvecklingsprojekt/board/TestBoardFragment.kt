@@ -91,6 +91,7 @@ class TestBoardFragment : Fragment() {
             meModel?.let {
                 this@TestBoardFragment.meModel = it
                 setText()
+                diceButton()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
@@ -114,7 +115,7 @@ class TestBoardFragment : Fragment() {
         }
 
         boardRef.addValueEventListener(boardListener)
-        diceButton()
+
         gameRef.addValueEventListener(positionListener)
         boardRef.addValueEventListener(gameStatusListener)
 

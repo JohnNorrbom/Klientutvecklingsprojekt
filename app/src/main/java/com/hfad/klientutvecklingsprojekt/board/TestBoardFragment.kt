@@ -35,15 +35,19 @@ import kotlin.random.Random
 /**
  *
  * TestBoardFragment:
+ *
  * målar spelplanen
  * målar rankningslistan
  * målar tärningen
+ * målar spelarna
  *
  * läser av Player Data, Board Data & Quiz tabellen från databasen
  *
+ * startar minigames (hoppar till andra fragments)
+ *
+ * avslutar spelet när en spelare har 30 poäng (navigerar till winnerFragment)
  *
  */
-//TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null

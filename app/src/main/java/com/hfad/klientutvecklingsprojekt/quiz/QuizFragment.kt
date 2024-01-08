@@ -1,6 +1,7 @@
 package com.hfad.klientutvecklingsprojekt.quiz
 
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -58,6 +59,7 @@ class QuizFragment : Fragment() {
         Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Quiz")
     var totalPlayersCount: Int = 0
+    private var mediaPlayer: MediaPlayer? = null
 
 
     override fun onCreateView(
@@ -101,9 +103,18 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song5_long_140bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
 
-        println("Körs detta flera gånger??")
         return view
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
     private fun fetchQuizSeed() = CoroutineScope(Dispatchers.IO).launch {
         try {
@@ -116,8 +127,6 @@ class QuizFragment : Fragment() {
                         loadQuestions(it)
                     }
                 }
-            } else {
-                println("Seed finns inte i databasen")
             }
         } catch (e: Exception) {
             Log.e("QuizFragment", "Error fetching seed", e)
@@ -402,7 +411,6 @@ class QuizFragment : Fragment() {
 
                 binding.scoreTextView.text = allScores.toString()
                 //PLUSSA PÅ SPELARENS POÄNG I DATABASEN
-                println("Kallar på increasePlayerScore")
                 increasePlayerScore(currentPlayerID, score)
                 delay(10000)
                 if (isAdded && view != null) {

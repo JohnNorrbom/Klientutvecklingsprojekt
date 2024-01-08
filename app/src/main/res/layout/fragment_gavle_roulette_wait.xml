@@ -23,7 +23,7 @@
             android:textSize="25dp"
             android:layout_gravity="center"
             android:textColor="@color/green"
-            android:text="waiting for minigame"/>
+            android:text="Reloding Revolver"/>
 
         <ImageView
             android:id="@+id/loading_symbol"

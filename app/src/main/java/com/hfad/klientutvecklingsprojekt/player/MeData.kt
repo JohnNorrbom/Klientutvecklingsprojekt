@@ -4,7 +4,17 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
-
+/**
+ *
+ * MeData:
+ *
+ * Ett object som används för att:
+ * Spara till modelen
+ * Hämta och spara till modelen
+ *
+ * @author William
+ *
+ */
 object MeData {
     private var _meModel : MutableLiveData<MeModel?> = MutableLiveData()
     var meModel : MutableLiveData<MeModel?> = _meModel

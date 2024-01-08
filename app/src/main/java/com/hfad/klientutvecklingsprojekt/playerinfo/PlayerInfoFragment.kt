@@ -38,6 +38,15 @@ import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlin.random.Random
 import kotlin.random.nextInt
 
+/**
+ *
+ * PlayerInfoFragment:
+ *
+ * Används för att spara valen som en spelare gör om vad de vill heta och vilken färg på gubbe de vill ha
+ *
+ * @author William
+ *
+ */
 //
 //  PLAYERDATA IS SAVED AT LOBBY DATA
 //
@@ -45,8 +54,6 @@ import kotlin.random.nextInt
 class PlayerInfoFragment : Fragment() {
     private var _binding: FragmentPlayerInfoBinding? = null
     private val binding get()  = _binding!!
-    private var playerModel : PlayerModel? = null
-    private var meModel : MeModel?= null
     private var gameModel : GameModel? = null
     private val characterColors = listOf("white","red","blue","green","yellow")
     private var playerColor = ""
@@ -78,6 +85,7 @@ class PlayerInfoFragment : Fragment() {
         return view
     }
 
+    //Spara valen för spelaren om de klarar alla tester och navigerar till lobbyfragment
     fun confirmCharacter() {
         currentGameID = gameModel?.gameID?:""
         myRef.child(currentGameID).child("status").get().addOnSuccessListener {
@@ -155,6 +163,8 @@ class PlayerInfoFragment : Fragment() {
 
         }
     }
+
+    //Avgör om ett nickname redan existerar i lobbyn
     fun checkName(callback: (Boolean) -> Unit) {
         playerRef.child(gameModel?.gameID?:"").child("players").get().addOnSuccessListener {
             val snapshot = it
@@ -175,7 +185,7 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
-    //update UI
+    //updaterar Ui för gubbar som är tagna
     fun setUI() {
         gameModel?.apply {
             //  Changes text for TextView to the lobby gameID
@@ -250,6 +260,7 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
+    //Avgör storleken på lobbyn
     fun checkSizeOfLobby() {
         gameModel?.apply {
             if (status != Progress.FINISHED) {
@@ -261,8 +272,6 @@ class PlayerInfoFragment : Fragment() {
                         break
                     }
                 }
-
-                Log.d("checkSizeOfLobby", "allPositionsTaken: $allPositionsTaken")
 
                 if (allPositionsTaken) {
                     // Kontrollera om statusen faktiskt ändras innan du uppdaterar
@@ -281,6 +290,7 @@ class PlayerInfoFragment : Fragment() {
         }
     }
 
+    //avgör vilken gubbe som spelaren har valt
     fun setPlayerInfo() {
         val colors = mutableListOf(
             Pair("white", binding.radioBtnWhite),
@@ -292,14 +302,11 @@ class PlayerInfoFragment : Fragment() {
         for (color in colors) {
             if (color.second.isChecked) {
                 gameModel?.apply {
-                    Log.d("inför Apply", "bra")
                     for (color in colors) {
                         if (color.second.isChecked) {
-                            Log.d("inför Apply", "bra")
                             //  Set position to taken
                             playerColor = color.first
-                            Log.d("takenPosition", "taken: ${takenPosition}")
-                            Log.d("this", "this: ${this}")
+
                         }
                     }
                 }

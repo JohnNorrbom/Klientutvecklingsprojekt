@@ -10,7 +10,18 @@ import com.google.firebase.database.database
 import com.google.firebase.inject.Deferred
 import com.hfad.klientutvecklingsprojekt.gamestart.GameData
 import com.hfad.klientutvecklingsprojekt.lobby.LobbyModel
-
+/**
+ *
+ * RouletteData:
+ *
+ * Ett object som används för att:
+ * Spara till modelen och databasen
+ * Hämta från databasen och spara till modelen
+ * Tabort lyssnare
+ *
+ * @author William
+ *
+ */
 object RouletteData {
     private var _rouletteModel : MutableLiveData<RouletteModel?> = MutableLiveData()
     var rouletteModel : MutableLiveData<RouletteModel?> = _rouletteModel
@@ -19,12 +30,13 @@ object RouletteData {
     var gameID : String =""
 
 
+    //används för att spara till modellen och databasen
     fun saveGameModel(model: RouletteModel,id : String){
         _rouletteModel.postValue(model)
         myRef.child(id).setValue(model)
     }
 
-
+    //används för att hämta från databasen och spara till modelen
     fun fetchGameModel(){
         rouletteModel.value?.apply {
             myRef.child(gameId?:"").addValueEventListener(rouletteListener)
@@ -46,7 +58,7 @@ object RouletteData {
         }
 
     }
-
+    //Tarbort lyssnare
     fun removeListner(){
         rouletteModel.value?.apply {
              myRef.child(gameId?:"").removeEventListener(rouletteListener)

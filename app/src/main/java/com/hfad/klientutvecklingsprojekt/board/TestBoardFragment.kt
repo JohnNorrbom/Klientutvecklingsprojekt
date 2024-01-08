@@ -96,6 +96,7 @@ class TestBoardFragment : Fragment() {
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+
         BoardData.boardModel.observe(this) { boardModel ->
             boardModel?.let {
                 this@TestBoardFragment.boardModel = it
@@ -122,6 +123,9 @@ class TestBoardFragment : Fragment() {
     }
 
     private fun setText() {
+
+
+
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
@@ -132,12 +136,13 @@ class TestBoardFragment : Fragment() {
             binding.playerRed.visibility = View.GONE
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
-            paintPlayers()
+
 
             println("local player id: " + localPlayerID)
             playersRef.child(localPlayerID).get()
                 .addOnSuccessListener { dataSnapshot ->
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
+                    paintPlayers()
                 }
         }
     }
@@ -224,6 +229,7 @@ class TestBoardFragment : Fragment() {
 
                 val nickname = playerSnapshot.child("nickname").value.toString()
                 val number = playerSnapshot.child("score").value.toString().toInt()
+                localScore = number
                 Log.d("score", "testing: $number")
                 updateLeaderboard(nickname, number)
                 imageView?.let { view ->

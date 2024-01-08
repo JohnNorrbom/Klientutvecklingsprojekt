@@ -37,6 +37,7 @@ import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.nio.charset.Charset
+import java.util.Random
 
 
 class QuizFragment : Fragment() {
@@ -46,42 +47,42 @@ class QuizFragment : Fragment() {
     private var score = 0 // Lägg till poängräknare
     private val handler = Handler()
     private var isAnswerChecked = false
-    private var meModel : MeModel? = null
+    private var meModel: MeModel? = null
     private var currentGameID = ""
     private var currentPlayerID = ""
     private lateinit var scoreTextView: TextView // Lägg till referens till textvy för poäng
     private var countDownTimer: CountDownTimer? = null
     private var _binding: FragmentQuizBinding? = null
     private val binding get() = _binding!!
-    private val database = Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
+    private val database =
+        Firebase.database("https://klientutvecklingsprojekt-default-rtdb.europe-west1.firebasedatabase.app/")
     private val myRef = database.getReference("Quiz")
     var totalPlayersCount: Int = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentQuizBinding.inflate(inflater, container, false)
+        val view = binding.root
+
         MeData.meModel.observe(context as LifecycleOwner) { meModel ->
             meModel?.let {
                 this@QuizFragment.meModel = it
                 setText()
             } ?: run {
-                // Handle the case when meModel is null
                 Log.e("QuizFragment", "meModel is null")
             }
         }
 
-        //Berätta för databasen att du inte är klar med quizet
+        // Berätta för databasen att du inte är klar med quizet
         myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(false)
-        try {
-            //  Läs in frågorna från JSON-filen
-            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
-            val allQuestions = JSONArray(jsonQuestions)
-            // Slumpmässigt välj 10 frågor
-            questions = JSONArray(selectRandomQuestions(allQuestions, 10).toString())
-            displayQuestion()
-            // TOP LEFT BUTTON
+
+        // Anropa metoden för att hämta seed och ladda frågor
+        fetchQuizSeed()
+
+
             binding.option1Button.setOnClickListener {
                 checkAnswer(binding.option1Button.text.toString(), binding.option1Button)
             }
@@ -100,16 +101,45 @@ class QuizFragment : Fragment() {
 
             // Hitta referensen till textvyen för poäng
             scoreTextView = binding.scoreTextView
+
+        println("Körs detta flera gånger??")
+        return view
+    }
+    private fun fetchQuizSeed() = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val seedRef = myRef.child(currentGameID).child("seed")
+            val dataSnapshot = seedRef.get().await()
+            if (dataSnapshot.exists()) {
+                val seed = dataSnapshot.getValue(Int::class.java)
+                seed?.let {
+                    withContext(Dispatchers.Main) {
+                        loadQuestions(it)
+                    }
+                }
+            } else {
+                println("Seed finns inte i databasen")
+            }
+        } catch (e: Exception) {
+            Log.e("QuizFragment", "Error fetching seed", e)
+        }
+    }
+    private fun loadQuestions(seed: Int) {
+        try {
+            val jsonQuestions = loadJsonFromRawResource(R.raw.questions)
+            val allQuestions = JSONArray(jsonQuestions)
+            questions = JSONArray(selectRandomQuestions(allQuestions, 10, seed.toLong()).toString())
+            displayQuestion()
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-        return binding.root
     }
+
     fun setText() {
         currentGameID = meModel?.gameID ?: ""
         currentPlayerID = meModel?.playerID ?: ""
         Log.d("QuizFragment", "playerID: ${currentPlayerID} GameID: ${currentGameID}")
     }
+
     private fun loadJsonFromRawResource(resourceId: Int): String {
         var json: String? = null
         try {
@@ -161,13 +191,11 @@ class QuizFragment : Fragment() {
             finishQuiz()
 
 
-
-
-
         }
 
 
     }
+
     private fun resetButtonColors() {
         binding.option1Button.apply {
             setBackgroundColor(Color.WHITE)
@@ -191,6 +219,7 @@ class QuizFragment : Fragment() {
             setClickable(true)
         }
     }
+
     //
 //
     private fun checkAnswer(selectedOption: String, selectedButton: View) {
@@ -206,7 +235,12 @@ class QuizFragment : Fragment() {
         for (button in buttons) {
             if (button.text == correctAnswer) {
                 // Rätt svar
-                button.setBackgroundColor(resources.getColor(android.R.color.holo_green_light, null))
+                button.setBackgroundColor(
+                    resources.getColor(
+                        android.R.color.holo_green_light,
+                        null
+                    )
+                )
                 if (button.text == selectedOption && !isAnswerChecked) {
                     // Om detta är det valda alternativet och svaret inte har kontrollerats tidigare
                     isAnswerChecked = true // Markera svaret som kontrollerat
@@ -214,7 +248,12 @@ class QuizFragment : Fragment() {
                     updateScore() // Uppdatera textvyen för att visa den nya poängen
                 } else if (button.text == selectedOption) {
                     // Om detta inte är det valda alternativet, sätt färgen till rött
-                    selectedButton.setBackgroundColor(resources.getColor(android.R.color.holo_red_light, null))
+                    selectedButton.setBackgroundColor(
+                        resources.getColor(
+                            android.R.color.holo_red_light,
+                            null
+                        )
+                    )
                 }
             } else if (button.text == selectedOption) {
                 isAnswerChecked = true
@@ -232,10 +271,12 @@ class QuizFragment : Fragment() {
             displayQuestion() // Visa nästa fråga
         }, 2000) // 2000 ms = 2 sekunder
     }
+
     //    // Uppdatera textvyen för att visa poängen
     private fun updateScore() {
         scoreTextView.text = "Points: $score"
     }
+
     private fun startTimer() {
         // Avbryt den befintliga timern om det finns en
         countDownTimer?.cancel()
@@ -246,13 +287,13 @@ class QuizFragment : Fragment() {
             override fun onTick(millisUntilFinished: Long) {
                 binding.timerTextView.text = "Time left: $time s"
                 time--
-                if (time < 4){
+                if (time < 4) {
                     binding.timerTextView.setTextColor(Color.RED)
-                }
-                else
+                } else
                     binding.timerTextView.setTextColor(Color.BLACK)
 
             }
+
             override fun onFinish() {
                 currentQuestionIndex++
                 displayQuestion()
@@ -260,25 +301,18 @@ class QuizFragment : Fragment() {
         }
         countDownTimer?.start()
     }
-    private fun stopTimer(){
+
+    private fun stopTimer() {
         countDownTimer?.cancel()
     }
-    private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int): List<JSONObject> {
-        val selectedQuestions = mutableListOf<JSONObject>()
+
+    private fun selectRandomQuestions(allQuestions: JSONArray, numberOfQuestions: Int, seed: Long): List<JSONObject> {
+        val random = Random(seed)
         val totalQuestions = allQuestions.length()
-
-        // Skapa en lista med alla frågornas index
         val allQuestionsIndices = (0 until totalQuestions).toMutableList()
+        val randomIndices = allQuestionsIndices.shuffled(random).take(numberOfQuestions)
 
-        // Slumpmässigt välj 10 index från listan
-        val randomIndices = allQuestionsIndices.shuffled().take(numberOfQuestions)
-
-        // Lägg till de slumpmässigt valda frågorna i den nya listan
-        for (index in randomIndices) {
-            selectedQuestions.add(allQuestions.getJSONObject(index))
-        }
-
-        return selectedQuestions
+        return randomIndices.map { allQuestions.getJSONObject(it) }
     }
 
     private fun finishQuiz() {
@@ -292,7 +326,8 @@ class QuizFragment : Fragment() {
         binding.questionTextView.text = scoreText
 
         // Berätta för databasen att du är klar med quiz
-        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz").setValue(true)
+        myRef.child(currentGameID).child("Players").child(currentPlayerID).child("doneWithQuiz")
+            .setValue(true)
 
         // Ladda upp poäng på databasen
         myRef.child(currentGameID).child("Scores").child(currentPlayerID).setValue(score)
@@ -300,6 +335,7 @@ class QuizFragment : Fragment() {
         // Initiera processen för att visa leaderboard
         initiateLeaderboardDisplay()
     }
+
     private fun initiateLeaderboardDisplay() {
         val playersCountRef = myRef.child(currentGameID).child("Players")
         playersCountRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -311,7 +347,8 @@ class QuizFragment : Fragment() {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         var donePlayersCount = 0
                         for (playerSnapshot in dataSnapshot.children) {
-                            val done = playerSnapshot.child("doneWithQuiz").getValue(Boolean::class.java)
+                            val done =
+                                playerSnapshot.child("doneWithQuiz").getValue(Boolean::class.java)
                             if (done == true) {
                                 donePlayersCount++
                             }
@@ -334,18 +371,22 @@ class QuizFragment : Fragment() {
             }
         })
     }
+
     data class PlayerScore(val nickname: String?, val score: Int)
+
     private fun showLeaderboard() = CoroutineScope(Dispatchers.Main).launch {
         try {
             val scoresRef = myRef.child(currentGameID).child("Scores")
-            val playerRef = database.getReference("Player Data").child(currentGameID).child("players")
+            val playerRef =
+                database.getReference("Player Data").child(currentGameID).child("players")
             val dataSnapshot = withContext(Dispatchers.IO) { scoresRef.get().await() }
             if (dataSnapshot.exists()) {
                 val scoresList = mutableListOf<PlayerScore>()
 
                 for (userSnapshot in dataSnapshot.children) {
                     val userNickname = withContext(Dispatchers.IO) {
-                        playerRef.child(userSnapshot.key ?: "").child("nickname").get().await().value as String?
+                        playerRef.child(userSnapshot.key ?: "").child("nickname").get()
+                            .await().value as String?
                     }
                     val userScore = userSnapshot.value.toString().toIntOrNull() ?: 0
                     scoresList.add(PlayerScore(userNickname, userScore))
@@ -365,8 +406,10 @@ class QuizFragment : Fragment() {
                 increasePlayerScore(currentPlayerID, score)
                 delay(10000)
                 if (isAdded && view != null) {
-                    database.getReference().child("Board Data").child(currentGameID).child("randomVal").setValue(-1)
-                    view?.findNavController()?.navigate(R.id.action_quizFragment_to_testBoardFragment)
+                    database.getReference().child("Board Data").child(currentGameID)
+                        .child("randomVal").setValue(-1)
+                    view?.findNavController()
+                        ?.navigate(R.id.action_quizFragment_to_testBoardFragment)
                 }
             } else {
                 binding.scoreTextView.text = "Ingen poäng att visa."
@@ -376,39 +419,35 @@ class QuizFragment : Fragment() {
             e.printStackTrace()
         }
     }
-    private fun increasePlayerScore(playerId: String, increment: Int) = CoroutineScope(Dispatchers.IO).launch {
-        val scoreRef = database.getReference("Player Data")
-            .child(currentGameID)
-            .child("players")
-            .child(playerId)
-            .child("score")
 
-        try {
-            val currentScoreSnapshot = scoreRef.get().await()
-            val currentScore = currentScoreSnapshot.getValue(Int::class.java) ?: 0
-            val newScore = currentScore + increment
+    private fun increasePlayerScore(playerId: String, increment: Int) =
+        CoroutineScope(Dispatchers.IO).launch {
+            val scoreRef = database.getReference("Player Data")
+                .child(currentGameID)
+                .child("players")
+                .child(playerId)
+                .child("score")
 
-            withContext(Dispatchers.Main) {
-                scoreRef.setValue(newScore).addOnSuccessListener {
-                    // Uppdatera UI här, visa bekräftelsemeddelande, etc.
-                    Log.d("UpdateScore", "Poängen har framgångsrikt uppdaterats till $newScore")
-                    // Exempel: Toast.makeText(context, "Poäng uppdaterad till $newScore", Toast.LENGTH_SHORT).show()
-                }.addOnFailureListener {
-                    // Hantera misslyckad uppdatering
-                    Log.e("UpdateScore", "Misslyckades med att uppdatera poängen", it)
+            try {
+                val currentScoreSnapshot = scoreRef.get().await()
+                val currentScore = currentScoreSnapshot.getValue(Int::class.java) ?: 0
+                val newScore = currentScore + increment
+
+                withContext(Dispatchers.Main) {
+                    scoreRef.setValue(newScore).addOnSuccessListener {
+                        // Uppdatera UI här, visa bekräftelsemeddelande, etc.
+                        Log.d("UpdateScore", "Poängen har framgångsrikt uppdaterats till $newScore")
+                        // Exempel: Toast.makeText(context, "Poäng uppdaterad till $newScore", Toast.LENGTH_SHORT).show()
+                    }.addOnFailureListener {
+                        // Hantera misslyckad uppdatering
+                        Log.e("UpdateScore", "Misslyckades med att uppdatera poängen", it)
+                    }
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    // Hantera fel vid läsning av poängen
+                    Log.e("UpdateScore", "Fel vid läsning av aktuell poäng", e)
                 }
             }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                // Hantera fel vid läsning av poängen
-                Log.e("UpdateScore", "Fel vid läsning av aktuell poäng", e)
-            }
         }
-    }
-
-
-
-
-
-
 }

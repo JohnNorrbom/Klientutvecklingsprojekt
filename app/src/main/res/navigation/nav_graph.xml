@@ -148,6 +148,9 @@
         <action
             android:id="@+id/action_testBoardFragment_to_winnerFragment"
             app:destination="@id/winnerFragment" />
+        <action
+            android:id="@+id/action_testBoardFragment_to_quizWaitingFragment"
+            app:destination="@id/quizWaitingFragment" />
     </fragment>
     <fragment
         android:id="@+id/stenSaxPaseChooseFragment"
@@ -200,5 +203,13 @@
         <action
             android:id="@+id/action_winnerFragment_to_startScreenFragment"
             app:destination="@id/startScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizWaitingFragment"
+        android:name="com.hfad.klientutvecklingsprojekt.quiz.QuizWaitingFragment"
+        android:label="QuizWaitingFragment" >
+        <action
+            android:id="@+id/action_quizWaitingFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
     </fragment>
 </navigation>

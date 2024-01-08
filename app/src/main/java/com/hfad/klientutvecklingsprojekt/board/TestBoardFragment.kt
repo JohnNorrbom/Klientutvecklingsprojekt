@@ -99,6 +99,7 @@ class TestBoardFragment : Fragment() {
     ): View? {
         _binding = FragmentTestBoardBinding.inflate(inflater, container, false)
         view = binding.root
+        diceButton()
         // startar bg musiken
         mediaPlayer = MediaPlayer.create(
             requireContext(), R.raw.android_song2_140bpm
@@ -110,7 +111,7 @@ class TestBoardFragment : Fragment() {
             meModel?.let {
                 this@TestBoardFragment.meModel = it
                 setText()
-                diceButton()
+
             } ?: run {
                 Log.e("LobbyFragment", "meModel is null")
             }
@@ -132,7 +133,6 @@ class TestBoardFragment : Fragment() {
         }
 
         boardRef.addValueEventListener(boardListener)
-
         gameRef.addValueEventListener(positionListener)
         boardRef.addValueEventListener(gameStatusListener)
 

@@ -20,6 +20,23 @@ import android.os.Handler
 import androidx.navigation.findNavController
 import com.hfad.klientutvecklingsprojekt.R
 
+/**
+ * @author: 21siha02 : simon.hamner@gmail.com
+ *
+ * hanterar mini-game Sten Sax Påse
+ *
+ * tar in 2 safe arg argument från TestBoardFragment, currentPlayerID och currentGameID
+ *
+ * skapar en databas folder som hanterar lobbyn
+ *
+ * två spelare spelar mot varandra, resten observerar
+ *
+ * de två spelarna lyssnar på databasen efter förändring av attributet "choice"
+ *
+ * då båda spelare har gjort sitt val så hanterar alla spelare ändringar lokalt och visar dem
+ *
+ */
+
 class StenSaxPaseFragment : Fragment() {
 
     private var _binding: FragmentStenSaxPaseBinding? = null

@@ -241,7 +241,7 @@ class TestBoardFragment : Fragment() {
 
                 val nickname = playerSnapshot.child("nickname").value.toString()
                 val number = playerSnapshot.child("score").value.toString().toInt()
-                localScore = number
+                //localScore = number
                 Log.d("score", "testing: $number")
                 updateLeaderboard(nickname, number)
                 imageView?.let { view ->

@@ -201,7 +201,6 @@ class SoccerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.finalScorePoint.visibility = View.INVISIBLE
-        binding.finishedGameButton.visibility = View.INVISIBLE
         binding.finishedGameScreen.visibility = View.INVISIBLE
         mediaPlayer = MediaPlayer.create(requireContext(), R.raw.android_song3_140bpm)
         mediaPlayer?.isLooping = true
@@ -222,11 +221,6 @@ class SoccerFragment : Fragment() {
         }
     }
     fun doMove(){
-
-        println("Player1 choice: "+ p1Choice)
-        println("Player2 choice: "+ p2Choice)
-        println("Player1 id"+ localP1Id)
-        println("Player2 id"+ localP2Id)
 
         if (p1Choice == "left"){
             soccerViewModel.leftButtonClick(1)
@@ -347,7 +341,6 @@ class SoccerFragment : Fragment() {
         handler.postDelayed({
             if ((soccerViewModel.p2Points >= 3 || soccerViewModel.p1Points >= 3) && abs(soccerViewModel.p2Points - soccerViewModel.p1Points) >= 2){
                 binding.finalScorePoint.visibility = View.VISIBLE
-                binding.finishedGameButton.visibility = View.VISIBLE
                 binding.finishedGameScreen.visibility = View.VISIBLE
                 if(soccerViewModel.p2Points > soccerViewModel.p1Points){
                     binding.finalScorePoint.text = "" + soccerViewModel.getEnemyColor() + " won!"
@@ -375,28 +368,28 @@ class SoccerFragment : Fragment() {
                             boardScoreWin += 10
                             var boardScoreLose = it.child(losingPlayerId).child("score").value.toString().toInt()
                             boardScoreLose -= 5
-                            println("board score: " + boardScoreWin)
                             // Set new value
                             database.getReference("Player Data").child(localGameId).child("players").child(winPlayerId).child("score").setValue("$boardScoreWin")
                             database.getReference("Player Data").child(localGameId).child("players").child(losingPlayerId).child("score").setValue("$boardScoreLose")
                         }
                     }
                 }
+                val handler = Handler(Looper.getMainLooper())
 
-                binding.finishedGameButton.setOnClickListener {
+                handler.postDelayed({
                     try {
                         view?.findNavController()
                             ?.navigate(R.id.action_soccerFragment_to_testBoardFragment)
                     } catch (e: Exception) {
                         println(e.stackTrace)
                     }
-                }
+                }, 5000)
+
             }
 
         }, 2000)
     }
     fun sendChoiceOnline(choice: String){
-        println("you are player one: " + youArePlayerOne + " and you choice: "+ choice)
         if (youArePlayerOne){
                 myRef.child(localGameId).child("p1Choice").setValue(choice)
                 p1Choice = choice

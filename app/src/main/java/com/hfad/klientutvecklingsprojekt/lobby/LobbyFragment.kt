@@ -3,6 +3,7 @@ package com.hfad.klientutvecklingsprojekt.lobby
 import android.content.ContentValues
 import android.content.pm.ActivityInfo
 import android.graphics.Color
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -51,6 +52,9 @@ class LobbyFragment : Fragment() {
     var localGameID =""
     var localPlayerID =""
 
+    // BG MUSIC
+    private var mediaPlayer: MediaPlayer? = null
+
     //host - den som kommer först in
     var playerIsHost: Boolean = true
 
@@ -60,6 +64,12 @@ class LobbyFragment : Fragment() {
         savedInstanceState: Bundle?): View? {
         _binding = FragmentLobbyBinding.inflate(inflater,container,false)
         val view = binding.root
+
+        mediaPlayer = MediaPlayer.create(
+            requireContext(), R.raw.android_song7_130bpm
+        )
+        mediaPlayer?.isLooping = true // Disable built-in looping
+        mediaPlayer?.start()
 
         LobbyData.fetchLobbyModel()
         PlayerData.fetchPlayerModel()
@@ -120,6 +130,8 @@ class LobbyFragment : Fragment() {
         println("Me model in LobbyFragment"+meModel)
         println("GameId in LobbyFragment: " + localGameID)
 
+        lobbyRef.addValueEventListener(gameStatusListener)
+
         return view
     }
 
@@ -139,31 +151,6 @@ class LobbyFragment : Fragment() {
         binding.lobbyId.text = spannableString
         binding.lobbyId.visibility = View.VISIBLE
         Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
-        val lobbyRefbtn = lobbyRef.child(localGameID).child("btnPressed")
-        lobbyRefbtn.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                println("HÄMTAT FRÅN DATABAS!!!")
-                println(dataSnapshot.getValue())
-                if (dataSnapshot.exists()) {
-                    val lobbyData = dataSnapshot.getValue()
-                    println("VÄRDET PÅ LOBBYDATA " + lobbyData)
-                    println(lobbyData == "true")
-                    if(lobbyData == true){
-                        try {
-                            view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
-
-                        }catch (e: Exception){
-                            println(e.stackTrace)
-                        }
-                    }
-                }
-            }
-
-            override fun onCancelled(databaseError: DatabaseError) {
-                // Failed to read value
-                Log.w("YourTag", "Failed to read lobby data.", databaseError.toException())
-            }
-        })
     }
 
     fun changeScreen(){
@@ -186,6 +173,28 @@ class LobbyFragment : Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private val gameStatusListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            lobbyRef.child(localGameID).child("btnPressed").get().addOnSuccessListener { dataSnapshot ->
+                try {
+                    if (dataSnapshot.exists()) {
+                        val lobbyData = dataSnapshot.getValue()
+                        println("VÄRDET PÅ LOBBYDATA " + lobbyData)
+                        println(lobbyData == "true")
+                        if(lobbyData == true){
+                            view?.findNavController()?.navigate(R.id.action_lobbyFragment_to_testBoardFragment)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
         }
     }
 
@@ -301,5 +310,17 @@ class LobbyFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun onStop() {
+        super.onStop()
+        lobbyRef.removeEventListener(gameStatusListener)
+        println("LOBBYFRAG: JAG HAR STOP")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer?.release()
+        mediaPlayer = null
     }
 }

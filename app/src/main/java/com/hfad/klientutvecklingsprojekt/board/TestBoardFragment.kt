@@ -32,6 +32,22 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 
+/**
+ *
+ * TestBoardFragment:
+ *
+ * målar spelplanen
+ * målar rankningslistan
+ * målar tärningen
+ * målar spelarna
+ *
+ * läser av Player Data, Board Data & Quiz tabellen från databasen
+ *
+ * startar minigames (hoppar till andra fragments)
+ *
+ * avslutar spelet när en spelare har 30 poäng (navigerar till winnerFragment)
+ *
+ */
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null

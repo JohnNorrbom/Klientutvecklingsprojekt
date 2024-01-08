@@ -321,9 +321,7 @@ class GavleRouletteFragment : Fragment(){
         playerRef.child(localGameID).child("players").child(localPlayerID).get().addOnSuccessListener {
             rouletteModel?.apply {
                 val currentScore = it.child("score").value.toString()
-                Log.d("score", " ${currentScore}")
                 val newScore = score?.get(localPlayerID)?.plus(currentScore.toInt()) ?: 0
-                Log.d("score", " ${newScore}")
                 playerRef.child(localGameID).child("players").child(localPlayerID).child("score").setValue(newScore)
             }
         }

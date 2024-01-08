@@ -162,10 +162,13 @@ class GavleRouletteFragment : Fragment(){
             Log.d("localPlayerID","${localPlayerID}")
             Log.d("localPlayerID","${it.value}")
             if(localPlayerID == it.value.toString()){
-                pullTheTrigger()
-                checksForKill()
-                checkForWinner()
-                changePlayer()
+                rouletteModel?.apply {
+                    pullTheTrigger()
+                    checksForKill()
+                    checkForWinner()
+                    changePlayer()
+                    updateGameData(this,localGameID)
+                }
             }else{
                 Toast.makeText(context?.applicationContext ?: context,"Not your turn",Toast.LENGTH_SHORT).show()
                 return@addOnSuccessListener
@@ -248,7 +251,7 @@ class GavleRouletteFragment : Fragment(){
     //Changes to the next player
     fun changePlayer() {
                 rouletteModel?.apply {
-                val currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
+                var currentPlayerIndex = players?.keys?.indexOf(currentPlayer) ?: -1
                 Log.d("player keys", "${players?.keys}")
                 Log.d("currentPlayerIndex", "${players?.keys?.indexOf(currentPlayer)}")
                 Log.d("currentPlayerIndex", "${currentPlayerIndex}")
@@ -266,6 +269,7 @@ class GavleRouletteFragment : Fragment(){
 
                         // Kontrollera om alla spelare är döda
                         if (newIndex == currentPlayerIndex) {
+                            currentPlayerIndex = 2
                             Log.d("changePlayer", "Inga levande spelare hittades.")
                             break
                         }

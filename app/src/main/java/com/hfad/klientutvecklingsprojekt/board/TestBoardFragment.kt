@@ -296,6 +296,7 @@ class TestBoardFragment : Fragment() {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
+            println("LOCALSCORE INNAN IF STATEMENTS:" + localScore)
             if (currentImageViewIndex % 20 == 0) {
                 soundPool.load(context, R.raw.dice_sound, 5)
                 soundPool.setOnLoadCompleteListener { _, sampleId, status ->
@@ -381,6 +382,7 @@ class TestBoardFragment : Fragment() {
             playerModel?.apply {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
+                println("Uppdaterar databasen med följande poäng:" + localScore)
                 playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
             paintPlayers()

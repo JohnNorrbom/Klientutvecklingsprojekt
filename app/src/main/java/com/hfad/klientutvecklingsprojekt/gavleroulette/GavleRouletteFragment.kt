@@ -27,6 +27,7 @@ import com.hfad.klientutvecklingsprojekt.gamestart.CharacterStatus
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 import kotlinx.coroutines.delay
+import kotlin.math.log
 import kotlin.random.Random
 
 class GavleRouletteFragment : Fragment(){
@@ -67,20 +68,7 @@ class GavleRouletteFragment : Fragment(){
                     Log.e("GavleRouletteFragment", "rouletteModel är null")
                 } else {
                     this@GavleRouletteFragment.rouletteModel = rouletteModel
-                    setUi()
-                    setPlayerInfo()
-                    if (rouletteModel.gameStatus == GameStatus.FINISHED) {
-                        handler.postDelayed({
-                            setScore()
-                            database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
-                            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                            try {
-                                view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }, 6000)
-                    }
+                    doWhenObserv()
                 }
             }
         }
@@ -104,6 +92,24 @@ class GavleRouletteFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
     }
 
+    fun doWhenObserv(){
+        setUi()
+        setPlayerInfo()
+        if (rouletteModel?.gameStatus == GameStatus.FINISHED) {
+            Log.d("inne","inne")
+            handler.postDelayed({
+                try {
+                    RouletteData.removeListner()
+                    setScore()
+                    database.getReference("Board Data").child(localGameID).child("randomVal").setValue(-1)
+                    activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    view?.findNavController()?.navigate(R.id.action_gavleRouletteFragment_to_testBoardFragment)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }, 6000)
+        }
+    }
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer?.release()
@@ -114,47 +120,49 @@ class GavleRouletteFragment : Fragment(){
         //den här
         localGameID = meModel?.gameID?:""
         localPlayerID = meModel?.playerID?:""
-        Log.d("meModel","player ${localGameID} Game ${localPlayerID}")
+        Log.d("meModel","player ${localPlayerID} Game ${localGameID}")
     }
 
     fun setUi() {
-        playerRef.child(localGameID).child("players").get().addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val snapshot = task.result
+        handler.postDelayed({
+            playerRef.child(localGameID).child("players").get().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val snapshot = task.result
 
-                rouletteModel?.apply {
-                    binding.gameStatusText.text = when (gameStatus) {
-                        GameStatus.INPROGRESS -> {
-                            Log.d("localP", "${localPlayerID}")
-                            Log.d("currentP", "${currentPlayer}")
-                            val text = if (localPlayerID == currentPlayer) {
-                                "Your turn"
-                            } else {
-                                val currentPlayerNickname =
-                                    snapshot.child(currentPlayer ?: "").child("nickname").value.toString()
-                                "$currentPlayerNickname turn"
+                    rouletteModel?.apply {
+                        binding.gameStatusText.text = when (gameStatus) {
+                            GameStatus.INPROGRESS -> {
+                                Log.d("localP", "${localPlayerID}")
+                                Log.d("currentP", "${currentPlayer}")
+                                val text = if (localPlayerID == currentPlayer) {
+                                    "Your turn"
+                                } else {
+                                    val currentPlayerNickname =
+                                        snapshot.child(currentPlayer?:"").child("nickname").value.toString()
+                                    "$currentPlayerNickname turn"
+                                }
+                                text
                             }
-                            text
-                        }
 
-                        GameStatus.FINISHED -> {
-                            val text = if (localPlayerID == winner) {
-                                "You won"
-                            } else {
-                                val winnerNickname =
-                                    snapshot.child(winner ?: "").child("nickname").value.toString()
-                                "$winnerNickname won"
+                            GameStatus.FINISHED -> {
+                                val text = if (localPlayerID == winner) {
+                                    "You won"
+                                } else {
+                                    val winnerNickname =
+                                        snapshot.child(winner ?: "").child("nickname").value.toString()
+                                    "$winnerNickname won"
+                                }
+                                text
                             }
-                            text
-                        }
 
-                        else -> ""
+                            else -> ""
+                        }
                     }
+                } else {
+                    Log.e("setUi", "Error fetching player data: ${task.exception}")
                 }
-            } else {
-                Log.e("setUi", "Error fetching player data: ${task.exception}")
             }
-        }
+        }, 500)
     }
 
     fun onTriggerPulled(){
@@ -277,7 +285,7 @@ class GavleRouletteFragment : Fragment(){
 
                     if (newIndex != currentPlayerIndex) {
                         currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
-                        setUi()
+                        myRef.child(localGameID).child("currentPlayer").setValue(currentPlayer)
                         updateGameData(this, localGameID)
                     } else {
                         Log.d("changePlayer", "Alla spelare är döda.")

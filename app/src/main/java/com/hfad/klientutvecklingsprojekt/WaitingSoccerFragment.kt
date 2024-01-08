@@ -81,7 +81,6 @@ class WaitingSoccerFragment : Fragment() {
         override fun onDataChange(snapshot: DataSnapshot) {
             myRef.child(localGameId).get().addOnSuccessListener { dataSnapshot ->
                 if(dataSnapshot.exists()){
-                    println("dataSnapshot exists...")
                     view?.findNavController()?.navigate(R.id.action_waitingSoccerFragment_to_soccerFragment)
                 }
             }

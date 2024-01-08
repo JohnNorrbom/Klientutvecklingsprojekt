@@ -3,10 +3,10 @@ package com.hfad.klientutvecklingsprojekt.soccer
 import androidx.lifecycle.ViewModel
 import com.google.firebase.database.FirebaseDatabase
 
+/**
+ * ViewModel for handling game logic and data related to the Soccer game.
+ */
 class SoccerViewModel() : ViewModel(){
-
-    val databaseReference = FirebaseDatabase.getInstance().getReference("Soccer")
-
 
     private var buttonCount = 0
     private var p1Color = "not assigned"
@@ -24,13 +24,21 @@ class SoccerViewModel() : ViewModel(){
     var goalieColor = p2Color
     var player1 = "shooter"
     var player2 = "goalie"
-
+    /**
+     * Retrieves the color of player 1.
+     */
     fun getColor(): String {
         return p1Color
     }
+    /**
+     * Retrieves the color of player 2 (enemy).
+     */
     fun getEnemyColor(): String {
         return p2Color
     }
+    /**
+     * Sets the colors of player 1 and player 2 based on provided colors and who shoots first.
+     */
     fun setColors(p1Color: String, p2Color: String, whoShootsFirst: Int){
         this.p1Color = p1Color
         this.p2Color = p2Color
@@ -44,7 +52,10 @@ class SoccerViewModel() : ViewModel(){
         }
 
     }
-
+    /**
+     * Sets the chosen direction ('left') for the shooter or goalie based on the player number and role.
+     * @param playerNbr The player number indicating the player making the move.
+     */
     fun leftButtonClick(playerNbr: Int){
         if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "left"
@@ -60,6 +71,10 @@ class SoccerViewModel() : ViewModel(){
         }
 
     }
+    /**
+     * Sets the chosen direction ('right') for the shooter or goalie based on the player number and role.
+     * @param playerNbr The player number indicating the player making the move.
+     */
     fun rightButtonClick(playerNbr: Int){
         if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "right"
@@ -74,6 +89,10 @@ class SoccerViewModel() : ViewModel(){
             goalieChoice = "right"
         }
     }
+    /**
+     * Sets the chosen direction ('mid') for the shooter or goalie based on the player number and role.
+     * @param playerNbr The player number indicating the player making the move.
+     */
     fun midButtonClick(playerNbr: Int){
         if (playerNbr == 1 && player1 == "shooter"){
             shooterChoice = "mid"
@@ -89,7 +108,9 @@ class SoccerViewModel() : ViewModel(){
         }
     }
 
-
+    /**
+     * Switches the roles/types of player 1 and player 2.
+     */
     fun switchType(){
         //change color of goalie and shooter
         var temp = goalieColor
@@ -106,7 +127,9 @@ class SoccerViewModel() : ViewModel(){
         }
     }
 
-
+    /**
+     * Starts a new round of the game, calculates points, and updates game state.
+     */
     fun startRound(){
         shooterHit = false
         println("shooterChoice: " + shooterChoice)

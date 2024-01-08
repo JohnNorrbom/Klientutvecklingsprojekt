@@ -18,10 +18,10 @@ import com.hfad.klientutvecklingsprojekt.databinding.FragmentWaitingSoccerBindin
 import com.hfad.klientutvecklingsprojekt.player.MeData
 import com.hfad.klientutvecklingsprojekt.player.MeModel
 
-
+/**
+ * Fragment responsible for waiting and listening for updates in the Soccer game.
+ */
 class WaitingSoccerFragment : Fragment() {
-
-    //TODO fixa listeners som lyssnar på SOCCERGAMES OCH VEM SOM SKA KÖRA
 
     private var _binding: FragmentWaitingSoccerBinding? = null
     private val binding get() = _binding!!
@@ -37,6 +37,9 @@ class WaitingSoccerFragment : Fragment() {
     //gameId
     private var localGameId: String = ""
 
+    /**
+     * Creates and initializes the view for waiting in the Soccer game lobby.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,6 +67,9 @@ class WaitingSoccerFragment : Fragment() {
         return view
     }
 
+    /**
+     * Retrieves the game ID from the current user's model.
+     */
     fun getGameId(){
         meModel?.apply {
             localGameId = gameID.toString()

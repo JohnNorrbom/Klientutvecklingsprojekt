@@ -273,8 +273,8 @@ class GavleRouletteFragment : Fragment(){
 
                     if (newIndex != currentPlayerIndex) {
                         currentPlayer = players?.keys?.elementAt(newIndex) ?: ""
-                        updateGameData(this, localGameID)
                         setUi()
+                        updateGameData(this, localGameID)
                     } else {
                         Log.d("changePlayer", "Alla spelare är döda.")
                         // Eventuell ytterligare hantering här, t.ex. avsluta spelet eller vidta andra åtgärder.

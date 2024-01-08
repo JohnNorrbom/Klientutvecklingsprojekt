@@ -279,6 +279,7 @@ class TestBoardFragment : Fragment() {
         dice?.setOnClickListener {
             //soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f)
             var randomInt = Random.nextInt(6) + 1
+//            var randomInt = 10
             var destination = "dice" + randomInt
             var resourceId = resources.getIdentifier(
                 destination,
@@ -287,7 +288,16 @@ class TestBoardFragment : Fragment() {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
-
+            if (currentImageViewIndex % 20 == 0) {
+                soundPool.load(context, R.raw.dice_sound, 5)
+                soundPool.setOnLoadCompleteListener { _, sampleId, status ->
+                    if (status == 0) {
+                        soundPool.play(sampleId, 1F, 1F, 5, 0, 1.0F)
+                    } else {
+                        Log.e("SoundPool", "Failed to load sound")
+                    }
+                }
+            }
             if (currentImageViewIndex % 20 == 1 || currentImageViewIndex % 20 == 6 || currentImageViewIndex % 20 == 11 || currentImageViewIndex % 20 == 15) {
                 localScore += 1
                 soundPool.load(context, R.raw.dice_sound, 5)

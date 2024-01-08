@@ -31,7 +31,6 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 
-//TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null
@@ -73,7 +72,6 @@ class TestBoardFragment : Fragment() {
 
     private var localCurrentPlayerTest = ""
 
-    //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
     val leaderboardList = mutableListOf<Pair<String, Int>>()
     override fun onCreateView(
@@ -402,7 +400,6 @@ class TestBoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         setText()
     }
@@ -423,7 +420,6 @@ class TestBoardFragment : Fragment() {
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    //means you are host    TODO SOCCER
                     if (localCurrentPlayerTest == localPlayerID) {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)

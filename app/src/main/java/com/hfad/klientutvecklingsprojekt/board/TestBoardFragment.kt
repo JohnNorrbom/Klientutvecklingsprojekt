@@ -32,7 +32,6 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 
-//TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING
     private var _binding: FragmentTestBoardBinding? = null
@@ -74,7 +73,6 @@ class TestBoardFragment : Fragment() {
 
     private var localCurrentPlayerTest = ""
 
-    //    val soundId = soundPool.load(context, R.raw.dice_sound, 1)
     // LEADERBOARD
     val leaderboardList = mutableListOf<Pair<String, Int>>()
     override fun onCreateView(
@@ -92,11 +90,13 @@ class TestBoardFragment : Fragment() {
             meModel?.let {
                 this@TestBoardFragment.meModel = it
                 setText()
+                diceButton()
             } ?: run {
                 // Handle the case when meModel is null
                 Log.e("LobbyFragment", "meModel is null")
             }
         }
+
         BoardData.boardModel.observe(this) { boardModel ->
             boardModel?.let {
                 this@TestBoardFragment.boardModel = it
@@ -114,7 +114,7 @@ class TestBoardFragment : Fragment() {
         }
 
         boardRef.addValueEventListener(boardListener)
-        diceButton()
+
         gameRef.addValueEventListener(positionListener)
         boardRef.addValueEventListener(gameStatusListener)
 
@@ -123,6 +123,9 @@ class TestBoardFragment : Fragment() {
     }
 
     private fun setText() {
+
+
+
         meModel?.apply {
             localGameID = gameID ?: ""
             localPlayerID = playerID ?: ""
@@ -133,12 +136,13 @@ class TestBoardFragment : Fragment() {
             binding.playerRed.visibility = View.GONE
             binding.playerYellow.visibility = View.GONE
             binding.playerGreen.visibility = View.GONE
-            paintPlayers()
+
 
             println("local player id: " + localPlayerID)
             playersRef.child(localPlayerID).get()
                 .addOnSuccessListener { dataSnapshot ->
                     currentImageViewIndex = dataSnapshot.child("position").value.toString().toInt()
+                    paintPlayers()
                 }
         }
     }
@@ -225,6 +229,7 @@ class TestBoardFragment : Fragment() {
 
                 val nickname = playerSnapshot.child("nickname").value.toString()
                 val number = playerSnapshot.child("score").value.toString().toInt()
+                localScore = number
                 Log.d("score", "testing: $number")
                 updateLeaderboard(nickname, number)
                 imageView?.let { view ->
@@ -290,6 +295,7 @@ class TestBoardFragment : Fragment() {
             )
             binding.diceButton?.setImageResource(resourceId)
             currentImageViewIndex += randomInt
+            println("LOCALSCORE INNAN IF STATEMENTS:" + localScore)
             if (currentImageViewIndex % 20 == 0) {
                 soundPool.load(context, R.raw.dice_sound, 5)
                 soundPool.setOnLoadCompleteListener { _, sampleId, status ->
@@ -363,7 +369,8 @@ class TestBoardFragment : Fragment() {
                 }
                 //minigame
                 //  Pick random game
-                localRandomVal = 3//Random.nextInt(3)
+                localRandomVal = 0
+                    //Random.nextInt(3)
 
                 //laddauppminigamesiffra,
                 //gör en listener som kallar på setMinigame
@@ -374,6 +381,7 @@ class TestBoardFragment : Fragment() {
             playerModel?.apply {
                 position = currentImageViewIndex
                 playersRef.child(localPlayerID).child("position").setValue(position)
+                println("Uppdaterar databasen med följande poäng:" + localScore)
                 playersRef.child(localPlayerID).child("score").setValue(localScore)
             }
             paintPlayers()
@@ -395,8 +403,8 @@ class TestBoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // currentImageViewIndex = playerModel localPlayerID position
         activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        setText()
     }
 
     private fun setMiniGame(randomVal: Int) {
@@ -415,7 +423,6 @@ class TestBoardFragment : Fragment() {
                 }
             } else if (randomVal == 1) {
                 if (isAdded && view != null) {
-                    //means you are host    TODO SOCCER
                     if (localCurrentPlayerTest == localPlayerID) {
                         view.findNavController()
                             .navigate(R.id.action_testBoardFragment_to_soccerChooseFragment)

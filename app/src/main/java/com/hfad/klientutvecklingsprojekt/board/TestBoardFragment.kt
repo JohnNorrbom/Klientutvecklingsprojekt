@@ -31,6 +31,17 @@ import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerData.gameID
 import com.hfad.klientutvecklingsprojekt.playerinfo.PlayerModel
 import kotlin.random.Random
 
+/**
+ *
+ * TestBoardFragment:
+ * målar spelplanen
+ * målar rankningslistan
+ * målar tärningen
+ *
+ * läser av Player Data, Board Data & Quiz tabellen från databasen
+ *
+ *
+ */
 //TODO fixa så att score sparas lokalt innan man slår tärning så att inte spelaren börjar från början. (när fragment startas om)
 class TestBoardFragment : Fragment() {
     //  VIEWBINDING

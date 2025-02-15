@@ -45,4 +45,4 @@ Följ dessa steg för att ladda ner och testa **Space Party** på din dator elle
    - Klicka på den gröna **"Play"-knappen** eller `Shift + F10` i Android Studio för att bygga och köra appen på enheten eller emulatorn.
 
 ## Licens
-Detta projekt är licensierat under [MIT License](LICENSE).
+Detta projekt är licensierat under [MIT License](LICENSE.txt).
